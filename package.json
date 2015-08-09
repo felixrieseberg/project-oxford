@@ -1,6 +1,6 @@
 {
   "name": "project-oxford",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Vision, Speech, and Face Intelligence from Project Oxford",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^2.9.34",
-    "request": "^2.60.0",
-    "restling": "^0.9.1"
+    "request": "^2.60.0"
   }
 }
