@@ -1,5 +1,4 @@
 var request = require('request'),
-    Promise = require('Bluebird'),
     fs = require('fs');
 
 const analyzeUrl = 'https://api.projectoxford.ai/vision/v1/analyses';
@@ -7,13 +6,13 @@ const thumbnailUrl = 'https://api.projectoxford.ai/vision/v1/thumbnails';
 const ocrUrl = 'https://api.projectoxford.ai/vision/v1/ocr';
 
 var vision = function (key) {
-    var _return = function (error, response, resolve, reject) {
+    function _return(error, response, resolve, reject) {
         if (error) {
             return reject(error);
         }
 
         return resolve(response);
-    };
+    }
 
     /**
      * (Private) Analyze a local image, using a fs pipe
@@ -21,7 +20,7 @@ var vision = function (key) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _analyzeLocal = function (image, options) {
+    function _analyzeLocal(image, options) {
         return new Promise(function (resolve, reject) {
             fs.createReadStream(image).pipe(request.post({
                 uri: analyzeUrl,
@@ -30,9 +29,9 @@ var vision = function (key) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options
-            }, (error, response) => _return(error, JSON.parse(response), resolve, reject))
-        )});
-    };
+            }, (error, response) => _return(error, JSON.parse(response), resolve, reject)));
+        });
+    }
 
     /**
      * (Private) Analyze an online image
@@ -40,22 +39,22 @@ var vision = function (key) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _analyzeOnline = function (image, options) {
+    function _analyzeOnline(image, options) {
         return new Promise(function (resolve, reject) {
             request.post({
                 uri: analyzeUrl,
                 headers: {'Ocp-Apim-Subscription-Key': key},
                 json: true,
-                body: {'url': image},
+                body: {url: image},
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject))
+            }, (error, response) => _return(error, response, resolve, reject));
         });
-    };
+    }
 
     /**
      * This operation does a deep analysis on the given image and then extracts a
-     * set of rich visual features based on the image content. 
-     * 
+     * set of rich visual features based on the image content.
+     *
      * @param  {Object}  options                - Options object describing features to extract
      * @param  {string}  options.url            - Url to image to be analyzed
      * @param  {string}  options.path           - Path to image to be analyzed
@@ -66,7 +65,7 @@ var vision = function (key) {
      * @param  {boolean} options.Categories     - Image categorization; taxonomy defined in documentation.
      * @return {[type]}         [description]
      */
-    var analyzeImage = function (options) {
+    function analyzeImage(options) {
         let test = /(ImageType)|(Color)|(Faces)|(Adult)|(Categories)/;
         let query = [];
 
@@ -76,8 +75,7 @@ var vision = function (key) {
             }
         });
 
-        
-        let qs = {visualFeatures: query.join()}
+        let qs = {visualFeatures: query.join()};
 
         if (options.path) {
             return _analyzeLocal(options.path, qs);
@@ -85,7 +83,7 @@ var vision = function (key) {
         if (options.url) {
             return _analyzeOnline(options.url, qs);
         }
-    };
+    }
 
     /**
      * (Private) Get a thumbnail for a local image, using a fs pipe
@@ -93,7 +91,7 @@ var vision = function (key) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _thumbnailLocal = function (image, options, pipe) {
+    function _thumbnailLocal(image, options, pipe) {
         return new Promise(function (resolve, reject) {
             fs.createReadStream(image).pipe(request.post({
                 uri: thumbnailUrl,
@@ -105,7 +103,7 @@ var vision = function (key) {
             }, (error, response) => _return(error, response, resolve, reject)))
             .pipe(pipe);
         });
-    };
+    }
 
     /**
      * (Private) Get a thumbnail for am online image
@@ -113,25 +111,25 @@ var vision = function (key) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _thumbnailOnline = function (image, options, pipe) {
+    function _thumbnailOnline(image, options, pipe) {
         return new Promise(function (resolve, reject) {
             request.post({
                 uri: thumbnailUrl,
                 headers: {'Ocp-Apim-Subscription-Key': key},
                 json: true,
-                body: {'url': image},
-                qs: options,
+                body: {url: image},
+                qs: options
             }, (error, response) => _return(error, response, resolve, reject))
             .pipe(pipe);
         });
     }
 
     /**
-     * Generate a thumbnail image to the user-specified width and height. By default, the 
+     * Generate a thumbnail image to the user-specified width and height. By default, the
      * service analyzes the image, identifies the region of interest (ROI), and generates
      * smart crop coordinates based on the ROI. Smart cropping is designed to help when you
      * specify an aspect ratio that differs from the input image.
-     * 
+     *
      * @param  {Object}  options                - Options object describing features to extract
      * @param  {string}  options.url            - Url to image to be thumbnailed
      * @param  {string}  options.path           - Path to image to be thumbnailed
@@ -141,7 +139,7 @@ var vision = function (key) {
      * @param  {Object}  options.pipe           - We'll pipe the returned image to this object
      * @return {Promise}                        - Promise resolving with the resulting JSON
      */
-    var thumbnail = function (options) {
+    function thumbnail(options) {
         let qs = {
             width: (options.width) ? options.width : 50,
             height: (options.height) ? options.height : 50,
@@ -154,7 +152,7 @@ var vision = function (key) {
         if (options.url) {
             return _thumbnailOnline(options.url, qs, options.pipe);
         }
-    };
+    }
 
     /**
      * (Private) OCR a local image, using a fs pipe
@@ -162,7 +160,7 @@ var vision = function (key) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _ocrLocal = function (image, options) {
+    function _ocrLocal(image, options) {
         return new Promise(function (resolve, reject) {
             fs.createReadStream(image).pipe(request.post({
                 uri: ocrUrl,
@@ -173,7 +171,7 @@ var vision = function (key) {
                 qs: options
             }, (error, response) => _return(error, response, resolve, reject)));
         });
-    };
+    }
 
     /**
      * (Private) OCR an online image
@@ -181,14 +179,14 @@ var vision = function (key) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _ocrOnline = function (image, options) {
+    function _ocrOnline(image, options) {
         return new Promise(function (resolve, reject) {
             request.post({
                 uri: ocrUrl,
                 headers: {'Ocp-Apim-Subscription-Key': key},
                 json: true,
-                body: {'url': image},
-                qs: options,
+                body: {url: image},
+                qs: options
             }, (error, response) => _return(error, response, resolve, reject));
         });
     }
@@ -196,7 +194,7 @@ var vision = function (key) {
     /**
      * Optical Character Recognition (OCR) detects text in an image and extracts the recognized
      * characters into a machine-usable character stream.
-     * 
+     *
      * @param  {Object}  options                    - Options object describing features to extract
      * @param  {string}  options.url                - Url to image to be analyzed
      * @param  {string}  options.path               - Path to image to be analyzed
@@ -204,11 +202,11 @@ var vision = function (key) {
      * @param  {string}  options.detectOrientation  - Detect orientation of text in the image
      * @return {Promise}                            - Promise resolving with the resulting JSON
      */
-    var ocr = function (options) {
+    function ocr(options) {
         let qs = {
             language: (options.language) ? options.language : 'unk',
-            detectOrientation: (options.detectOrientation) ? options.detectOrientation : true,
-        }
+            detectOrientation: (options.detectOrientation) ? options.detectOrientation : true
+        };
 
         if (options.path) {
             return _ocrLocal(options.path, qs);
@@ -222,7 +220,7 @@ var vision = function (key) {
         analyzeImage: analyzeImage,
         thumbnail: thumbnail,
         ocr: ocr
-    }
-}
+    };
+};
 
 module.exports = vision;

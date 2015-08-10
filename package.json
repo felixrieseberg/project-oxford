@@ -1,7 +1,8 @@
 {
   "name": "project-oxford",
-  "version": "0.0.1",
-  "description": "Vision, Speech, and Face Intelligence from Project Oxford",
+  "version": "0.1.0",
+  "description": "Vision, and Face Intelligence with Project Oxford",
+  "repository": "https://github.com/felixrieseberg/project-oxford",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +10,13 @@
   "author": "Felix Rieseberg",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^2.9.34",
     "request": "^2.60.0"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-jscodesniffer": "^0.1.8",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-jscs": "^0.8.1",
+    "load-grunt-tasks": "^1.0.0"
   }
 }
