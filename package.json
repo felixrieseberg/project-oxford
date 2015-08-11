@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "description": "Vision, and Face Intelligence with Project Oxford",
   "repository": "https://github.com/felixrieseberg/project-oxford",
-  "main": "lib/oxford.js",
+  "main": "dist/oxford.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec"
   },
