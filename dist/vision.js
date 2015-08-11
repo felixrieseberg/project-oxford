@@ -8,7 +8,14 @@ var analyzeUrl = 'https://api.projectoxford.ai/vision/v1/analyses';
 var thumbnailUrl = 'https://api.projectoxford.ai/vision/v1/thumbnails';
 var ocrUrl = 'https://api.projectoxford.ai/vision/v1/ocr';
 
+/** 
+ * @namespace
+ * @memberof Client
+ */
 var vision = function vision(key) {
+    /**
+     * @private
+     */
     function _return(error, response, resolve, reject) {
         if (error) {
             return reject(error);
@@ -19,6 +26,7 @@ var vision = function vision(key) {
 
     /**
      * (Private) Analyze a local image, using a fs pipe
+     * @private
      * @param  {string} image       - Path to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -41,6 +49,7 @@ var vision = function vision(key) {
 
     /**
      * (Private) Analyze an online image
+     * @private
      * @param  {string} image       - Url to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -95,6 +104,7 @@ var vision = function vision(key) {
 
     /**
      * (Private) Get a thumbnail for a local image, using a fs pipe
+     * @private
      * @param  {string} image       - Path to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -117,6 +127,7 @@ var vision = function vision(key) {
 
     /**
      * (Private) Get a thumbnail for am online image
+     * @private
      * @param  {string} image       - url to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -167,6 +178,7 @@ var vision = function vision(key) {
 
     /**
      * (Private) OCR a local image, using a fs pipe
+     * @private
      * @param  {string} image       - Path to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -181,13 +193,15 @@ var vision = function vision(key) {
                 },
                 qs: options
             }, function (error, response) {
-                return _return(error, response, resolve, reject);
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
             }));
         });
     }
 
     /**
      * (Private) OCR an online image
+     * @private
      * @param  {string} image       - url to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON

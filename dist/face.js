@@ -12,8 +12,15 @@ var verifyUrl = 'https://api.projectoxford.ai/face/v0/verifications';
 var personGroupUrl = 'https://api.projectoxford.ai/face/v0/persongroups';
 var personUrl = 'https://api.projectoxford.ai/face/v0/persongroups';
 
+/**
+ * @namespace
+ * @memberof Client
+ */
 var face = function face(key) {
-    var _return = function _return(error, response, resolve, reject) {
+    /**
+     * @private
+     */
+    function _return(error, response, resolve, reject) {
         if (error) {
             return reject(error);
         }
@@ -24,11 +31,12 @@ var face = function face(key) {
     /**
      * (Private) Call the Face Detected API using a local image
      *
+     * @private
      * @param  {string} image       - Path to the image
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _detectLocal = function _detectLocal(image, options) {
+    function _detectLocal(image, options) {
         return new _Promise(function (resolve, reject) {
             fs.createReadStream(image).pipe(request.post({
                 uri: detectUrl,
@@ -47,11 +55,12 @@ var face = function face(key) {
     /**
      * (Private) Call the Face Detected API using a uri to an online image
      *
+     * @private
      * @param  {string} image       - Url to the image
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var _detectOnline = function _detectOnline(image, options) {
+    function _detectOnline(image, options) {
         return new _Promise(function (resolve, reject) {
             request.post({
                 uri: detectUrl,
@@ -67,20 +76,21 @@ var face = function face(key) {
 
     /**
      * Call the Face Detected API
-     * ------------------------------------------------------------------------------------
      * Detects human faces in an image and returns face locations, face landmarks, and
      * optional attributes including head-pose, gender, and age. Detection is an essential
      * API that provides faceId to other APIs like Identification, Verification,
      * and Find Similar.
      *
      * @param  {object}  options                        - Options object
+     * @param  {string}  options.url                    - URL to image to be used
+     * @param  {string}  options.path                   - Path to image to be used
      * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesAge            - Analyze age?
      * @param  {boolean} options.analyzesGender         - Analyze gender?
      * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
-    var detect = function detect(options) {
+    function detect(options) {
         var qs = {
             analyzesFaceLandmarks: options.analyzesFaceLandmarks ? true : false,
             analyzesAge: options.analyzesAge ? true : false,
@@ -99,12 +109,11 @@ var face = function face(key) {
 
     /**
      * Detect similar faces using faceIds (as returned from the detect API)
-     * ------------------------------------------------------------------------------------
      * @param  {string} sourceFace          - String of faceId for the source face
      * @param  {string[]} candidateFaces    - Array of faceIds to use as candidates
      * @return {Promise}                    - Promise resolving with the resulting JSON
      */
-    var similar = function similar(sourceFace, candidateFaces) {
+    function similar(sourceFace, candidateFaces) {
         return new _Promise(function (resolve, reject) {
             var faces = {
                 faceId: sourceFace,
@@ -124,7 +133,6 @@ var face = function face(key) {
 
     /**
      * Divides candidate faces into groups based on face similarity using faceIds.
-     * ------------------------------------------------------------------------------------
      * The output is one or more disjointed face groups and a MessyGroup.
      * A face group contains the faces that have similar looking, often of the same person.
      * There will be one or more face groups ranked by group size, i.e. number of face.
@@ -137,7 +145,7 @@ var face = function face(key) {
      * @param  {string[]} faces     - Array of faceIds to use
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var grouping = function grouping(faces) {
+    function grouping(faces) {
         return new _Promise(function (resolve, reject) {
             if (faces) {
                 faces = { faceIds: faces };
@@ -156,7 +164,6 @@ var face = function face(key) {
 
     /**
      * Identifies persons from a person group by one or more input faces.
-     * ------------------------------------------------------------------------------------
      * To recognize which person a face belongs to, Face Identification needs a person group
      * that contains number of persons. Each person contains one or more faces. After a person
      * group prepared, it should be trained to make it ready for identification. Then the
@@ -166,7 +173,7 @@ var face = function face(key) {
      * @param  {string[]} faces     - Array of faceIds to use
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var identify = function identify(faces, options) {
+    function identify(faces, options) {
         return new _Promise(function (resolve, reject) {
             var body = {};
 
@@ -193,13 +200,12 @@ var face = function face(key) {
 
     /**
      * Analyzes two faces and determine whether they are from the same person.
-     * ------------------------------------------------------------------------------------
      * Verification works well for frontal and near-frontal faces.
      * For the scenarios that are sensitive to accuracy please use with own judgment.
      * @param  {string[]} faces     - Array containing two faceIds to use
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    var verify = function verify(faces) {
+    function verify(faces) {
         return new _Promise(function (resolve, reject) {
             if (faces && faces.length > 1) {
                 var body = {
@@ -221,10 +227,13 @@ var face = function face(key) {
         });
     };
 
+    /**
+     * @namespace
+     * @memberof face
+     */
     var personGroup = {
         /**
          * Creates a new person group with a user-specified ID.
-         * ------------------------------------------------------------------------------------
          * A person group is one of the most important parameters for the Identification API.
          * The Identification searches person faces in a specified person group.
          *
@@ -323,8 +332,7 @@ var face = function face(key) {
 
         /**
          * Starts a person group training.
-         * ------------------------------------------------------------------------------------
-         * Training is a necessary preparation process of a person group before identification.
+             * Training is a necessary preparation process of a person group before identification.
          * Each person group needs to be trained in order to call Identification. The training
          * will process for a while on the server side even after this API has responded.
          *
@@ -396,6 +404,10 @@ var face = function face(key) {
         }
     };
 
+    /**
+     * @namespace
+     * @memberOf face
+     */
     var person = {
         /**
          * Adds a face to a person for identification. The maximum face count for each person is 32.

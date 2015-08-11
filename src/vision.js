@@ -6,7 +6,14 @@ const analyzeUrl = 'https://api.projectoxford.ai/vision/v1/analyses';
 const thumbnailUrl = 'https://api.projectoxford.ai/vision/v1/thumbnails';
 const ocrUrl = 'https://api.projectoxford.ai/vision/v1/ocr';
 
+/** 
+ * @namespace
+ * @memberof Client
+ */
 var vision = function (key) {
+    /**
+     * @private
+     */
     function _return(error, response, resolve, reject) {
         if (error) {
             return reject(error);
@@ -17,6 +24,7 @@ var vision = function (key) {
 
     /**
      * (Private) Analyze a local image, using a fs pipe
+     * @private
      * @param  {string} image       - Path to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -39,6 +47,7 @@ var vision = function (key) {
 
     /**
      * (Private) Analyze an online image
+     * @private
      * @param  {string} image       - Url to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -91,6 +100,7 @@ var vision = function (key) {
 
     /**
      * (Private) Get a thumbnail for a local image, using a fs pipe
+     * @private
      * @param  {string} image       - Path to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -113,6 +123,7 @@ var vision = function (key) {
 
     /**
      * (Private) Get a thumbnail for am online image
+     * @private
      * @param  {string} image       - url to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -162,6 +173,7 @@ var vision = function (key) {
 
     /**
      * (Private) OCR a local image, using a fs pipe
+     * @private
      * @param  {string} image       - Path to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
@@ -177,13 +189,14 @@ var vision = function (key) {
                 qs: options
             }, (error, response) => {
                 response.body = JSON.parse(response.body);
-                _return(error, response, resolve, reject));
-            });
+                _return(error, response, resolve, reject);
+            }));
         });
     }
 
     /**
      * (Private) OCR an online image
+     * @private
      * @param  {string} image       - url to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
