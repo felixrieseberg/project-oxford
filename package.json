@@ -1,6 +1,6 @@
 {
   "name": "project-oxford",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vision, and Face Intelligence with Project Oxford",
   "repository": "https://github.com/felixrieseberg/project-oxford",
   "main": "lib/oxford.js",
