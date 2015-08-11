@@ -28,10 +28,11 @@ module.exports = function (grunt) {
                     'dist/oxford.js': 'src/oxford.js',
                 }
             }
-        }
+        },
+        clean: ['./test/output/*']
     });
 
     grunt.registerTask('compile', 'babel');
-    grunt.registerTask('test', ['jshint', 'jscs']);
+    grunt.registerTask('test', ['clean', 'jshint', 'jscs']);
     grunt.registerTask('default', ['test', 'compile']);
 };

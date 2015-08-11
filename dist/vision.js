@@ -71,7 +71,7 @@ var vision = function vision(key) {
      * @param  {boolean} options.Faces          - Detects if faces are present. If present, generate coordinates, gender and age.
      * @param  {boolean} options.Adult          - Detects if image is pornographic in nature (nudity or sex act). Sexually suggestive content is also detected.
      * @param  {boolean} options.Categories     - Image categorization; taxonomy defined in documentation.
-     * @return {[type]}         [description]
+     * @return {Promise}                        - Promise resolving with the resulting JSON
      */
     function analyzeImage(options) {
         var test = /(ImageType)|(Color)|(Faces)|(Adult)|(Categories)/;

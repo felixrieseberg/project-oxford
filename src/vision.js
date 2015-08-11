@@ -67,7 +67,7 @@ var vision = function (key) {
      * @param  {boolean} options.Faces          - Detects if faces are present. If present, generate coordinates, gender and age.
      * @param  {boolean} options.Adult          - Detects if image is pornographic in nature (nudity or sex act). Sexually suggestive content is also detected.
      * @param  {boolean} options.Categories     - Image categorization; taxonomy defined in documentation.
-     * @return {[type]}         [description]
+     * @return {Promise}                        - Promise resolving with the resulting JSON
      */
     function analyzeImage(options) {
         let test = /(ImageType)|(Color)|(Faces)|(Adult)|(Categories)/;
@@ -175,7 +175,10 @@ var vision = function (key) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject)));
+            }, (error, response) => {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject));
+            });
         });
     }
 

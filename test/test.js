@@ -1,8 +1,9 @@
 var assert = require('assert'),
     _Promise = require('bluebird'),
     uuid = require('uuid'),
+    fs = require('fs'),
     oxford = require('../dist/oxford'),
-    client = new oxford.Client('');
+    client = new oxford.Client(process.env.OXFORD_KEY);
 
 // Store variables, no point in calling the api too often
 var billFaces = [],
@@ -290,6 +291,112 @@ describe('Project Oxford Face API Test', function () {
                 assert.equal(response.statusMessage, 'OK');
                 done();
             });
+        });
+    });
+});
+
+describe('Project Oxford Vision API Test', function () {
+    it('analyzes a local image', function (done) {
+        this.timeout(10000);
+        client.vision.analyzeImage({
+            path: './test/images/vision.jpg',
+            ImageType: true,
+            Color: true,
+            Faces: true,
+            Adult: true,
+            Categories: true
+        })
+        .then(function (response) {
+            assert.ok(response.body);
+            assert.ok(response.body.categories);
+            assert.ok(response.body.adult);
+            assert.ok(response.body.metadata);
+            assert.ok(response.body.faces);
+            assert.ok(response.body.color);
+            assert.ok(response.body.imageType);
+            done();
+        });
+    });
+
+    it('analyzes an online image', function (done) {
+        this.timeout(10000);
+        client.vision.analyzeImage({
+            url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
+            ImageType: true,
+            Color: true,
+            Faces: true,
+            Adult: true,
+            Categories: true
+        })
+        .then(function (response) {
+            assert.ok(response.body);
+            assert.ok(response.body.categories);
+            assert.ok(response.body.adult);
+            assert.ok(response.body.metadata);
+            assert.ok(response.body.faces);
+            assert.ok(response.body.color);
+            assert.ok(response.body.imageType);
+            done();
+        });
+    });
+    
+    it('creates a thumbnail for a local image', function (done) {
+        this.timeout(10000);
+        client.vision.thumbnail({
+            path: './test/images/vision.jpg',
+            pipe: fs.createWriteStream('./test/output/thumb2.jpg'),
+            width: 100,
+            height: 100,
+            smartCropping: true
+        })
+        .then(function (response) {
+            var stats = fs.statSync('./test/output/thumb2.jpg');
+            assert.ok((stats.size > 0));
+            done();
+        });
+    });
+
+    it('creates a thumbnail for an online image', function (done) {
+        this.timeout(10000);
+        client.vision.thumbnail({
+            url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
+            pipe: fs.createWriteStream('./test/output/thumb1.jpg'),
+            width: 100,
+            height: 100,
+            smartCropping: true
+        })
+        .then(function (response) {
+            var stats = fs.statSync('./test/output/thumb1.jpg');
+            assert.ok((stats.size > 0));
+            done();
+        });
+    });
+    
+    it('runs OCR on a local image', function (done) {
+        this.timeout(10000);
+        client.vision.ocr({
+            path: './test/images/vision.jpg',
+            language: 'en',
+            detectOrientation: true
+        })
+        .then(function (response) {
+            assert.ok(response.body.language);
+            assert.ok(response.body.regions);
+            done();
+        });
+    });
+
+    it('runs OCR on an online image', function (done) {
+        this.timeout(10000);
+        client.vision.ocr({
+            url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
+            language: 'en',
+            detectOrientation: true
+        })
+        .then(function (response) {
+            assert.ok(response.body.language);
+            assert.ok(response.body.orientation);
+            done();
         });
     });
 });
