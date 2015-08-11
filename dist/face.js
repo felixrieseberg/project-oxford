@@ -10,7 +10,7 @@ var groupingUrl = 'https://api.projectoxford.ai/face/v0/groupings';
 var identifyUrl = 'https://api.projectoxford.ai/face/v0/identifications';
 var verifyUrl = 'https://api.projectoxford.ai/face/v0/verifications';
 var personGroupUrl = 'https://api.projectoxford.ai/face/v0/persongroups';
-var personUrl = 'https://api.projectoxford.ai/face/v0/persongroups/{personGroupId}/persons';
+var personUrl = 'https://api.projectoxford.ai/face/v0/persongroups';
 
 var face = function face(key) {
     var _return = function _return(error, response, resolve, reject) {
@@ -38,7 +38,8 @@ var face = function face(key) {
                 },
                 qs: options
             }, function (error, response) {
-                return _return(error, response, resolve, reject);
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
             }));
         });
     };
@@ -99,16 +100,16 @@ var face = function face(key) {
     /**
      * Detect similar faces using faceIds (as returned from the detect API)
      * ------------------------------------------------------------------------------------
-     * @param  {string[]} faces     - Array of faceIds to use
-     * @return {Promise}            - Promise resolving with the resulting JSON
+     * @param  {string} sourceFace          - String of faceId for the source face
+     * @param  {string[]} candidateFaces    - Array of faceIds to use as candidates
+     * @return {Promise}                    - Promise resolving with the resulting JSON
      */
-    var similar = function similar(faces) {
+    var similar = function similar(sourceFace, candidateFaces) {
         return new _Promise(function (resolve, reject) {
-            if (faces.length === 1) {
-                faces = { faceId: faces[0] };
-            } else {
-                faces = { faceIds: faces };
-            }
+            var faces = {
+                faceId: sourceFace,
+                faceIds: candidateFaces
+            };
 
             request.post({
                 uri: similarUrl,
@@ -260,7 +261,8 @@ var face = function face(key) {
          */
         'delete': function _delete(personGroupId) {
             return new _Promise(function (resolve, reject) {
-                request['delete']({
+                request({
+                    method: 'DELETE',
                     uri: personGroupUrl + '/' + personGroupId,
                     headers: { 'Ocp-Apim-Subscription-Key': key }
                 }, function (error, response) {
@@ -289,6 +291,7 @@ var face = function face(key) {
                         return reject(error);
                     }
 
+                    response.body = JSON.parse(response.body);
                     return resolve(response);
                 });
             });
@@ -312,6 +315,7 @@ var face = function face(key) {
                         return reject(error);
                     }
 
+                    response.body = JSON.parse(response.body);
                     return resolve(response);
                 });
             });
@@ -337,6 +341,7 @@ var face = function face(key) {
                         return reject(error);
                     }
 
+                    response.body = JSON.parse(response.body);
                     return resolve(response);
                 });
             });
@@ -384,6 +389,7 @@ var face = function face(key) {
                         return reject(error);
                     }
 
+                    response.body = JSON.parse(response.body);
                     return resolve(response);
                 });
             });
@@ -425,7 +431,8 @@ var face = function face(key) {
          */
         deleteFace: function deleteFace(personGroupId, personId, faceId) {
             return new _Promise(function (resolve, reject) {
-                request['delete']({
+                request({
+                    method: 'DELETE',
                     uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/faces/' + faceId,
                     headers: { 'Ocp-Apim-Subscription-Key': key }
                 }, function (error, response) {
@@ -470,7 +477,8 @@ var face = function face(key) {
                     uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/faces/' + faceId,
                     headers: { 'Ocp-Apim-Subscription-Key': key }
                 }, function (error, response) {
-                    return _return(error, response, resolve, reject);
+                    response.body = JSON.parse(response.body);
+                    _return(error, response, resolve, reject);
                 });
             });
         },
@@ -512,11 +520,31 @@ var face = function face(key) {
          */
         'delete': function _delete(personGroupId, personId) {
             return new _Promise(function (resolve, reject) {
-                request['delete']({
+                request({
+                    method: 'DELETE',
                     uri: personUrl + '/' + personGroupId + '/persons/' + personId,
                     headers: { 'Ocp-Apim-Subscription-Key': key }
                 }, function (error, response) {
                     return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Gets an existing person from a person group.
+         *
+         * @param {string} personGroupId     - The target person's person group.
+         * @param {string} personId          - The target person to get.
+         * @return {Promise}                 - Promise resolving with the resulting JSON
+         */
+        get: function get(personGroupId, personId) {
+            return new _Promise(function (resolve, reject) {
+                request({
+                    uri: personUrl + '/' + personGroupId + '/persons/' + personId,
+                    headers: { 'Ocp-Apim-Subscription-Key': key }
+                }, function (error, response) {
+                    response.body = JSON.parse(response.body);
+                    _return(error, response, resolve, reject);
                 });
             });
         },
@@ -559,7 +587,8 @@ var face = function face(key) {
                     uri: personUrl + '/' + personGroupId + '/persons',
                     headers: { 'Ocp-Apim-Subscription-Key': key }
                 }, function (error, response) {
-                    return _return(error, response, resolve, reject);
+                    response.body = JSON.parse(response.body);
+                    _return(error, response, resolve, reject);
                 });
             });
         }

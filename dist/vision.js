@@ -33,7 +33,8 @@ var vision = function vision(key) {
                 },
                 qs: options
             }, function (error, response) {
-                return _return(error, JSON.parse(response), resolve, reject);
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
             }));
         });
     }
@@ -108,7 +109,8 @@ var vision = function vision(key) {
                 },
                 qs: options
             }, function (error, response) {
-                return _return(error, response, resolve, reject);
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
             })).pipe(pipe);
         });
     }

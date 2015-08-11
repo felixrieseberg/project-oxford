@@ -30,7 +30,10 @@ var vision = function (key) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options
-            }, (error, response) => _return(error, JSON.parse(response), resolve, reject)));
+            }, (error, response) => {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
+            }));
         });
     }
 
@@ -101,8 +104,10 @@ var vision = function (key) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject)))
-            .pipe(pipe);
+            }, (error, response) => {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
+            })).pipe(pipe);
         });
     }
 
