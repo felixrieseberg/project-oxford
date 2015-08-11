@@ -1,3 +1,5 @@
+'use strict';
+
 var face = require('./face.js'),
     vision = require('./vision.js'),
     oxford = {};

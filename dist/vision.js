@@ -1,12 +1,14 @@
+'use strict';
+
 var request = require('request'),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const analyzeUrl = 'https://api.projectoxford.ai/vision/v1/analyses';
-const thumbnailUrl = 'https://api.projectoxford.ai/vision/v1/thumbnails';
-const ocrUrl = 'https://api.projectoxford.ai/vision/v1/ocr';
+var analyzeUrl = 'https://api.projectoxford.ai/vision/v1/analyses';
+var thumbnailUrl = 'https://api.projectoxford.ai/vision/v1/thumbnails';
+var ocrUrl = 'https://api.projectoxford.ai/vision/v1/ocr';
 
-var vision = function (key) {
+var vision = function vision(key) {
     function _return(error, response, resolve, reject) {
         if (error) {
             return reject(error);
@@ -30,7 +32,9 @@ var vision = function (key) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options
-            }, (error, response) => _return(error, JSON.parse(response), resolve, reject)));
+            }, function (error, response) {
+                return _return(error, JSON.parse(response), resolve, reject);
+            }));
         });
     }
 
@@ -44,11 +48,13 @@ var vision = function (key) {
         return new _Promise(function (resolve, reject) {
             request.post({
                 uri: analyzeUrl,
-                headers: {'Ocp-Apim-Subscription-Key': key},
+                headers: { 'Ocp-Apim-Subscription-Key': key },
                 json: true,
-                body: {url: image},
+                body: { url: image },
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject));
+            }, function (error, response) {
+                return _return(error, response, resolve, reject);
+            });
         });
     }
 
@@ -67,16 +73,16 @@ var vision = function (key) {
      * @return {[type]}         [description]
      */
     function analyzeImage(options) {
-        let test = /(ImageType)|(Color)|(Faces)|(Adult)|(Categories)/;
-        let query = [];
+        var test = /(ImageType)|(Color)|(Faces)|(Adult)|(Categories)/;
+        var query = [];
 
-        Object.keys(options).forEach((value, key) => {
+        Object.keys(options).forEach(function (value, key) {
             if (key.toString().match(test) && value) {
                 query.push(key.toString());
             }
         });
 
-        let qs = {visualFeatures: query.join()};
+        var qs = { visualFeatures: query.join() };
 
         if (options.path) {
             return _analyzeLocal(options.path, qs);
@@ -101,8 +107,9 @@ var vision = function (key) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject)))
-            .pipe(pipe);
+            }, function (error, response) {
+                return _return(error, response, resolve, reject);
+            })).pipe(pipe);
         });
     }
 
@@ -116,12 +123,13 @@ var vision = function (key) {
         return new _Promise(function (resolve, reject) {
             request.post({
                 uri: thumbnailUrl,
-                headers: {'Ocp-Apim-Subscription-Key': key},
+                headers: { 'Ocp-Apim-Subscription-Key': key },
                 json: true,
-                body: {url: image},
+                body: { url: image },
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject))
-            .pipe(pipe);
+            }, function (error, response) {
+                return _return(error, response, resolve, reject);
+            }).pipe(pipe);
         });
     }
 
@@ -141,10 +149,10 @@ var vision = function (key) {
      * @return {Promise}                        - Promise resolving with the resulting JSON
      */
     function thumbnail(options) {
-        let qs = {
-            width: (options.width) ? options.width : 50,
-            height: (options.height) ? options.height : 50,
-            smartCropping: (options.smartCropping) ? options.smartCropping : false
+        var qs = {
+            width: options.width ? options.width : 50,
+            height: options.height ? options.height : 50,
+            smartCropping: options.smartCropping ? options.smartCropping : false
         };
 
         if (options.path) {
@@ -170,7 +178,9 @@ var vision = function (key) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject)));
+            }, function (error, response) {
+                return _return(error, response, resolve, reject);
+            }));
         });
     }
 
@@ -184,11 +194,13 @@ var vision = function (key) {
         return new _Promise(function (resolve, reject) {
             request.post({
                 uri: ocrUrl,
-                headers: {'Ocp-Apim-Subscription-Key': key},
+                headers: { 'Ocp-Apim-Subscription-Key': key },
                 json: true,
-                body: {url: image},
+                body: { url: image },
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject));
+            }, function (error, response) {
+                return _return(error, response, resolve, reject);
+            });
         });
     }
 
@@ -204,9 +216,9 @@ var vision = function (key) {
      * @return {Promise}                            - Promise resolving with the resulting JSON
      */
     function ocr(options) {
-        let qs = {
-            language: (options.language) ? options.language : 'unk',
-            detectOrientation: (options.detectOrientation) ? options.detectOrientation : true
+        var qs = {
+            language: options.language ? options.language : 'unk',
+            detectOrientation: options.detectOrientation ? options.detectOrientation : true
         };
 
         if (options.path) {

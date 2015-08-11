@@ -19,10 +19,19 @@ module.exports = function (grunt) {
                 config: '.jscsrc',
                 esnext: true
             }
+        },
+        babel: {
+            dist: {
+                files: {
+                    'dist/face.js': 'src/face.js',
+                    'dist/vision.js': 'src/vision.js',
+                    'dist/oxford.js': 'src/oxford.js',
+                }
+            }
         }
     });
 
-    grunt.registerTask('codestyle', ['jshint', 'jscs']);
-    grunt.registerTask('test', ['codestyle']);
-    grunt.registerTask('default', ['test']);
+    grunt.registerTask('compile', 'babel');
+    grunt.registerTask('test', ['jshint', 'jscs']);
+    grunt.registerTask('default', ['test', 'compile']);
 };
