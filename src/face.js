@@ -27,16 +27,16 @@ var face = function (key) {
     };
 
     /**
-     * (Private) Call the Face Detected API using a local image
+     * (Private) Call the Face Detected API using a stream of an image
      *
      * @private
-     * @param  {string} image       - Path to the image
+     * @param  {stream} stream      - Stream for the image
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    function _detectLocal(image, options) {
+    function _detectStream(stream, options) {
         return new _Promise(function (resolve, reject) {
-            fs.createReadStream(image).pipe(request.post({
+            stream.pipe(request.post({
                 uri: detectUrl,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
@@ -48,6 +48,18 @@ var face = function (key) {
                 _return(error, response, resolve, reject);
             }));
         });
+    };
+
+    /**
+     * (Private) Call the Face Detected API using a local image
+     *
+     * @private
+     * @param  {string} image       - Path to the image
+     * @param  {object} options     - Querystring object
+     * @return {Promise}            - Promise resolving with the resulting JSON
+     */
+    function _detectLocal(image, options) {
+        return _detectStream(fs.createReadStream(image), options);
     };
 
     /**
@@ -70,6 +82,7 @@ var face = function (key) {
         });
     };
 
+
     /**
      * Call the Face Detected API
      * Detects human faces in an image and returns face locations, face landmarks, and
@@ -80,6 +93,7 @@ var face = function (key) {
      * @param  {object}  options                        - Options object
      * @param  {string}  options.url                    - URL to image to be used
      * @param  {string}  options.path                   - Path to image to be used
+     * @param  {stream}  options.stream                 - Stream for image to be used
      * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesAge            - Analyze age?
      * @param  {boolean} options.analyzesGender         - Analyze gender?
@@ -100,6 +114,10 @@ var face = function (key) {
 
         if (options.path && options.path !== '') {
             return _detectLocal(options.path, qs);
+        }
+
+        if (options.stream) {
+            return _detectStream(options.stream, qs);
         }
     };
 
