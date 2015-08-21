@@ -12,7 +12,32 @@ var billFaces = [],
     billPersonId;
  
 describe('Project Oxford Face API Test', function () {
+    afterEach(function() {
+        // delay after each test to prevent throttling
+        var now = +new Date() + 250;
+        while(now > +new Date());
+    });
+
     describe('#detect()', function () {
+        it('detects a face in a stream', function (done) {
+            client.face.detect({
+                stream: fs.createReadStream('./test/images/face1.jpg'),
+                analyzesFaceLandmarks: true,
+                analyzesAge: true,
+                analyzesGender: true,
+                analyzesHeadPose: true
+            }).then(function (response) {
+                assert.ok(response.body[0].faceId);
+                assert.ok(response.body[0].faceRectangle);
+                assert.ok(response.body[0].faceLandmarks);
+                assert.ok(response.body[0].attributes.gender);
+                assert.ok(response.body[0].attributes.headPose);
+
+                assert.equal(response.body[0].attributes.gender, 'male');
+                done();
+            });
+        });
+
         it('detects a face in a local file', function (done) {
             client.face.detect({
                 path: './test/images/face1.jpg',
@@ -296,6 +321,15 @@ describe('Project Oxford Face API Test', function () {
 });
 
 describe('Project Oxford Vision API Test', function () {
+    before(function() {
+        // ensure the output directory exists
+        if(!fs.existsSync('./test/output')){
+            fs.mkdirSync('./test/output', 0766, function(err){ 
+                throw err;
+            });
+        }
+    });
+
     it('analyzes a local image', function (done) {
         this.timeout(10000);
         client.vision.analyzeImage({

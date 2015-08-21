@@ -115,7 +115,6 @@ var vision = function (key) {
                 },
                 qs: options
             }, (error, response) => {
-                response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
             })).pipe(pipe);
         });
