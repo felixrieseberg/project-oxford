@@ -1,6 +1,6 @@
 ## Project Oxford for Node.js
 [![npm version](https://badge.fury.io/js/project-oxford.svg)](http://badge.fury.io/js/project-oxford)
-[![Build Status](https://travis-ci.org/scsouthw/project-oxford.svg?branch=master)](https://travis-ci.org/scsouthw/project-oxford)
+[![Build Status](https://travis-ci.org/felixrieseberg/project-oxford.svg?branch=master)](https://travis-ci.org/felixrieseberg/project-oxford)
 
 
 This package contains a set of intelligent APIs understanding images: It can detect and analyze people's faces, their age, gender, and similarity. It can identify people based on a set of images. It can understand what is displayed in a picture and crop it according to where the important features are. It can tell you whether an image contains adult content, what the main colors are, and which of your images belong in a group. If your image features text, it will tell you the language and return the text as a string. It's basically magic. For more details on the Project Oxford API, please visit [projectoxford.ai](projectoxford.ai/demo/face#detection).
@@ -102,6 +102,7 @@ and Find Similar.
 | options | <code>object</code> | Options object |
 | options.url | <code>string</code> | URL to image to be used |
 | options.path | <code>string</code> | Path to image to be used |
+| options.stream | <code>stream</code> | Stream for image to be used |
 | options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
 | options.analyzesAge | <code>boolean</code> | Analyze age? |
 | options.analyzesGender | <code>boolean</code> | Analyze gender? |

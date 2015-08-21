@@ -5,7 +5,8 @@
   "repository": "https://github.com/felixrieseberg/project-oxford",
   "main": "dist/oxford.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "docs": "jsdoc2md dist/*.js > api.md"
   },
   "author": "Felix Rieseberg",
   "license": "MIT",

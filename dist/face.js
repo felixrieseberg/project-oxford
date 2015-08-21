@@ -394,6 +394,7 @@ var face = function face(key) {
                     uri: personGroupUrl,
                     headers: { 'Ocp-Apim-Subscription-Key': key }
                 }, function (error, response) {
+                    response.body = JSON.parse(response.body);
                     return _return(error, response, resolve, reject);
                 });
             });
