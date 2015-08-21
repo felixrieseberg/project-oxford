@@ -19,8 +19,16 @@ var vision = function (key) {
             return reject(error);
         }
 
-        return resolve(response);
-    }
+        if (typeof response.body === "string" && response.body.length > 0) {
+            response.body = JSON.parse(response.body);
+        }
+
+        if (response.statusCode != 200) {
+            reject(response.body);
+        }
+
+        return resolve(response.body);
+    };
 
     /**
      * (Private) Analyze a local image, using a fs pipe

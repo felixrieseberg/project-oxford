@@ -21,8 +21,12 @@ var vision = function vision(key) {
             return reject(error);
         }
 
-        return resolve(response);
-    }
+        if (response.statusCode != 200) {
+            reject(response.body);
+        }
+
+        return resolve(response.body);
+    };
 
     /**
      * (Private) Analyze a local image, using a fs pipe
@@ -119,7 +123,6 @@ var vision = function vision(key) {
                 },
                 qs: options
             }, function (error, response) {
-                response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
             })).pipe(pipe);
         });
