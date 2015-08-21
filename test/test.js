@@ -145,9 +145,9 @@ describe('Project Oxford Face API Test', function () {
     });
     
     describe('#PersonGroup', function () {
-        it('cleans up before testing', function (done) {
+        before(function(done) {
             this.timeout(5000);
-            // Fine, you got me. This isn't really a test. In order to test the
+            // In order to test the
             // training feature, we have to start trainign - sadly, we can't
             // delete the group then. So we clean up before we run tests - and to wait
             // for cleanup to finish, we're just using done().
@@ -164,7 +164,7 @@ describe('Project Oxford Face API Test', function () {
                     done();
                 });
             });
-        })
+        });
 
         it('creates a PersonGroup', function (done) {
             client.face.personGroup.create(personGroupId, 'po-node-test-group', 'test-data').then(function (response) {
@@ -364,6 +364,12 @@ describe('Project Oxford Vision API Test', function () {
                 throw err;
             });
         }
+    });
+
+    afterEach(function() {
+        // delay after each test to prevent throttling
+        var now = +new Date() + 250;
+        while(now > +new Date());
     });
 
     it('analyzes a local image', function (done) {
