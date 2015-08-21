@@ -14,7 +14,7 @@ var billFaces = [],
 describe('Project Oxford Face API Test', function () {
     afterEach(function() {
         // delay after each test to prevent throttling
-        var now = +new Date() + 500;
+        var now = +new Date() + 250;
         while(now > +new Date());
     });
 
@@ -364,6 +364,12 @@ describe('Project Oxford Vision API Test', function () {
                 throw err;
             });
         }
+    });
+
+    afterEach(function() {
+        // delay after each test to prevent throttling
+        var now = +new Date() + 250;
+        while(now > +new Date());
     });
 
     it('analyzes a local image', function (done) {
