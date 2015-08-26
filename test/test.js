@@ -226,10 +226,10 @@ describe('Project Oxford Face API Test', function () {
 
         it('deletes a PersonGroup', function (done) {
             client.face.personGroup.delete(personGroupId).then(function (response) {
-                assert.ok(true, "void response");
+                assert.ok(!response, "void response");
                 done();
             }).catch(function (response) {
-                assert.equal(response.code, 'PersonGroupTrainingNotFinished');
+                assert.equal(JSON.parse(response).code, 'PersonGroupTrainingNotFinished');
                 done();
             });
         });
