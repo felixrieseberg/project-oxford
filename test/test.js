@@ -20,6 +20,7 @@ describe('Project Oxford Face API Test', function () {
 
     describe('#detect()', function () {
         it('detects a face in a stream', function (done) {
+            this.timeout(10000);
             client.face.detect({
                 stream: fs.createReadStream('./test/images/face1.jpg'),
                 analyzesFaceLandmarks: true,
@@ -39,6 +40,7 @@ describe('Project Oxford Face API Test', function () {
         });
 
         it('detects a face in a local file', function (done) {
+            this.timeout(10000);
             client.face.detect({
                 path: './test/images/face1.jpg',
                 analyzesFaceLandmarks: true,
@@ -58,6 +60,7 @@ describe('Project Oxford Face API Test', function () {
         });
 
         it('detects a face in a remote file', function (done) {
+            this.timeout(10000);
             client.face.detect({
                 url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
                 analyzesFaceLandmarks: true,
@@ -226,10 +229,10 @@ describe('Project Oxford Face API Test', function () {
 
         it('deletes a PersonGroup', function (done) {
             client.face.personGroup.delete(personGroupId).then(function (response) {
-                assert.ok(true, "void response");
+                assert.ok(!response, "void response");
                 done();
             }).catch(function (response) {
-                assert.equal(response.code, 'PersonGroupTrainingNotFinished');
+                assert.equal(JSON.parse(response).code, 'PersonGroupTrainingNotFinished');
                 done();
             });
         });
