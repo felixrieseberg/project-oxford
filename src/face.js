@@ -23,10 +23,6 @@ var face = function (key) {
             return reject(error);
         }
 
-        if (typeof response.body === "string" && response.body.length > 0) {
-            response.body = JSON.parse(response.body);
-        }
-
         if (response.statusCode != 200) {
             reject(response.body);
         }
