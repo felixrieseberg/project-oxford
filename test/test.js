@@ -21,7 +21,7 @@ describe('Project Oxford Face API Test', function () {
 
     describe('#detect()', function () {
         it('detects a face in a stream', function (done) {
-            this.timeout(10000);
+            this.timeout(30000);
             client.face.detect({
                 stream: fs.createReadStream('./test/images/face1.jpg'),
                 analyzesFaceLandmarks: true,
@@ -48,7 +48,7 @@ describe('Project Oxford Face API Test', function () {
         });
 
         it('detects a face in a local file', function (done) {
-            this.timeout(10000);
+            this.timeout(30000);
             client.face.detect({
                 path: './test/images/face1.jpg',
                 analyzesFaceLandmarks: true,
@@ -68,7 +68,7 @@ describe('Project Oxford Face API Test', function () {
         });
 
         it('detects a face in a remote file', function (done) {
-            this.timeout(10000);
+            this.timeout(30000);
             client.face.detect({
                 url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
                 analyzesFaceLandmarks: true,
@@ -92,7 +92,7 @@ describe('Project Oxford Face API Test', function () {
         it('detects similar faces', function (done) {
             var detects = [];
 
-            this.timeout(10000);
+            this.timeout(30000);
 
             detects.push(client.face.detect({
                 path: './test/images/face1.jpg',
@@ -121,7 +121,7 @@ describe('Project Oxford Face API Test', function () {
         it('detects groups faces', function (done) {
             var faceIds = [];
 
-            this.timeout(10000);
+            this.timeout(30000);
 
             client.face.detect({
                 path: './test/images/face-group.jpg',
@@ -142,7 +142,7 @@ describe('Project Oxford Face API Test', function () {
 
     describe('#verify()', function () {
         it('verifies a face against another face', function (done) {
-            this.timeout(10000);
+            this.timeout(30000);
 
             assert.equal(billFaces.length, 2);
 
@@ -384,7 +384,7 @@ describe('Project Oxford Vision API Test', function () {
     });
 
     it('analyzes a local image', function (done) {
-        this.timeout(10000);
+        this.timeout(30000);
         client.vision.analyzeImage({
             path: './test/images/vision.jpg',
             ImageType: true,
@@ -406,7 +406,7 @@ describe('Project Oxford Vision API Test', function () {
     });
 
     it('analyzes an online image', function (done) {
-        this.timeout(10000);
+        this.timeout(30000);
         client.vision.analyzeImage({
             url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
             ImageType: true,
@@ -428,7 +428,7 @@ describe('Project Oxford Vision API Test', function () {
     });
     
     it('creates a thumbnail for a local image', function (done) {
-        this.timeout(10000);
+        this.timeout(30000);
         client.vision.thumbnail({
             path: './test/images/vision.jpg',
             pipe: fs.createWriteStream('./test/output/thumb2.jpg'),
@@ -444,7 +444,7 @@ describe('Project Oxford Vision API Test', function () {
     });
 
     it('creates a thumbnail for an online image', function (done) {
-        this.timeout(10000);
+        this.timeout(30000);
         client.vision.thumbnail({
             url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
             pipe: fs.createWriteStream('./test/output/thumb1.jpg'),
@@ -460,7 +460,7 @@ describe('Project Oxford Vision API Test', function () {
     });
     
     it('runs OCR on a local image', function (done) {
-        this.timeout(10000);
+        this.timeout(30000);
         client.vision.ocr({
             path: './test/images/vision.jpg',
             language: 'en',
@@ -474,7 +474,7 @@ describe('Project Oxford Vision API Test', function () {
     });
 
     it('runs OCR on an online image', function (done) {
-        this.timeout(10000);
+        this.timeout(30000);
         client.vision.ocr({
             url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
             language: 'en',
