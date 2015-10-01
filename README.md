@@ -24,8 +24,8 @@ client.face.detect({
     analyzeAge: true,
     analyzeGender: true
 }).then(function (response) {
-    console.log('The age is: ' + response.body.attributes.age);
-    console.log('The gender is: ' + response.body.attributes.gender);
+    console.log('The age is: ' + response[0].attributes.age);
+    console.log('The gender is: ' + response[0].attributes.gender);
 });
 ```
 
