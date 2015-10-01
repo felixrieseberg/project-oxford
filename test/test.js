@@ -9,6 +9,7 @@ var assert = require('assert'),
 var billFaces = [],
     personGroupId = uuid.v4(),
     personGroupId2 = uuid.v4(),
+    subValid = true,
     billPersonId;
  
 describe('Project Oxford Face API Test', function () {
@@ -31,11 +32,18 @@ describe('Project Oxford Face API Test', function () {
                 assert.ok(response[0].faceId);
                 assert.ok(response[0].faceRectangle);
                 assert.ok(response[0].faceLandmarks);
+                assert.ok(response[0].attributes.age);
                 assert.ok(response[0].attributes.gender);
                 assert.ok(response[0].attributes.headPose);
 
                 assert.equal(response[0].attributes.gender, 'male');
                 done();
+            }).catch(function (error) {
+                // Check if subscription is valid
+                if (error.statusCode === 403 || error.message === 'Subscription Expired!') {
+                    console.error('Subscription key is not valid, all tests will fail!');
+                }
+                throw error;
             });
         });
 
