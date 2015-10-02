@@ -21,8 +21,8 @@ Now that you got your client running, you're ready to do some pretty smart stuff
 ```
 client.face.detect({
     path: 'myFolder/myFace.jpg',
-    analyzeAge: true,
-    analyzeGender: true
+    analyzesAge: true,
+    analyzesGender: true
 }).then(function (response) {
     console.log('The age is: ' + response[0].attributes.age);
     console.log('The gender is: ' + response[0].attributes.gender);
