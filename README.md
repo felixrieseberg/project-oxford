@@ -28,7 +28,25 @@ client.face.detect({
     console.log('The gender is: ' + response[0].attributes.gender);
 });
 ```
+Have a picture of a person and want a computed guess about their emotions?
 
+```
+client.emotion.analyzeEmotion({
+    path: './myFace.jpg',
+}).then(function (response) {
+    console.log(response);
+});
+```
+Or, you can add the rectangle of the face yourself, in the form "left,top,width,height". Delimited multiple face rectangles with a “;”.
+
+```
+client.emotion.analyzeEmotion({
+    path: './myFace.jpg',
+    faceRectangles: '10, 10, 100, 100'
+}).then(function (response) {
+    console.log(response);
+});
+```
 Creating a smart-cropped thumbnail:
 ```
 client.vision.thumbnail({
@@ -223,6 +241,29 @@ characters into a machine-usable character stream.
 | options.path | <code>string</code> | Path to image to be analyzed |
 | options.language | <code>string</code> | BCP-47 language code of the text to be detected in the image. Default value is "unk", then the service will auto detect the language of the text in the image. |
 | options.detectOrientation | <code>string</code> | Detect orientation of text in the image |
+
+
+<a name="Client.emotion"></a>
+### Client.emotion : <code>object</code>
+**Kind**: static namespace of <code>[Client](#Client)</code>
+
+* [.emotion](#Client.emotion) : <code>object</code>
+  * [~analyzeEmotion(options)](#Client.emotion..analyzeImage) ⇒ <code>Promise</code>
+
+<a name="Client.emotion..analyzeEmotion"></a>
+#### emotion.analyzeEmotion(options) ⇒ <code>Promise</code>
+Recognizes the emotions expressed by one or more people in an image,
+as well as returns a bounding box for the face.
+The emotions detected are happiness, sadness, surprise, anger, fear, contempt, and disgust or neutral.
+
+**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | Options object |
+| options.url | <code>string</code> | Url to image to be analyzed |
+| options.path | <code>string</code> | Path to image to be analyzed |
+| options.faceRectangles | <code>string (optional)</code> | A face rectangle is in the form “left,top,width,height”. Delimited multiple face rectangles with a “;”. |
 
 ## License
 Licensed as MIT - please see LICENSE for details.

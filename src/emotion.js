@@ -67,9 +67,7 @@ var emotion = function(key) {
     };
 
     function analyzeEmotion(options) {
-        let query = [];
-
-        let qs = {faceRectangles: options};
+        let qs = {faceRectangles: options.faceRectangles};
 
         if (options.path) {
             return _emotionLocal(options.path, qs);

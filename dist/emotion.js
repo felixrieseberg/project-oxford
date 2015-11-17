@@ -70,9 +70,7 @@ var emotion = function emotion(key) {
     };
 
     function analyzeEmotion(options) {
-        var query = [];
-
-        var qs = { faceRectangles: options };
+        var qs = { faceRectangles: options.faceRectangles };
 
         if (options.path) {
             return _emotionLocal(options.path, qs);
