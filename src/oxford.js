@@ -1,6 +1,6 @@
 var face = require('./face.js'),
     vision = require('./vision.js'),
-    emotion = require('./emotion.js')
+    emotion = require('./emotion.js'),
     oxford = {};
 
 /**

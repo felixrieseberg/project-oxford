@@ -2,6 +2,7 @@
 
 var face = require('./face.js'),
     vision = require('./vision.js'),
+    emotion = require('./emotion.js'),
     oxford = {};
 
 /**
@@ -17,6 +18,7 @@ oxford.Client = function (key) {
     this._key = key;
     this.face = face(key);
     this.vision = vision(key);
+    this.emotion = emotion(key);
 };
 
 module.exports = oxford;
