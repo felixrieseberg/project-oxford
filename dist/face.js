@@ -24,7 +24,7 @@ var face = function face(key) {
         if (error) {
             return reject(error);
         }
-        
+
         if (response.statusCode != 200) {
             reject(response.body);
         }
