@@ -1,11 +1,12 @@
-var request = require('request'),
+var request = require('request').defaults({
+        baseUrl: 'https://api.projectoxford.ai/emotion/v1.0/',
+        headers: {'User-Agent': 'nodejs/0.3.0'}}),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const emotionUrl = 'https://api.projectoxford.ai/emotion/v1.0/recognize';
+const emotionUrl = '/recognize';
 
-
-var emotion = function(key) {
+var emotion = function (key) {
     /**
      * @private
      */
@@ -14,12 +15,12 @@ var emotion = function(key) {
             return reject(error);
         }
 
-        if (response.statusCode != 200) {
+        if (response.statusCode !== 200) {
             reject(response.body);
         }
 
         return resolve(response.body);
-    };
+    }
 
     /**
      * (Private) Analyze a local image, using a fs pipe
@@ -42,7 +43,7 @@ var emotion = function(key) {
                 _return(error, response, resolve, reject);
             }));
         });
-    };
+    }
 
     /**
      * (Private) Analyze an online image
@@ -64,10 +65,22 @@ var emotion = function(key) {
                 qs: options
             }, (error, response) => _return(error, response, resolve, reject));
         });
-    };
+    }
 
     function analyzeEmotion(options) {
-        let qs = {faceRectangles: options.faceRectangles};
+        let qs = {};
+        if (options && options.faceRectangles) {
+            var rects = [];
+            options.faceRectangles.forEach(function (rect) {
+                var r = [];
+                r.push(rect.left);
+                r.push(rect.top);
+                r.push(rect.width);
+                r.push(rect.height);
+                rects.push(r.join(','));
+            });
+            qs.faceRectangles = rects.join(';');
+        }
 
         if (options.path) {
             return _emotionLocal(options.path, qs);
@@ -75,11 +88,11 @@ var emotion = function(key) {
         if (options.url) {
             return _emotionOnline(options.url, qs);
         }
-    };
+    }
 
     return {
         analyzeEmotion: analyzeEmotion
     };
-}
+};
 
 module.exports = emotion;

@@ -1,14 +1,17 @@
-var request = require('request'),
+var request = require('request').defaults({
+        baseUrl: 'https://api.projectoxford.ai/face/v1.0/',
+        headers: {'User-Agent': 'nodejs/0.3.0'}}),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const detectUrl = 'https://api.projectoxford.ai/face/v0/detections';
-const similarUrl = 'https://api.projectoxford.ai/face/v0/findsimilars';
-const groupingUrl = 'https://api.projectoxford.ai/face/v0/groupings';
-const identifyUrl = 'https://api.projectoxford.ai/face/v0/identifications';
-const verifyUrl = 'https://api.projectoxford.ai/face/v0/verifications';
-const personGroupUrl = 'https://api.projectoxford.ai/face/v0/persongroups';
-const personUrl = 'https://api.projectoxford.ai/face/v0/persongroups';
+const detectUrl = '/detect';
+const similarUrl = '/findsimilars';
+const groupingUrl = '/group';
+const identifyUrl = '/identify';
+const verifyUrl = '/verify';
+const personGroupUrl = '/persongroups';
+const personUrl = '/persongroups';
+const faceListUrl = '/facelists';
 
 /**
  * @namespace
@@ -23,25 +26,47 @@ var face = function (key) {
             return reject(error);
         }
 
-        if (response.statusCode != 200) {
-            reject(response.body);
+        if (response.statusCode !== 200 && response.statusCode !== 202) {
+            reject(response.body.error || response.body);
         }
 
         return resolve(response.body);
-    };
+    }
 
     /**
-     * (Private) Call the Face Detected API using a stream of an image
+     * (Private) Post an online image to a face API URL
      *
      * @private
+     * @param  {string} url         - Url to POST
+     * @param  {string} image       - Url to the image
+     * @param  {object} options     - Querystring object
+     * @return {Promise}            - Promise resolving with the resulting JSON
+     */
+    function _postOnline(url, image, options) {
+        return new _Promise(function (resolve, reject) {
+            request.post({
+                uri: url,
+                headers: {'Ocp-Apim-Subscription-Key': key},
+                json: true,
+                body: {url: image},
+                qs: options
+            }, (error, response) => _return(error, response, resolve, reject));
+        });
+    }
+
+    /**
+     * (Private) Post an image stream to a face API URL
+     *
+     * @private
+     * @param  {string} url         - Url to POST
      * @param  {stream} stream      - Stream for the image
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    function _detectStream(stream, options) {
+    function _postStream(url, stream, options) {
         return new _Promise(function (resolve, reject) {
             stream.pipe(request.post({
-                uri: detectUrl,
+                uri: url,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/octet-stream'
@@ -52,40 +77,44 @@ var face = function (key) {
                 _return(error, response, resolve, reject);
             }));
         });
-    };
+    }
 
     /**
-     * (Private) Call the Face Detected API using a local image
+     * (Private) Post a local image file to a face API URL
      *
      * @private
+     * @param  {string} url         - Url to POST
      * @param  {string} image       - Path to the image
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    function _detectLocal(image, options) {
-        return _detectStream(fs.createReadStream(image), options);
-    };
+    function _postLocal(url, image, options) {
+        return _postStream(url, fs.createReadStream(image), options);
+    }
 
     /**
-     * (Private) Call the Face Detected API using a uri to an online image
+     * (Private)  Post an image to a face API URL.
      *
      * @private
-     * @param  {string} image       - Url to the image
-     * @param  {object} options     - Querystring object
-     * @return {Promise}            - Promise resolving with the resulting JSON
+     * @param  {string} url           - URL to post
+     * @param  {object} source        - Union of sources
+     * @param  {string} source.url    - URL of image
+     * @param  {string} source.path   - Local path of image
+     * @param  {string} source.stream - Stream of image
+     * @param  {object} qs            - Querystring object
+     * @return {Promise}              - Promise resolving with the resulting JSON
      */
-    function _detectOnline(image, options) {
-        return new _Promise(function (resolve, reject) {
-            request.post({
-                uri: detectUrl,
-                headers: {'Ocp-Apim-Subscription-Key': key},
-                json: true,
-                body: {url: image},
-                qs: options
-            }, (error, response) => _return(error, response, resolve, reject));
-        });
-    };
-
+    function _postImage(url, source, qs) {
+        if (source.url && source.url !== '') {
+            return _postOnline(url, source.url, qs);
+        }
+        if (source.path && source.path !== '') {
+            return _postLocal(url, source.path, qs);
+        }
+        if (source.stream) {
+            return _postStream(url, source.stream, qs);
+        }
+    }
 
     /**
      * Call the Face Detected API
@@ -98,46 +127,66 @@ var face = function (key) {
      * @param  {string}  options.url                    - URL to image to be used
      * @param  {string}  options.path                   - Path to image to be used
      * @param  {stream}  options.stream                 - Stream for image to be used
+     * @param  {boolean} options.returnFaceId           - Include face ID in response?
      * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesAge            - Analyze age?
      * @param  {boolean} options.analyzesGender         - Analyze gender?
      * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
+     * @param  {boolean} options.analyzesSmile          - Analyze smile?
+     * @param  {boolean} options.analyzesFacialHair     - Analyze facial hair?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detect(options) {
+        let attributes = [];
+        if (options.analyzesAge) {
+            attributes.push('age');
+        }
+        if (options.analyzesGender) {
+            attributes.push('gender');
+        }
+        if (options.analyzesHeadPose) {
+            attributes.push('headPose');
+        }
+        if (options.analyzesSmile) {
+            attributes.push('smile');
+        }
+        if (options.analyzesFacialHair) {
+            attributes.push('facialHair');
+        }
         let qs = {
-            analyzesFaceLandmarks: options.analyzesFaceLandmarks ? true : false,
-            analyzesAge: options.analyzesAge ? true : false,
-            analyzesGender: options.analyzesGender ? true : false,
-            analyzesHeadPose: options.analyzesHeadPose ? true : false
+            returnFaceId: !!options.returnFaceId,
+            returnFaceLandmarks: !!options.analyzesFaceLandmarks,
+            returnFaceAttributes: attributes.join()
         };
 
-        if (options.url && options.url !== '') {
-            return _detectOnline(options.url, qs);
-        }
-
-        if (options.path && options.path !== '') {
-            return _detectLocal(options.path, qs);
-        }
-
-        if (options.stream) {
-            return _detectStream(options.stream, qs);
-        }
-    };
+        return _postImage(detectUrl, options, qs);
+    }
 
     /**
-     * Detect similar faces using faceIds (as returned from the detect API)
-     * @param  {string} sourceFace          - String of faceId for the source face
-     * @param  {string[]} candidateFaces    - Array of faceIds to use as candidates
-     * @return {Promise}                    - Promise resolving with the resulting JSON
+     * Detect similar faces using faceIds (as returned from the detect API), or faceListId
+     * (as returned from the facelist API).
+     * @param  {string}   sourceFace                  - String of faceId for the source face
+     * @param  {object}   options                     - Options object
+     * @param  {string[]} options.candidateFaces      - Array of faceIds to use as candidates
+     * @param  {string}   options.candidateFaceListId - Id of face list, created via FaceList.create
+     * @param  {Number}   options.maxCandidates       - Optional max number for top candidates (default is 20, max is 20)
+     * @return {Promise}                              - Promise resolving with the resulting JSON
      */
-    function similar(sourceFace, candidateFaces) {
+    function similar(sourceFace, options) {
         return new _Promise(function (resolve, reject) {
             let faces = {
-                faceId: sourceFace,
-                faceIds: candidateFaces
+                faceId: sourceFace
+            };
+            if (options) {
+                if (options.candidateFaceListId) {
+                    faces.faceListId = options.candidateFaceListId;
+                } else {
+                    faces.faceIds = options.candidateFaces;
+                }
+                if (options.maxCandidates) {
+                    faces.maxNumOfCandidatesReturned = options.maxCandidates;
+                }
             }
-
             request.post({
                 uri: similarUrl,
                 headers: {'Ocp-Apim-Subscription-Key': key},
@@ -145,7 +194,7 @@ var face = function (key) {
                 body: faces
             }, (error, response) => _return(error, response, resolve, reject));
         });
-    };
+    }
 
     /**
      * Divides candidate faces into groups based on face similarity using faceIds.
@@ -174,7 +223,7 @@ var face = function (key) {
                 body: faces
             }, (error, response) => _return(error, response, resolve, reject));
         });
-    };
+    }
 
     /**
      * Identifies persons from a person group by one or more input faces.
@@ -184,22 +233,18 @@ var face = function (key) {
      * identification API compares the input face to those persons' faces in person group and
      * returns the best-matched candidate persons, ranked by confidence.
      *
-     * @param  {string[]} faces     - Array of faceIds to use
-     * @return {Promise}            - Promise resolving with the resulting JSON
+     * @param  {string[]} faces                     - Array of faceIds to use
+     * @param  {string} personGroupId               - Id of person group from which faces will be identified
+     * @param  {Number} maxNumOfCandidatesReturned  - Optional max number of candidates per face (default=1, max=5)
+     * @return {Promise}                            - Promise resolving with the resulting JSON
      */
-    function identify(faces, options) {
+    function identify(faces, personGroupId, maxNumOfCandidatesReturned) {
         return new _Promise(function (resolve, reject) {
-            let body = {};
-
-            if (options && options.personGroupId) {
-                body.personGroupId = options.personGroupId;
-            }
-
-            if (options && options.maxNumOfCandidatesReturned) {
-                body.maxNumOfCandidatesReturned = options.maxNumOfCandidatesReturned;
-            }
-
-            body.faceIds = faces;
+            let body = {
+                faceIds: faces,
+                personGroupId: personGroupId,
+                maxNumOfCandidatesReturned: maxNumOfCandidatesReturned || 1
+            };
 
             request.post({
                 uri: identifyUrl,
@@ -208,7 +253,7 @@ var face = function (key) {
                 body: body
             }, (error, response) => _return(error, response, resolve, reject));
         });
-    };
+    }
 
     /**
      * Analyzes two faces and determine whether they are from the same person.
@@ -235,6 +280,163 @@ var face = function (key) {
                 return reject('Faces array must contain two face ids');
             }
         });
+    }
+
+    /**
+     * @namespace
+     * @memberof face
+     */
+    var faceList = {
+        /**
+         * Lists the faceListIds, and associated names and/or userData.
+         * @return {Promise} - Promise resolving with the resulting JSON
+         */
+        list: function () {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: faceListUrl,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    response.body = JSON.parse(response.body);
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Creates a new face list with a user-specified ID.
+         * A face list is a list of faces associated to be associated with a given person.
+         *
+         * @param  {string} faceListId          - Numbers, en-us letters in lower case, '-', '_'. Max length: 64
+         * @param  {object} options             - Optional parameters
+         * @param  {string} options.name        - Name of the face List
+         * @param  {string} options.userData    - User-provided data associated with the face list.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        create: function (faceListId, options) {
+            var body = {};
+            if (options) {
+                body.name = options.name;
+                body.userData = options.userData;
+            }
+            return new _Promise((resolve, reject) => {
+                request.put({
+                    uri: faceListUrl + '/' + faceListId,
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    json: true,
+                    body: body
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Creates a new person group with a user-specified ID.
+         * A person group is one of the most important parameters for the Identification API.
+         * The Identification searches person faces in a specified person group.
+         *
+         * @param  {string} faceListId          - Numbers, en-us letters in lower case, '-', '_'. Max length: 64
+         * @param  {object} options             - Optional parameters
+         * @param  {string} options.name        - Name of the face List
+         * @param  {string} options.userData    - User-provided data associated with the face list.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        update: function (faceListId, options) {
+            var body = {};
+            if (options) {
+                body.name = options.name;
+                body.userData = options.userData;
+            }
+            return new _Promise((resolve, reject) => {
+                request.patch({
+                    uri: faceListUrl + '/' + faceListId,
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    json: true,
+                    body: body
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Deletes an existing person group.
+         *
+         * @param  {string} faceListId          - ID of face list to delete
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        delete: function (faceListId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    method: 'DELETE',
+                    uri: faceListUrl + '/' + faceListId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Gets an existing face list.
+         *
+         * @param  {string} faceListId          - ID of face list to retrieve
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        get: function (faceListId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: faceListUrl + '/' + faceListId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    response.body = JSON.parse(response.body);
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Gets an existing face list.
+         *
+         * @param  {string} faceListId          - ID of face list to retrieve
+         * @param  {object} options             - Options object
+         * @param  {string} options.url         - URL to image to be used
+         * @param  {string} options.path        - Path to image to be used
+         * @param  {stream} options.stream      - Stream for image to be used
+         * @param  {string} options.name        - Optional name for the face
+         * @param  {string} options.userData    - Optional user-data for the face
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        addFace: function (faceListId, options) {
+            let url = faceListUrl + '/' + faceListId + '/persistedFaces';
+            let qs = {};
+            if (options) {
+                qs.name = options.name;
+                qs.userData = options.userData;
+            }
+            return _postImage(url, options, qs);
+        },
+
+        /**
+         * Delete a face from the face list.  The face ID will be an ID returned in the addFace method,
+         * not from the detect method.
+         *
+         * @param  {string} faceListId          - ID of face list to retrieve
+         * @param  {string} persistedFaceId     - ID of face in the face list
+         * @return {Promise}                    - Promise; successful response is empty
+         */
+        deleteFace: function (faceListId, persistedFaceId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    method: 'DELETE',
+                    uri: faceListUrl + '/' + faceListId + '/persistedFaces/' + persistedFaceId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        }
     };
 
     /**
@@ -326,7 +528,7 @@ var face = function (key) {
 
         /**
          * Starts a person group training.
-             * Training is a necessary preparation process of a person group before identification.
+         * Training is a necessary preparation process of a person group before identification.
          * Each person group needs to be trained in order to call Identification. The training
          * will process for a while on the server side even after this API has responded.
          *
@@ -336,10 +538,9 @@ var face = function (key) {
         trainingStart: function (personGroupId) {
             return new _Promise((resolve, reject) => {
                 request.post({
-                    uri: personGroupUrl + '/' + personGroupId + '/training',
+                    uri: personGroupUrl + '/' + personGroupId + '/train',
                     headers: {'Ocp-Apim-Subscription-Key': key}
                 }, function (error, response) {
-                    response.body = JSON.parse(response.body);
                     return _return(error, response, resolve, reject);
                 });
             });
@@ -392,25 +593,28 @@ var face = function (key) {
      */
     var person = {
         /**
-         * Adds a face to a person for identification. The maximum face count for each person is 32.
-         * The face ID must be added to a person before its expiration. Typically a face ID expires
-         * 24 hours after detection.
+         * Adds a face to a person for identification. The maximum face count for each person is 248.
          *
-         * @param {string} personGroupId     - The target person's person group.
-         * @param {string} personId          - The target person that the face is added to.
-         * @param {string} faceId            - The ID of the face to be added. The maximum face amount for each person is 32.
-         * @param {string} userData          - Optional. Attach user data to person's face. The maximum length is 1024.
-         * @return {Promise}                 - Promise resolving with the resulting JSON
+         * @param {string} personGroupId       - The target person's person group.
+         * @param {string} personId            - The target person that the face is added to.
+         * @param {object} options             - The source specification.
+         * @param {string} options.url         - URL to image to be used.
+         * @param {string} options.path        - Path to image to be used.
+         * @param {stream} options.stream      - Stream for image to be used.
+         * @param {string} options.userData    - Optional. Attach user data to person's face. The maximum length is 1024.
+         * @param {object} options.targetFace  - Optional. The rectangle of the face in the image.
+         * @return {Promise}                   - Promise resolving with the resulting JSON
          */
-        addFace: function (personGroupId, personId, faceId, userData) {
-            return new _Promise((resolve, reject) => {
-                request.put({
-                    uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/faces/' + faceId,
-                    headers: {'Ocp-Apim-Subscription-Key': key},
-                    json: true,
-                    body: userData ? {userData: userData} : {}
-                }, (error, response) => _return(error, response, resolve, reject));
-            });
+        addFace: function (personGroupId, personId, options) {
+            var qs = {};
+            if (options) {
+                qs.userData = options.userData;
+                if (options.targetFace) {
+                    qs.targetFace = [options.targetFace.left, options.targetFace.top, options.targetFace.width, options.targetFace.height].join();
+                }
+            }
+            var url = personUrl + '/' + personGroupId + '/persons/' + personId + '/persistedFaces';
+            return _postImage(url, options, qs);
         },
 
         /**
@@ -418,14 +622,14 @@ var face = function (key) {
          *
          * @param {string} personGroupId     - The target person's person group.
          * @param {string} personId          - The target person that the face is removed from.
-         * @param {string} faceId            - The ID of the face to be deleted.
+         * @param {string} persistedFaceId   - The ID of the face to be deleted.
          * @return {Promise}                 - Promise resolving with the resulting JSON
          */
-        deleteFace: function (personGroupId, personId, faceId) {
+        deleteFace: function (personGroupId, personId, persistedFaceId) {
             return new _Promise((resolve, reject) => {
                 request({
                     method: 'DELETE',
-                    uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/faces/' + faceId,
+                    uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/persistedFaces/' + persistedFaceId,
                     headers: {'Ocp-Apim-Subscription-Key': key}
                 }, (error, response) => _return(error, response, resolve, reject));
             });
@@ -436,14 +640,14 @@ var face = function (key) {
          *
          * @param {string} personGroupId     - The target person's person group.
          * @param {string} personId          - The target person that the face is updated on.
-         * @param {string} faceId            - The ID of the face to be updated.
+         * @param {string} persistedFaceId   - The ID of the face to be updated.
          * @param {string} userData          - Optional. Attach user data to person's face. The maximum length is 1024.
          * @return {Promise}                 - Promise resolving with the resulting JSON
          */
-        updateFace: function (personGroupId, personId, faceId, userData) {
+        updateFace: function (personGroupId, personId, persistedFaceId, userData) {
             return new _Promise((resolve, reject) => {
                 request.patch({
-                    uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/faces/' + faceId,
+                    uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/persistedFaces/' + persistedFaceId,
                     headers: {'Ocp-Apim-Subscription-Key': key},
                     json: true,
                     body: userData ? {userData: userData} : {}
@@ -456,17 +660,17 @@ var face = function (key) {
          *
          * @param {string} personGroupId     - The target person's person group.
          * @param {string} personId          - The target person that the face is to get from.
-         * @param {string} faceId            - The ID of the face to get.
+         * @param {string} persistedFaceId   - The ID of the face to get.
          * @return {Promise}                 - Promise resolving with the resulting JSON
          */
-        getFace: function (personGroupId, personId, faceId) {
+        getFace: function (personGroupId, personId, persistedFaceId) {
             return new _Promise((resolve, reject) => {
                 request({
-                    uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/faces/' + faceId,
+                    uri: personUrl + '/' + personGroupId + '/persons/' + personId + '/persistedFaces/' + persistedFaceId,
                     headers: {'Ocp-Apim-Subscription-Key': key}
                 }, (error, response) => {
                     response.body = JSON.parse(response.body);
-                    _return(error, response, resolve, reject)
+                    _return(error, response, resolve, reject);
                 });
             });
         },
@@ -474,22 +678,19 @@ var face = function (key) {
         /**
          * Creates a new person in a specified person group for identification.
          * The number of persons has a subscription limit. Free subscription amount is 1000 persons.
-         * The maximum face count for each person is 32.
          *
          * @param {string} personGroupId     - The target person's person group.
-         * @param {string[]} faces           - Array of face id's for the target person
          * @param {string} name              - Target person's display name. The maximum length is 128.
          * @param {string} userData          - Optional fields for user-provided data attached to a person. Size limit is 16KB.
          * @return {Promise}                 - Promise resolving with the resulting JSON
          */
-        create: function (personGroupId, faces, name, userData) {
+        create: function (personGroupId, name, userData) {
             return new _Promise((resolve, reject) => {
                 request.post({
                     uri: personUrl + '/' + personGroupId + '/persons',
                     headers: {'Ocp-Apim-Subscription-Key': key},
                     json: true,
                     body: {
-                        faceIds: faces,
                         name: name,
                         userData: userData
                     }
@@ -537,19 +738,17 @@ var face = function (key) {
          * Updates a person's information.
          *
          * @param {string} personGroupId     - The target person's person group.
-         * @param {string[]} faces           - Array of face id's for the target person
          * @param {string} name              - Target person's display name. The maximum length is 128.
          * @param {string} userData          - Optional fields for user-provided data attached to a person. Size limit is 16KB.
          * @return {Promise}                 - Promise resolving with the resulting JSON
          */
-        update: function (personGroupId, personId, faces, name, userData) {
+        update: function (personGroupId, personId, name, userData) {
             return new _Promise((resolve, reject) => {
                 request.patch({
                     uri: personUrl + '/' + personGroupId + '/persons/' + personId,
                     headers: {'Ocp-Apim-Subscription-Key': key},
                     json: true,
                     body: {
-                        faceIds: faces,
                         name: name,
                         userData: userData
                     }
@@ -582,6 +781,7 @@ var face = function (key) {
         grouping: grouping,
         identify: identify,
         verify: verify,
+        faceList: faceList,
         personGroup: personGroup,
         person: person
     };
