@@ -265,5 +265,12 @@ The emotions detected are happiness, sadness, surprise, anger, fear, contempt, a
 | options.path | <code>string</code> | Path to image to be analyzed |
 | options.faceRectangles | <code>string (optional)</code> | A face rectangle is in the form “left,top,width,height”. Delimited multiple face rectangles with a “;”. |
 
+## Updating from 0.3.0
+All versions of project-oxford at or below 0.3.0 were written for the Project Oxford v0 API.
+ * Be warned that v1 IDs are not compatible with the v0 API. If you've squirreled away these IDs, you will need to retrain your PersonGroup. 
+ * The concept of a `FaceList` has been introduced. This is a collection of face IDs that you would typically associate with a Person in a `PersonGroup`.
+ * The concept of `persistedFaceIds` has been introduced. These IDs are long-lived, and are used for training. By contrast, a plain `faceId` is a byproduct of face feature detection. Note that `face.detect` method no longer returns a faceId by default. If you are interested in getting a `faceId`, you must request it in the options `{returnFaceId: true}`.
+ * You can get a `persistedFaceId` either via `faceList.addFace` or `person.addFace`.
+
 ## License
 Licensed as MIT - please see LICENSE for details.
