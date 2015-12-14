@@ -1,14 +1,16 @@
 'use strict';
 
-var request = require('request'),
+var request = require('request').defaults({
+    baseUrl: 'https://api.projectoxford.ai/vision/v1/',
+    headers: { 'User-Agent': 'nodejs/0.3.0' } }),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-var analyzeUrl = 'https://api.projectoxford.ai/vision/v1/analyses';
-var thumbnailUrl = 'https://api.projectoxford.ai/vision/v1/thumbnails';
-var ocrUrl = 'https://api.projectoxford.ai/vision/v1/ocr';
+var analyzeUrl = '/analyses';
+var thumbnailUrl = '/thumbnails';
+var ocrUrl = '/ocr';
 
-/** 
+/**
  * @namespace
  * @memberof Client
  */
@@ -21,12 +23,12 @@ var vision = function vision(key) {
             return reject(error);
         }
 
-        if (response.statusCode != 200) {
+        if (response.statusCode !== 200) {
             reject(response.body);
         }
 
         return resolve(response.body);
-    };
+    }
 
     /**
      * (Private) Analyze a local image, using a fs pipe

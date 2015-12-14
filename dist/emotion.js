@@ -1,10 +1,12 @@
 'use strict';
 
-var request = require('request'),
+var request = require('request').defaults({
+    baseUrl: 'https://api.projectoxford.ai/emotion/v1.0/',
+    headers: { 'User-Agent': 'nodejs/0.3.0' } }),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-var emotionUrl = 'https://api.projectoxford.ai/emotion/v1.0/recognize';
+var emotionUrl = '/recognize';
 
 var emotion = function emotion(key) {
     /**
@@ -15,12 +17,12 @@ var emotion = function emotion(key) {
             return reject(error);
         }
 
-        if (response.statusCode != 200) {
+        if (response.statusCode !== 200) {
             reject(response.body);
         }
 
         return resolve(response.body);
-    };
+    }
 
     /**
      * (Private) Analyze a local image, using a fs pipe
@@ -43,7 +45,7 @@ var emotion = function emotion(key) {
                 _return(error, response, resolve, reject);
             }));
         });
-    };
+    }
 
     /**
      * (Private) Analyze an online image
@@ -67,10 +69,22 @@ var emotion = function emotion(key) {
                 return _return(error, response, resolve, reject);
             });
         });
-    };
+    }
 
     function analyzeEmotion(options) {
-        var qs = { faceRectangles: options.faceRectangles };
+        var qs = {};
+        if (options && options.faceRectangles) {
+            var rects = [];
+            options.faceRectangles.forEach(function (rect) {
+                var r = [];
+                r.push(rect.left);
+                r.push(rect.top);
+                r.push(rect.width);
+                r.push(rect.height);
+                rects.push(r.join(','));
+            });
+            qs.faceRectangles = rects.join(';');
+        }
 
         if (options.path) {
             return _emotionLocal(options.path, qs);
@@ -78,7 +92,7 @@ var emotion = function emotion(key) {
         if (options.url) {
             return _emotionOnline(options.url, qs);
         }
-    };
+    }
 
     return {
         analyzeEmotion: analyzeEmotion
