@@ -70,19 +70,22 @@ visionClient.vision.ocr({
 
 For the full documentation, please see the API reference below.
 
-## API Reference
+# 
+API Reference
+<a name="Client"></a>
+## Client
 * [Client](#Client)
   * [new Client(key)](#new_Client_new)
   * [.face](#Client.face) : <code>object</code>
-    * [.detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
-    * [.similar(sourceFace, candidateFaces)](#Client.face..similar) ⇒ <code>Promise</code>
-    * [.grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
-    * [.identify(faces)](#Client.face..identify) ⇒ <code>Promise</code>
-    * [.verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
+    * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
+    * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
+    * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
+    * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
+    * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
   * [.vision](#Client.vision) : <code>object</code>
-    * [.analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
-    * [.thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
-    * [.ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+    * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
+    * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
+    * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
 
 <a name="new_Client_new"></a>
 ### new Client(key)
@@ -99,20 +102,21 @@ Creates a new Project Oxford Client using a given API key.
 
 * [.face](#Client.face) : <code>object</code>
   * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
-  * [~similar(sourceFace, candidateFaces)](#Client.face..similar) ⇒ <code>Promise</code>
+  * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
   * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
-  * [~identify(faces)](#Client.face..identify) ⇒ <code>Promise</code>
+  * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
   * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
 
 <a name="Client.face..detect"></a>
-#### face.detect(options) ⇒ <code>Promise</code>
+#### face~detect(options) ⇒ <code>Promise</code>
 Call the Face Detected API
 Detects human faces in an image and returns face locations, face landmarks, and
 optional attributes including head-pose, gender, and age. Detection is an essential
 API that provides faceId to other APIs like Identification, Verification,
 and Find Similar.
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[face](#Client.face)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -120,24 +124,32 @@ and Find Similar.
 | options.url | <code>string</code> | URL to image to be used |
 | options.path | <code>string</code> | Path to image to be used |
 | options.stream | <code>stream</code> | Stream for image to be used |
+| options.returnFaceId | <code>boolean</code> | Include face ID in response? |
 | options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
 | options.analyzesAge | <code>boolean</code> | Analyze age? |
 | options.analyzesGender | <code>boolean</code> | Analyze gender? |
 | options.analyzesHeadPose | <code>boolean</code> | Analyze headpose? |
+| options.analyzesSmile | <code>boolean</code> | Analyze smile? |
+| options.analyzesFacialHair | <code>boolean</code> | Analyze facial hair? |
 
 <a name="Client.face..similar"></a>
-#### face.similar(sourceFace, candidateFaces) ⇒ <code>Promise</code>
-Detect similar faces using faceIds (as returned from the detect API)
+#### face~similar(sourceFace, options) ⇒ <code>Promise</code>
+Detect similar faces using faceIds (as returned from the detect API), or faceListId
+(as returned from the facelist API).
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[face](#Client.face)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | sourceFace | <code>string</code> | String of faceId for the source face |
-| candidateFaces | <code>Array.&lt;string&gt;</code> | Array of faceIds to use as candidates |
+| options | <code>object</code> | Options object |
+| options.candidateFaces | <code>Array.&lt;string&gt;</code> | Array of faceIds to use as candidates |
+| options.candidateFaceListId | <code>string</code> | Id of face list, created via FaceList.create |
+| options.maxCandidates | <code>Number</code> | Optional max number for top candidates (default is 20, max is 20) |
 
 <a name="Client.face..grouping"></a>
-#### face.grouping(faces) ⇒ <code>Promise</code>
+#### face~grouping(faces) ⇒ <code>Promise</code>
 Divides candidate faces into groups based on face similarity using faceIds.
 The output is one or more disjointed face groups and a MessyGroup.
 A face group contains the faces that have similar looking, often of the same person.
@@ -148,14 +160,15 @@ faces in original candidate faces. The messyGroup will not appear in the result 
 all faces found their similar counterparts. The candidate face list has a
 limit of 100 faces.
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[face](#Client.face)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | faces | <code>Array.&lt;string&gt;</code> | Array of faceIds to use |
 
 <a name="Client.face..identify"></a>
-#### face.identify(faces) ⇒ <code>Promise</code>
+#### face~identify(faces, personGroupId, maxNumOfCandidatesReturned) ⇒ <code>Promise</code>
 Identifies persons from a person group by one or more input faces.
 To recognize which person a face belongs to, Face Identification needs a person group
 that contains number of persons. Each person contains one or more faces. After a person
@@ -163,19 +176,23 @@ group prepared, it should be trained to make it ready for identification. Then t
 identification API compares the input face to those persons' faces in person group and
 returns the best-matched candidate persons, ranked by confidence.
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[face](#Client.face)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | faces | <code>Array.&lt;string&gt;</code> | Array of faceIds to use |
+| personGroupId | <code>string</code> | Id of person group from which faces will be identified |
+| maxNumOfCandidatesReturned | <code>Number</code> | Optional max number of candidates per face (default=1, max=5) |
 
 <a name="Client.face..verify"></a>
-#### face.verify(faces) ⇒ <code>Promise</code>
+#### face~verify(faces) ⇒ <code>Promise</code>
 Analyzes two faces and determine whether they are from the same person.
 Verification works well for frontal and near-frontal faces.
 For the scenarios that are sensitive to accuracy please use with own judgment.
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[face](#Client.face)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -191,11 +208,12 @@ For the scenarios that are sensitive to accuracy please use with own judgment.
   * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
 
 <a name="Client.vision..analyzeImage"></a>
-#### vision.analyzeImage(options) ⇒ <code>Promise</code>
+#### vision~analyzeImage(options) ⇒ <code>Promise</code>
 This operation does a deep analysis on the given image and then extracts a
 set of rich visual features based on the image content.
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[vision](#Client.vision)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -209,13 +227,14 @@ set of rich visual features based on the image content.
 | options.Categories | <code>boolean</code> | Image categorization; taxonomy defined in documentation. |
 
 <a name="Client.vision..thumbnail"></a>
-#### vision.thumbnail(options) ⇒ <code>Promise</code>
+#### vision~thumbnail(options) ⇒ <code>Promise</code>
 Generate a thumbnail image to the user-specified width and height. By default, the
 service analyzes the image, identifies the region of interest (ROI), and generates
 smart crop coordinates based on the ROI. Smart cropping is designed to help when you
 specify an aspect ratio that differs from the input image.
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[vision](#Client.vision)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -228,11 +247,12 @@ specify an aspect ratio that differs from the input image.
 | options.pipe | <code>Object</code> | We'll pipe the returned image to this object |
 
 <a name="Client.vision..ocr"></a>
-#### vision.ocr(options) ⇒ <code>Promise</code>
+#### vision~ocr(options) ⇒ <code>Promise</code>
 Optical Character Recognition (OCR) detects text in an image and extracts the recognized
 characters into a machine-usable character stream.
 
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON  
+**Kind**: inner method of <code>[vision](#Client.vision)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -241,29 +261,6 @@ characters into a machine-usable character stream.
 | options.path | <code>string</code> | Path to image to be analyzed |
 | options.language | <code>string</code> | BCP-47 language code of the text to be detected in the image. Default value is "unk", then the service will auto detect the language of the text in the image. |
 | options.detectOrientation | <code>string</code> | Detect orientation of text in the image |
-
-
-<a name="Client.emotion"></a>
-### Client.emotion : <code>object</code>
-**Kind**: static namespace of <code>[Client](#Client)</code>
-
-* [.emotion](#Client.emotion) : <code>object</code>
-  * [~analyzeEmotion(options)](#Client.emotion..analyzeImage) ⇒ <code>Promise</code>
-
-<a name="Client.emotion..analyzeEmotion"></a>
-#### emotion.analyzeEmotion(options) ⇒ <code>Promise</code>
-Recognizes the emotions expressed by one or more people in an image,
-as well as returns a bounding box for the face.
-The emotions detected are happiness, sadness, surprise, anger, fear, contempt, and disgust or neutral.
-
-**Returns**: <code>Promise</code> - Promise resolving with the resulting JSON
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>Object</code> | Options object |
-| options.url | <code>string</code> | Url to image to be analyzed |
-| options.path | <code>string</code> | Path to image to be analyzed |
-| options.faceRectangles | <code>string (optional)</code> | A face rectangle is in the form “left,top,width,height”. Delimited multiple face rectangles with a “;”. |
 
 ## Updating from 0.3.0
 All versions of project-oxford at or below 0.3.0 were written for the Project Oxford v0 API.
