@@ -15,7 +15,6 @@ var billFaces = [],
     billPersonId,
     billPersonPersistedFaceId;
  
-var t0 = [];
 describe('Project Oxford Face API Test', function () {
     afterEach(function() {
         // delay after each test to prevent throttling

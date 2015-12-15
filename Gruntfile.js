@@ -23,10 +23,11 @@ module.exports = function (grunt) {
         babel: {
             dist: {
                 files: {
-                    'dist/face.js': 'src/face.js',
-                    'dist/vision.js': 'src/vision.js',
                     'dist/emotion.js': 'src/emotion.js',
+                    'dist/face.js': 'src/face.js',
                     'dist/oxford.js': 'src/oxford.js',
+                    'dist/video.js': 'src/video.js',
+                    'dist/vision.js': 'src/vision.js',
                 }
             }
         },
