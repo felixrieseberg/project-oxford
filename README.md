@@ -192,14 +192,14 @@ Analyze the emotions of one or more faces in an image.
 #### face.faceList : <code>object</code>
 **Kind**: static namespace of <code>[face](#Client.face)</code>  
 
-    * [.faceList](#Client.face.faceList) : <code>object</code>
-        * [.list()](#Client.face.faceList.list) ⇒ <code>Promise</code>
-        * [.create(faceListId, options)](#Client.face.faceList.create) ⇒ <code>Promise</code>
-        * [.update(faceListId, options)](#Client.face.faceList.update) ⇒ <code>Promise</code>
-        * [.delete(faceListId)](#Client.face.faceList.delete) ⇒ <code>Promise</code>
-        * [.get(faceListId)](#Client.face.faceList.get) ⇒ <code>Promise</code>
-        * [.addFace(faceListId, options)](#Client.face.faceList.addFace) ⇒ <code>Promise</code>
-        * [.deleteFace(faceListId, persistedFaceId)](#Client.face.faceList.deleteFace) ⇒ <code>Promise</code>
+* [.faceList](#Client.face.faceList) : <code>object</code>
+    * [.list()](#Client.face.faceList.list) ⇒ <code>Promise</code>
+    * [.create(faceListId, options)](#Client.face.faceList.create) ⇒ <code>Promise</code>
+    * [.update(faceListId, options)](#Client.face.faceList.update) ⇒ <code>Promise</code>
+    * [.delete(faceListId)](#Client.face.faceList.delete) ⇒ <code>Promise</code>
+    * [.get(faceListId)](#Client.face.faceList.get) ⇒ <code>Promise</code>
+    * [.addFace(faceListId, options)](#Client.face.faceList.addFace) ⇒ <code>Promise</code>
+    * [.deleteFace(faceListId, persistedFaceId)](#Client.face.faceList.deleteFace) ⇒ <code>Promise</code>
 
 <a name="Client.face.faceList.list"></a>
 ##### faceList.list() ⇒ <code>Promise</code>
@@ -294,14 +294,14 @@ not from the detect method.
 #### face.personGroup : <code>object</code>
 **Kind**: static namespace of <code>[face](#Client.face)</code>  
 
-    * [.personGroup](#Client.face.personGroup) : <code>object</code>
-        * [.create(personGroupId, name, userData)](#Client.face.personGroup.create) ⇒ <code>Promise</code>
-        * [.delete(personGroupId)](#Client.face.personGroup.delete) ⇒ <code>Promise</code>
-        * [.get(personGroupId)](#Client.face.personGroup.get) ⇒ <code>Promise</code>
-        * [.trainingStatus(personGroupId)](#Client.face.personGroup.trainingStatus) ⇒ <code>Promise</code>
-        * [.trainingStart(personGroupId)](#Client.face.personGroup.trainingStart) ⇒ <code>Promise</code>
-        * [.update(personGroupId, name, userData)](#Client.face.personGroup.update) ⇒ <code>Promise</code>
-        * [.list()](#Client.face.personGroup.list) ⇒ <code>Promise</code>
+* [.personGroup](#Client.face.personGroup) : <code>object</code>
+    * [.create(personGroupId, name, userData)](#Client.face.personGroup.create) ⇒ <code>Promise</code>
+    * [.delete(personGroupId)](#Client.face.personGroup.delete) ⇒ <code>Promise</code>
+    * [.get(personGroupId)](#Client.face.personGroup.get) ⇒ <code>Promise</code>
+    * [.trainingStatus(personGroupId)](#Client.face.personGroup.trainingStatus) ⇒ <code>Promise</code>
+    * [.trainingStart(personGroupId)](#Client.face.personGroup.trainingStart) ⇒ <code>Promise</code>
+    * [.update(personGroupId, name, userData)](#Client.face.personGroup.update) ⇒ <code>Promise</code>
+    * [.list()](#Client.face.personGroup.list) ⇒ <code>Promise</code>
 
 <a name="Client.face.personGroup.create"></a>
 ##### personGroup.create(personGroupId, name, userData) ⇒ <code>Promise</code>
@@ -390,16 +390,16 @@ Lists all person groups in the current subscription.
 #### face.person : <code>object</code>
 **Kind**: static namespace of <code>[face](#Client.face)</code>  
 
-    * [.person](#Client.face.person) : <code>object</code>
-        * [.addFace(personGroupId, personId, options)](#Client.face.person.addFace) ⇒ <code>Promise</code>
-        * [.deleteFace(personGroupId, personId, persistedFaceId)](#Client.face.person.deleteFace) ⇒ <code>Promise</code>
-        * [.updateFace(personGroupId, personId, persistedFaceId, userData)](#Client.face.person.updateFace) ⇒ <code>Promise</code>
-        * [.getFace(personGroupId, personId, persistedFaceId)](#Client.face.person.getFace) ⇒ <code>Promise</code>
-        * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
-        * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
-        * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
-        * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
-        * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
+* [.person](#Client.face.person) : <code>object</code>
+    * [.addFace(personGroupId, personId, options)](#Client.face.person.addFace) ⇒ <code>Promise</code>
+    * [.deleteFace(personGroupId, personId, persistedFaceId)](#Client.face.person.deleteFace) ⇒ <code>Promise</code>
+    * [.updateFace(personGroupId, personId, persistedFaceId, userData)](#Client.face.person.updateFace) ⇒ <code>Promise</code>
+    * [.getFace(personGroupId, personId, persistedFaceId)](#Client.face.person.getFace) ⇒ <code>Promise</code>
+    * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
+    * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
+    * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
+    * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
+    * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
 
 <a name="Client.face.person.addFace"></a>
 ##### person.addFace(personGroupId, personId, options) ⇒ <code>Promise</code>
@@ -630,9 +630,9 @@ For the scenarios that are sensitive to accuracy please use with own judgment.
 #### video.result
 **Kind**: static property of <code>[video](#Client.video)</code>  
 
-    * [.result](#Client.video.result)
-        * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
-        * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
+* [.result](#Client.video.result)
+    * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
+    * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
 
 <a name="Client.video.result.get"></a>
 ##### result.get(operation) ⇒ <code>Promise</code>
