@@ -6,6 +6,10 @@ var request = require('request').defaults({
 
 const emotionUrl = '/recognize';
 
+/**
+ * @namespace
+ * @memberof Client
+ */
 var emotion = function (key) {
     /**
      * @private
@@ -67,6 +71,16 @@ var emotion = function (key) {
         });
     }
 
+    /**
+     * Analyze the emotions of one or more faces in an image.
+     *
+     * @param  {Object}   options                - Options object
+     * @param  {string}   options.url            - URL to the image file
+     * @param  {string}   options.path           - URL to a local image file
+     * @param  {Object[]} options.faceRectangles - Array of face rectangles.  Face rectangles
+     *      are returned in the face.detect and vision.analyzeImage methods.
+     * @return {Promise}                         - Promise resolving with the resulting JSON
+     */
     function analyzeEmotion(options) {
         let qs = {};
         if (options && options.faceRectangles) {

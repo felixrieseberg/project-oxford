@@ -117,9 +117,9 @@ var video = function (key) {
      * Faces in a video will be tracked.
      *
      * @param  {object}  options                        - Options object
-     * @param  {string}  options.url                    - URL to video to be used
-     * @param  {string}  options.path                   - Path to video to be used
-     * @param  {stream}  options.stream                 - Stream for video to be used
+     * @param  {string}  options.url                    - URL to video to be processed
+     * @param  {string}  options.path                   - Path to video to be processed
+     * @param  {stream}  options.stream                 - Stream for video to be processed
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function trackFace(options) {
@@ -131,9 +131,9 @@ var video = function (key) {
      * Motion in a video will be tracked.
      *
      * @param  {object}  options                        - Options object
-     * @param  {string}  options.url                    - URL to video to be used
-     * @param  {string}  options.path                   - Path to video to be used
-     * @param  {stream}  options.stream                 - Stream for video to be used
+     * @param  {string}  options.url                    - URL to video to be processed
+     * @param  {string}  options.path                   - Path to video to be processed
+     * @param  {stream}  options.stream                 - Stream for video to be processed
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detectMotion(options) {
@@ -145,9 +145,9 @@ var video = function (key) {
      * A stabilized version of you video will be generated.
      *
      * @param  {object}  options                        - Options object
-     * @param  {string}  options.url                    - URL to video to be used
-     * @param  {string}  options.path                   - Path to video to be used
-     * @param  {stream}  options.stream                 - Stream for video to be used
+     * @param  {string}  options.url                    - URL to video to be processed
+     * @param  {string}  options.path                   - Path to video to be processed
+     * @param  {stream}  options.stream                 - Stream for video to be processed
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function stabilize(options) {
@@ -155,20 +155,19 @@ var video = function (key) {
     }
 
     /**
-     * @namespace
-     * @memberOf video
+     * @memberof Client.video
      */
     var result = {
         /**
         * Checks the result of a given operation.  When an operation is deemed completed, the
         * status of the returned object should be 'Succeeded' (or, possibly, 'Failed'.) For
-        * operations which return a JSON payload, the stringified-JSON is return in the
+        * operations which return a JSON payload, the stringified-JSON is returned in the
         * processingResult field.  For operations which return a video, the location of the
-        * video is provided in the resourceLocation field.  You can use the getVideo method
+        * video is provided in the resourceLocation field.  You can use the [getVideo]{@link Client.video.result#getVideo} method
         * to help you retrieve that, as this would automatically attach the API key to request.
         *
-        * @param  {string[]} faces     - Array of faceIds to use
-        * @return {Promise}            - Promise resolving with the resulting JSON
+        * @param  {Object} operation  - Object holding the result URL
+        * @return {Promise}           - Promise resolving with the resulting JSON
         */
         get: function (operation) {
             return new _Promise((resolve, reject) => {
@@ -184,7 +183,7 @@ var video = function (key) {
 
         /**
         * Downloads the resulting video, for processors that returning videos instead of metadata.
-        * Currently this applies to the the stabilize operation.
+        * Currently this applies to the [stabilize]{@link Client.video#stabilize} operation.
         *
         * @param  {string} url   - URL of the resource
         * @param  {Object} pipe  - Destination for video, typically a fs object

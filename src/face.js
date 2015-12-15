@@ -284,7 +284,7 @@ var face = function (key) {
 
     /**
      * @namespace
-     * @memberof face
+     * @memberof Client.face
      */
     var faceList = {
         /**
@@ -441,7 +441,7 @@ var face = function (key) {
 
     /**
      * @namespace
-     * @memberof face
+     * @memberof Client.face
      */
     var personGroup = {
         /**
@@ -589,7 +589,7 @@ var face = function (key) {
 
     /**
      * @namespace
-     * @memberOf face
+     * @memberof Client.face
      */
     var person = {
         /**
