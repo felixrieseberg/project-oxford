@@ -28,6 +28,7 @@ module.exports = function (grunt) {
                     'dist/oxford.js': 'src/oxford.js',
                     'dist/video.js': 'src/video.js',
                     'dist/vision.js': 'src/vision.js',
+                    'dist/weblm.js': 'src/weblm.js',
                 }
             }
         },

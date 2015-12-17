@@ -2,6 +2,7 @@ var emotion = require('./emotion.js'),
     face = require('./face.js'),
     video = require('./video.js'),
     vision = require('./vision.js'),
+    weblm = require('./weblm.js'),
     oxford = {};
 
 /**
@@ -19,6 +20,7 @@ oxford.Client = function (key) {
     this.face = face(key);
     this.video = video(key);
     this.vision = vision(key);
+    this.weblm = weblm(key);
 };
 
 module.exports = oxford;

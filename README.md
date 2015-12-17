@@ -71,6 +71,8 @@ visionClient.vision.ocr({
 For the full documentation, please see the API reference below.
 
 ## API Reference
+**Kind**: global class  
+
 * [Client](#Client)
     * [new Client(key)](#new_Client_new)
     * [.emotion](#Client.emotion) : <code>object</code>
@@ -122,6 +124,12 @@ For the full documentation, please see the API reference below.
         * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
         * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
         * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+    * [.weblm](#Client.weblm) : <code>object</code>
+        * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
+        * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
+        * [~generateWords(model, words, options)](#Client.weblm..generateWords) ⇒ <code>Promise</code>
+        * [~getJointProbabilities(model, phrases, order)](#Client.weblm..getJointProbabilities) ⇒ <code>Promise</code>
+        * [~getConditionalProbabilities(model, queries, order)](#Client.weblm..getConditionalProbabilities) ⇒ <code>Promise</code>
 
 <a name="new_Client_new"></a>
 ### new Client(key)
@@ -771,6 +779,79 @@ characters into a machine-usable character stream.
 | options.path | <code>string</code> | Path to image to be analyzed |
 | options.language | <code>string</code> | BCP-47 language code of the text to be detected in the image. Default value is "unk", then the service will auto detect the language of the text in the image. |
 | options.detectOrientation | <code>string</code> | Detect orientation of text in the image |
+
+<a name="Client.weblm"></a>
+### Client.weblm : <code>object</code>
+**Kind**: static namespace of <code>[Client](#Client)</code>  
+
+* [.weblm](#Client.weblm) : <code>object</code>
+    * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
+    * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
+    * [~generateWords(model, words, options)](#Client.weblm..generateWords) ⇒ <code>Promise</code>
+    * [~getJointProbabilities(model, phrases, order)](#Client.weblm..getJointProbabilities) ⇒ <code>Promise</code>
+    * [~getConditionalProbabilities(model, queries, order)](#Client.weblm..getConditionalProbabilities) ⇒ <code>Promise</code>
+
+<a name="Client.weblm..listModels"></a>
+#### weblm~listModels() ⇒ <code>Promise</code>
+List available language models for the service currently.
+
+**Kind**: inner method of <code>[weblm](#Client.weblm)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+<a name="Client.weblm..breakIntoWords"></a>
+#### weblm~breakIntoWords(model, text, options) ⇒ <code>Promise</code>
+Breaks text in to consituent words
+
+**Kind**: inner method of <code>[weblm](#Client.weblm)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| model | <code>string</code> | Name of model. Currently one of title/anchor/query/body |
+| text | <code>string</code> | Text to break.  E.g. onetwothree |
+| options | <code>Object</code> | Options object |
+| options.order | <code>Number</code> | Optional N-gram order. Default is 5 |
+| options.maxCandidates | <code>Number</code> | Optional maximum candidate count. Default is 5 |
+
+<a name="Client.weblm..generateWords"></a>
+#### weblm~generateWords(model, words, options) ⇒ <code>Promise</code>
+Generates a list of candidate of words that would follow the a given sequence of one or more words
+
+**Kind**: inner method of <code>[weblm](#Client.weblm)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| model | <code>string</code> | Name of model. Currently one of title/anchor/query/body |
+| words | <code>string</code> | Text to break.  E.g. 'hello world wide' |
+| options | <code>Object</code> | Options object |
+| options.order | <code>Number</code> | Optional N-gram order. Default is 5 |
+| options.maxCandidates | <code>Number</code> | Optional maximum candidate count. Default is 5 |
+
+<a name="Client.weblm..getJointProbabilities"></a>
+#### weblm~getJointProbabilities(model, phrases, order) ⇒ <code>Promise</code>
+Generates a list of candidate of words that would follow the a given sequence of one or more words
+
+**Kind**: inner method of <code>[weblm](#Client.weblm)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| model | <code>string</code> | Name of model. Currently one of title/anchor/query/body |
+| phrases | <code>Array.&lt;string&gt;</code> | One or more phrases for which to look up the probalities of the word sequences |
+| order | <code>Number</code> | Optional N-gram order. Default is 5 |
+
+<a name="Client.weblm..getConditionalProbabilities"></a>
+#### weblm~getConditionalProbabilities(model, queries, order) ⇒ <code>Promise</code>
+Generates a list of candidate of words that would follow the a given sequence of one or more words
+
+**Kind**: inner method of <code>[weblm](#Client.weblm)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| model | <code>string</code> | Name of model. Currently one of title/anchor/query/body |
+| queries | <code>Array</code> | One of more objects consisting of 'words'/'word' pairs,      where the conditional probability of 'word' in the context of 'words' is computed. |
+| order | <code>Number</code> | Optional N-gram order. Default is 5 |
 
 ## License
 Licensed as MIT - please see LICENSE for details.

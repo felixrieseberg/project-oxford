@@ -9,7 +9,7 @@ describe('Project Oxford Video API Test', function () {
     before(function() {
         // ensure the output directory exists
         if(!fs.existsSync('./test/output')){
-            fs.mkdirSync('./test/output', 0766, function(err){ 
+            fs.mkdirSync('./test/output', 0766, function(err){
                 throw err;
             });
         }
@@ -44,10 +44,10 @@ describe('Project Oxford Video API Test', function () {
                     assert.ok(response.lastActionDateTime);
                     if (response.status === 'Succeeded') {
                         resourceLocation = response.resourceLocation;
-                        done();                        
+                        done();
                     } else if (response.status === 'Failed') {
                         assert.ok(false);
-                        done();                        
+                        done();
                     } else {
                         waitTimeMs *= 1.8;
                         setTimeout(checkFn, waitTimeMs);
@@ -57,7 +57,7 @@ describe('Project Oxford Video API Test', function () {
 
             setTimeout(checkFn, waitTimeMs);
         });
-        
+
         it('gets the stabilized video', function (done) {
             this.slow();
             client.video.result.getVideo(resourceLocation, fs.createWriteStream('./test/output/out.mp4'))
@@ -68,11 +68,11 @@ describe('Project Oxford Video API Test', function () {
             })
             .catch(function (error) {
                 assert.ok(false, JSON.stringify(error));
-                done();                
+                done();
             });
         });
     });
-    
+
     describe('#detectMotion()', function () {
         var operation = {};
         it('uploads a local video for motion detection', function (done) {
@@ -118,10 +118,10 @@ describe('Project Oxford Video API Test', function () {
                         assert.equal(motion.fragments[0].duration, VIDEO_DURATION_SECS * motion.timescale);
                         assert.equal(motion.fragments[0].interval, undefined);
                         assert.equal(motion.fragments[0].events, undefined);
-                        done();                        
+                        done();
                     } else if (response.status === 'Failed') {
                         assert.ok(false);
-                        done();                        
+                        done();
                     } else {
                         waitTimeMs *= 1.8;
                         setTimeout(checkFn, waitTimeMs);
