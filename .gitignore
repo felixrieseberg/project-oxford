@@ -31,3 +31,6 @@ node_modules
 .idea
 
 /test/output/*
+
+# jsdoc2md intermediate file
+api.md

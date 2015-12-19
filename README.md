@@ -111,6 +111,9 @@ For the full documentation, please see the API reference below.
             * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
             * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
             * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
+    * [.text](#Client.text) : <code>object</code>
+        * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
+        * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
     * [.video](#Client.video) : <code>object</code>
         * _static_
             * [.result](#Client.video.result)
@@ -619,6 +622,43 @@ For the scenarios that are sensitive to accuracy please use with own judgment.
 | Param | Type | Description |
 | --- | --- | --- |
 | faces | <code>Array.&lt;string&gt;</code> | Array containing two faceIds to use |
+
+<a name="Client.text"></a>
+### Client.text : <code>object</code>
+**Kind**: static namespace of <code>[Client](#Client)</code>  
+
+* [.text](#Client.text) : <code>object</code>
+    * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
+    * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
+
+<a name="Client.text..proof"></a>
+#### text~proof(text, preContextText, postContextText) ⇒ <code>Promise</code>
+Proofs a word or phrase.  Offers Microsoft Office Word-like spelling corrections. Longer phrases can
+be checked, and the result will include casing corrections while avoiding aggressive corrections.
+
+**Kind**: inner method of <code>[text](#Client.text)</code>  
+**Returns**: <code>Promise</code> - - A promise in which the resulting JSON is returned.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| text | <code>string</code> | Word or phrase to spell check. |
+| preContextText | <code>string</code> | Optional context of one or more words preceding the target word/phrase. |
+| postContextText | <code>string</code> | Optional context of one or more words following the target word/phrase. |
+
+<a name="Client.text..spellCheck"></a>
+#### text~spellCheck(text, preContextText, postContextText) ⇒ <code>Promise</code>
+Spell checks a word or phrase.  Spell checks offers search-engine-like corrections.  Short phrases
+(up to 9 tokens) will be checked, and the result will be optimized for search queries, both in terms
+of performance and relevance.
+
+**Kind**: inner method of <code>[text](#Client.text)</code>  
+**Returns**: <code>Promise</code> - - A promise in which the resulting JSON is returned.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| text | <code>string</code> | Word or phrase to spell check. |
+| preContextText | <code>string</code> | Optional context of one or more words preceding the target word/phrase. |
+| postContextText | <code>string</code> | Optional context of one or more words following the target word/phrase. |
 
 <a name="Client.video"></a>
 ### Client.video : <code>object</code>
