@@ -1,8 +1,11 @@
 'use strict';
 
-var face = require('./face.js'),
+var emotion = require('./emotion.js'),
+    face = require('./face.js'),
+    text = require('./text.js'),
+    video = require('./video.js'),
     vision = require('./vision.js'),
-    emotion = require('./emotion.js'),
+    weblm = require('./weblm.js'),
     oxford = {};
 
 /**
@@ -16,9 +19,12 @@ oxford.Client = function (key) {
     }
 
     this._key = key;
-    this.face = face(key);
-    this.vision = vision(key);
     this.emotion = emotion(key);
+    this.face = face(key);
+    this.text = text(key);
+    this.video = video(key);
+    this.vision = vision(key);
+    this.weblm = weblm(key);
 };
 
 module.exports = oxford;
