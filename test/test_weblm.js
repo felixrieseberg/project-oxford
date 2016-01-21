@@ -1,9 +1,9 @@
-var assert = require('assert'),
+var assert   = require('assert'),
     _Promise = require('bluebird'),
-    uuid = require('uuid'),
-    fs = require('fs'),
-    oxford = require('../dist/oxford'),
-    client = new oxford.Client(process.env.OXFORD_KEY);
+    uuid     = require('uuid'),
+    fs       = require('fs'),
+    oxford   = require('../dist/oxford'),
+    client   = new oxford.Client(process.env.OXFORD_WEBLM_KEY);
 
 var apiModels = {};
 describe('Project Oxford WebLM API Test', function () {
@@ -128,4 +128,5 @@ describe('Project Oxford WebLM API Test', function () {
                 done();
             });
         });
-    });});
+    });
+});

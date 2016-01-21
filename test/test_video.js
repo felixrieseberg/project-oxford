@@ -1,11 +1,18 @@
-var assert = require('assert'),
+var assert   = require('assert'),
     _Promise = require('bluebird'),
-    uuid = require('uuid'),
-    fs = require('fs'),
-    oxford = require('../dist/oxford'),
-    client = new oxford.Client(process.env.OXFORD_KEY);
+    uuid     = require('uuid'),
+    fs       = require('fs'),
+    oxford   = require('../dist/oxford'),
+    client   = new oxford.Client(process.env.OXFORD_VIDEO_KEY);
 
 describe('Project Oxford Video API Test', function () {
+    afterEach(function() {
+        // delay after each test to prevent throttling
+        this.enableTimeouts(false);
+        var now = +new Date() + 6000;
+        while(now > +new Date());
+    });
+ 
     before(function() {
         // ensure the output directory exists
         if(!fs.existsSync('./test/output')){
@@ -18,6 +25,7 @@ describe('Project Oxford Video API Test', function () {
     describe('#stabilize()', function () {
         var operation = {};
         var resourceLocation = '';
+
         it('uploads a local video for stabilization', function (done) {
             this.timeout(30000);
             client.video.stabilize({
@@ -33,7 +41,7 @@ describe('Project Oxford Video API Test', function () {
         });
 
         it('checks the operation status, polls until done', function (done) {
-            this.slow();
+            this.slow(200000);
             this.timeout(120000);
             var waitTimeMs = 1000;
             var checkFn = function() {

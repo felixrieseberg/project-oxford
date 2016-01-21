@@ -136,7 +136,7 @@ var face = function (key) {
      * @param  {boolean} options.analyzesFacialHair     - Analyze facial hair?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
-    function detect(options) {
+    function detect(options) {       
         let attributes = [];
         if (options.analyzesAge) {
             attributes.push('age');

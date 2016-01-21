@@ -1,9 +1,9 @@
-var assert = require('assert'),
+var assert   = require('assert'),
     _Promise = require('bluebird'),
-    uuid = require('uuid'),
-    fs = require('fs'),
-    oxford = require('../dist/oxford'),
-    client = new oxford.Client(process.env.OXFORD_KEY);
+    uuid     = require('uuid'),
+    fs       = require('fs'),
+    oxford   = require('../dist/oxford'),
+    client   = new oxford.Client(process.env.OXFORD_KEY);
 
 // Store variables, no point in calling the api too often
 var billFaces = [],
@@ -18,7 +18,7 @@ var billFaces = [],
 describe('Project Oxford Face API Test', function () {
     afterEach(function() {
         // delay after each test to prevent throttling
-        var now = +new Date() + 250;
+        var now = +new Date() + 1000;
         while(now > +new Date());
     });
 
@@ -42,9 +42,11 @@ describe('Project Oxford Face API Test', function () {
                 done();
             }).catch(function (error) {
                 // Check if subscription is valid
-                if (error.statusCode === 403 || error.message === 'Subscription Expired!') {
+                if (error.statusCode === 403 || error.message === 'Subscription Expired!' || error.message.indexOf('invalid subscription key')) {
                     console.error('Subscription key is not valid, all tests will fail!');
+                    return process.exit(1);
                 }
+                
                 throw error;
             });
         });
@@ -323,7 +325,8 @@ describe('Project Oxford Face API Test', function () {
         });
 
         it('gets a PersonGroup', function (done) {
-            client.face.personGroup.get(personGroupId).then(function (response) {
+            client.face.personGroup.get(personGroupId)
+            .then(function (response) {
                 assert.equal(response.personGroupId, personGroupId);
                 assert.equal(response.name, 'po-node-test-group');
                 assert.equal(response.userData, 'test-data');
@@ -370,7 +373,8 @@ describe('Project Oxford Face API Test', function () {
         });
 
         it('deletes a PersonGroup', function (done) {
-            client.face.personGroup.delete(personGroupId).then(function (response) {
+            client.face.personGroup.delete(personGroupId)
+            .then(function (response) {
                 assert.ok(!response, "void response");
                 done();
             }).catch(function (response) {
@@ -411,7 +415,6 @@ describe('Project Oxford Face API Test', function () {
             client.face.person.get(personGroupId2, billPersonId)
             .then(function (response) {
                 assert.equal(response.personId, billPersonId);
-                assert.ok(!response.persistedFaceIds || response.persistedFaceIds.length, 0);
                 assert.equal(response.name, 'test-bill');
                 assert.equal(response.userData, 'test-data');
                 done();
@@ -520,8 +523,8 @@ describe('Project Oxford Face API Test', function () {
 describe('Project Oxford Vision API Test', function () {
     before(function() {
         // ensure the output directory exists
-        if(!fs.existsSync('./test/output')){
-            fs.mkdirSync('./test/output', 0766, function(err){ 
+        if (!fs.existsSync('./test/output')) {
+            fs.mkdirSync('./test/output', 0766, function (err) { 
                 throw err;
             });
         }
@@ -529,7 +532,7 @@ describe('Project Oxford Vision API Test', function () {
 
     afterEach(function() {
         // delay after each test to prevent throttling
-        var now = +new Date() + 250;
+        var now = +new Date() + 1000;
         while(now > +new Date());
     });
 
@@ -613,6 +616,9 @@ describe('Project Oxford Vision API Test', function () {
             var stats = fs.statSync('./test/output/thumb1.jpg');
             assert.ok((stats.size > 0));
             done();
+        })
+        .catch(function (error) {
+            console.error(error)
         });
     });
     
@@ -627,6 +633,9 @@ describe('Project Oxford Vision API Test', function () {
             assert.ok(response.language);
             assert.ok(response.regions);
             done();
+        })
+        .catch(function (error) {
+            console.log(error)
         });
     });
 
