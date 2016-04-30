@@ -92,8 +92,26 @@ var face = function face(key) {
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
+
+    function _postImageImage(url, image, options) {
+        return new _Promise(function (resolve, reject) {
+
+            request.post({
+                uri: url,
+                headers: {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-Type': 'application/octet-stream'
+                },
+                qs: options,
+                body: fs.readFileSync(image)
+            }, function (error, response) {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
+            });
+        });
+    }
     function _postLocal(url, image, options) {
-        return _postStream(url, fs.createReadStream(image), options);
+        return _postImageImage(url, image, options);
     }
 
     /**

@@ -89,8 +89,10 @@ var face = function (key) {
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
 
-     function _postImage(url, image, options) {
-        request.post({
+    function _postImageSync(url, image, options) {
+        return new _Promise(function(resolve, reject) {
+
+            request.post({
                 uri: url,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
@@ -101,10 +103,12 @@ var face = function (key) {
             }, (error, response) => {
                 response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
-            }));
-     }
+            });
+        });
+
+    }
     function _postLocal(url, image, options) {
-        return _postImage(url, image, options);
+        return _postImageSync(url, image, options);
     }
 
     /**
