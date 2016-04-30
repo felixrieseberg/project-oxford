@@ -71,7 +71,7 @@ var face = function (key) {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/octet-stream'
                 },
-                qs: options
+                qs: options,
             }, (error, response) => {
                 response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
@@ -88,8 +88,23 @@ var face = function (key) {
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
+
+     function _postImage(url, image, options) {
+        request.post({
+                uri: url,
+                headers: {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-Type': 'application/octet-stream'
+                },
+                qs: options,
+                body: fs.readFileSync(image)
+            }, (error, response) => {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
+            }));
+     }
     function _postLocal(url, image, options) {
-        return _postStream(url, fs.createReadStream(image), options);
+        return _postImage(url, image, options);
     }
 
     /**
