@@ -91,7 +91,7 @@ var vision = function (key) {
         let query = [];
 
         for (var key in options) {
-            if (test.test(key)&& options[key]) {
+            if (test.test(key) && options[key]) {
                 query.push(key);
             }
         };
