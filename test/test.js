@@ -544,7 +544,9 @@ describe('Project Oxford Vision API Test', function () {
             Color: true,
             Faces: true,
             Adult: true,
-            Categories: true
+            Categories: true,
+            Tags: true,
+            Description: true
         })
         .then(function (response) {
             assert.ok(response);
@@ -554,6 +556,8 @@ describe('Project Oxford Vision API Test', function () {
             assert.ok(response.faces);
             assert.ok(response.color);
             assert.ok(response.imageType);
+            assert.ok(response.tags);
+            assert.ok(response.description);
             done();
         })
     });
@@ -573,7 +577,9 @@ describe('Project Oxford Vision API Test', function () {
             Color: true,
             Faces: true,
             Adult: true,
-            Categories: true
+            Categories: true,
+            Tags: true,
+            Description: true
         })
         .then(function (response) {
             assert.ok(response);
@@ -583,6 +589,8 @@ describe('Project Oxford Vision API Test', function () {
             assert.ok(response.faces);
             assert.ok(response.color);
             assert.ok(response.imageType);
+            assert.ok(response.tags);
+            assert.ok(response.description);
             done();
         });
     });
