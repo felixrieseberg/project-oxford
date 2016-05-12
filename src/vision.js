@@ -82,17 +82,19 @@ var vision = function (key) {
      * @param  {boolean} options.Faces          - Detects if faces are present. If present, generate coordinates, gender and age.
      * @param  {boolean} options.Adult          - Detects if image is pornographic in nature (nudity or sex act). Sexually suggestive content is also detected.
      * @param  {boolean} options.Categories     - Image categorization; taxonomy defined in documentation.
+     * @param  {boolean} options.Tags           - Tags the image with a detailed list of words related to the image content.
+     * @param  {boolean} options.Description    - Describes the image content with a complete English sentence.
      * @return {Promise}                        - Promise resolving with the resulting JSON
      */
     function analyzeImage(options) {
-        let test = /(ImageType)|(Color)|(Faces)|(Adult)|(Categories)/;
+        let test = /(ImageType)|(Color)|(Faces)|(Adult)|(Categories)|(Tags)|(Description)/;
         let query = [];
 
-        Object.keys(options).forEach((value, key) => {
-            if (key.toString().match(test) && value) {
-                query.push(key.toString());
+        for (var key in options) {
+            if (test.test(key)&& options[key]) {
+                query.push(key);
             }
-        });
+        };
 
         let qs = {visualFeatures: query.join()};
 
