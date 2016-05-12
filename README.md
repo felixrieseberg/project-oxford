@@ -783,6 +783,8 @@ set of rich visual features based on the image content.
 | options.Faces | <code>boolean</code> | Detects if faces are present. If present, generate coordinates, gender and age. |
 | options.Adult | <code>boolean</code> | Detects if image is pornographic in nature (nudity or sex act). Sexually suggestive content is also detected. |
 | options.Categories | <code>boolean</code> | Image categorization; taxonomy defined in documentation. |
+| options.Tags | <code>boolean</code> | Tags the image with a detailed list of words related to the image content. |
+| options.Description | <code>boolean</code> | Describes the image content with a complete English sentence. |
 
 <a name="Client.vision..thumbnail"></a>
 #### vision~thumbnail(options) ⇒ <code>Promise</code>
