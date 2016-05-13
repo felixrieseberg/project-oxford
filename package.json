@@ -6,7 +6,8 @@
   "main": "dist/oxford.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec",
-    "docs": "jsdoc2md dist/*.js > api.md"
+    "docs": "jsdoc2md dist/*.js > api.md",
+    "build": "grunt compile"
   },
   "author": "Felix Rieseberg",
   "license": "MIT",

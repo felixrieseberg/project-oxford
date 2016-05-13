@@ -3,10 +3,10 @@ var request = require('request').defaults({
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const apiBaseUrl = 'https://api.projectoxford.ai/video/v1.0/';
-const trackFaceUrl = apiBaseUrl + 'trackface';
+const apiBaseUrl       = 'https://api.projectoxford.ai/video/v1.0/';
+const trackFaceUrl     = apiBaseUrl + 'trackface';
 const detectMotionrUrl = apiBaseUrl + 'detectmotion';
-const stabilizeUrl = apiBaseUrl + 'stabilize';
+const stabilizeUrl     = apiBaseUrl + 'stabilize';
 
 /**
  * @namespace

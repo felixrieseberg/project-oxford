@@ -4,14 +4,14 @@ var request = require('request').defaults({
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const detectUrl = '/detect';
-const similarUrl = '/findsimilars';
-const groupingUrl = '/group';
-const identifyUrl = '/identify';
-const verifyUrl = '/verify';
+const detectUrl      = '/detect';
+const similarUrl     = '/findsimilars';
+const groupingUrl    = '/group';
+const identifyUrl    = '/identify';
+const verifyUrl      = '/verify';
 const personGroupUrl = '/persongroups';
-const personUrl = '/persongroups';
-const faceListUrl = '/facelists';
+const personUrl      = '/persongroups';
+const faceListUrl    = '/facelists';
 
 /**
  * @namespace
@@ -55,31 +55,6 @@ var face = function (key) {
     }
 
     /**
-     * (Private) Post an image stream to a face API URL
-     *
-     * @private
-     * @param  {string} url         - Url to POST
-     * @param  {stream} stream      - Stream for the image
-     * @param  {object} options     - Querystring object
-     * @return {Promise}            - Promise resolving with the resulting JSON
-     */
-    function _postStream(url, stream, options) {
-        return new _Promise(function (resolve, reject) {
-            stream.pipe(request.post({
-                uri: url,
-                headers: {
-                    'Ocp-Apim-Subscription-Key': key,
-                    'Content-Type': 'application/octet-stream'
-                },
-                qs: options,
-            }, (error, response) => {
-                response.body = JSON.parse(response.body);
-                _return(error, response, resolve, reject);
-            }));
-        });
-    }
-
-    /**
      * (Private) Post a local image file to a face API URL
      *
      * @private
@@ -119,7 +94,6 @@ var face = function (key) {
      * @param  {object} source        - Union of sources
      * @param  {string} source.url    - URL of image
      * @param  {string} source.path   - Local path of image
-     * @param  {string} source.stream - Stream of image
      * @param  {object} qs            - Querystring object
      * @return {Promise}              - Promise resolving with the resulting JSON
      */
@@ -129,9 +103,6 @@ var face = function (key) {
         }
         if (source.path && source.path !== '') {
             return _postLocal(url, source.path, qs);
-        }
-        if (source.stream) {
-            return _postStream(url, source.stream, qs);
         }
     }
 
@@ -145,7 +116,6 @@ var face = function (key) {
      * @param  {object}  options                        - Options object
      * @param  {string}  options.url                    - URL to image to be used
      * @param  {string}  options.path                   - Path to image to be used
-     * @param  {stream}  options.stream                 - Stream for image to be used
      * @param  {boolean} options.returnFaceId           - Include face ID in response?
      * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesAge            - Analyze age?
@@ -422,7 +392,6 @@ var face = function (key) {
          * @param  {object} options             - Options object
          * @param  {string} options.url         - URL to image to be used
          * @param  {string} options.path        - Path to image to be used
-         * @param  {stream} options.stream      - Stream for image to be used
          * @param  {string} options.name        - Optional name for the face
          * @param  {string} options.userData    - Optional user-data for the face
          * @return {Promise}                    - Promise resolving with the resulting JSON
@@ -619,7 +588,6 @@ var face = function (key) {
          * @param {object} options             - The source specification.
          * @param {string} options.url         - URL to image to be used.
          * @param {string} options.path        - Path to image to be used.
-         * @param {stream} options.stream      - Stream for image to be used.
          * @param {string} options.userData    - Optional. Attach user data to person's face. The maximum length is 1024.
          * @param {object} options.targetFace  - Optional. The rectangle of the face in the image.
          * @return {Promise}                   - Promise resolving with the resulting JSON

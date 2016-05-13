@@ -3,11 +3,11 @@ var request = require('request').defaults({
         headers: {'User-Agent': 'nodejs/0.3.0'}}),
     _Promise = require('bluebird');
 
-const workBreakUrl = '/breakIntoWords';
-const listModelsUrl = '/models';
-const generateNextWordsUrl = '/generateNextWords';
+const workBreakUrl          = '/breakIntoWords';
+const listModelsUrl         = '/models';
+const generateNextWordsUrl  = '/generateNextWords';
 const calculateJointProbUrl = '/calculateJointProbability';
-const calculateCondProbUrl = '/calculateConditionalProbability';
+const calculateCondProbUrl  = '/calculateConditionalProbability';
 
 /**
  * @namespace

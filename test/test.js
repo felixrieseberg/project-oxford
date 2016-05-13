@@ -23,34 +23,6 @@ describe('Project Oxford Face API Test', function () {
     });
 
     describe('#detect()', function () {
-        it('detects a face in a stream', function (done) {
-            this.timeout(30000);
-            client.face.detect({
-                stream: fs.createReadStream('./test/images/face1.jpg'),
-                analyzesFaceLandmarks: true,
-                analyzesAge: true,
-                analyzesGender: true,
-                analyzesHeadPose: true
-            }).then(function (response) {
-                assert.ok(response[0].faceRectangle);
-                assert.ok(response[0].faceLandmarks);
-                assert.ok(response[0].faceAttributes.age);
-                assert.ok(response[0].faceAttributes.gender);
-                assert.ok(response[0].faceAttributes.headPose);
-
-                assert.equal(response[0].faceAttributes.gender, 'male');
-                done();
-            }).catch(function (error) {
-                // Check if subscription is valid
-                if (error.statusCode === 403 || error.message === 'Subscription Expired!' || error.message.indexOf('invalid subscription key')) {
-                    console.error('Subscription key is not valid, all tests will fail!');
-                    return process.exit(1);
-                }
-                
-                throw error;
-            });
-        });
-
         it('detects a face in a local file', function (done) {
             this.timeout(30000);
             client.face.detect({
@@ -69,6 +41,15 @@ describe('Project Oxford Face API Test', function () {
 
                 assert.equal(response[0].faceAttributes.gender, 'male');
                 done();
+            }).catch(function (error) {
+                // Check if subscription is valid
+                if (error.statusCode === 403 || error.message === 'Subscription Expired!' || error.message.indexOf('invalid subscription key')) {
+                    console.error('Subscription key is not valid, all tests will fail!');
+                    console.log(error);
+                    return process.exit(1);
+                }
+                
+                // throw error;
             });
         });
 

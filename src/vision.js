@@ -4,9 +4,9 @@ var request = require('request').defaults({
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const analyzeUrl = '/analyses';
+const analyzeUrl   = '/analyses';
 const thumbnailUrl = '/thumbnails';
-const ocrUrl = '/ocr';
+const ocrUrl       = '/ocr';
 
 /**
  * @namespace

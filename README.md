@@ -74,65 +74,65 @@ For the full documentation, please see the API reference below.
 **Kind**: global class  
 
 * [Client](#Client)
-    * [new Client(key)](#new_Client_new)
-    * [.emotion](#Client.emotion) : <code>object</code>
-        * [~analyzeEmotion(options)](#Client.emotion..analyzeEmotion) ⇒ <code>Promise</code>
-    * [.face](#Client.face) : <code>object</code>
-        * _static_
-            * [.faceList](#Client.face.faceList) : <code>object</code>
-                * [.list()](#Client.face.faceList.list) ⇒ <code>Promise</code>
-                * [.create(faceListId, options)](#Client.face.faceList.create) ⇒ <code>Promise</code>
-                * [.update(faceListId, options)](#Client.face.faceList.update) ⇒ <code>Promise</code>
-                * [.delete(faceListId)](#Client.face.faceList.delete) ⇒ <code>Promise</code>
-                * [.get(faceListId)](#Client.face.faceList.get) ⇒ <code>Promise</code>
-                * [.addFace(faceListId, options)](#Client.face.faceList.addFace) ⇒ <code>Promise</code>
-                * [.deleteFace(faceListId, persistedFaceId)](#Client.face.faceList.deleteFace) ⇒ <code>Promise</code>
-            * [.personGroup](#Client.face.personGroup) : <code>object</code>
-                * [.create(personGroupId, name, userData)](#Client.face.personGroup.create) ⇒ <code>Promise</code>
-                * [.delete(personGroupId)](#Client.face.personGroup.delete) ⇒ <code>Promise</code>
-                * [.get(personGroupId)](#Client.face.personGroup.get) ⇒ <code>Promise</code>
-                * [.trainingStatus(personGroupId)](#Client.face.personGroup.trainingStatus) ⇒ <code>Promise</code>
-                * [.trainingStart(personGroupId)](#Client.face.personGroup.trainingStart) ⇒ <code>Promise</code>
-                * [.update(personGroupId, name, userData)](#Client.face.personGroup.update) ⇒ <code>Promise</code>
-                * [.list()](#Client.face.personGroup.list) ⇒ <code>Promise</code>
-            * [.person](#Client.face.person) : <code>object</code>
-                * [.addFace(personGroupId, personId, options)](#Client.face.person.addFace) ⇒ <code>Promise</code>
-                * [.deleteFace(personGroupId, personId, persistedFaceId)](#Client.face.person.deleteFace) ⇒ <code>Promise</code>
-                * [.updateFace(personGroupId, personId, persistedFaceId, userData)](#Client.face.person.updateFace) ⇒ <code>Promise</code>
-                * [.getFace(personGroupId, personId, persistedFaceId)](#Client.face.person.getFace) ⇒ <code>Promise</code>
-                * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
-                * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
-                * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
-                * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
-                * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
-        * _inner_
-            * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
-            * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
-            * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
-            * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
-            * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
-    * [.text](#Client.text) : <code>object</code>
-        * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
-        * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
-    * [.video](#Client.video) : <code>object</code>
-        * _static_
-            * [.result](#Client.video.result)
-                * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
-                * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
-        * _inner_
-            * [~trackFace(options)](#Client.video..trackFace) ⇒ <code>Promise</code>
-            * [~detectMotion(options)](#Client.video..detectMotion) ⇒ <code>Promise</code>
-            * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
-    * [.vision](#Client.vision) : <code>object</code>
-        * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
-        * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
-        * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
-    * [.weblm](#Client.weblm) : <code>object</code>
-        * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
-        * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
-        * [~generateWords(model, words, options)](#Client.weblm..generateWords) ⇒ <code>Promise</code>
-        * [~getJointProbabilities(model, phrases, order)](#Client.weblm..getJointProbabilities) ⇒ <code>Promise</code>
-        * [~getConditionalProbabilities(model, queries, order)](#Client.weblm..getConditionalProbabilities) ⇒ <code>Promise</code>
+  * [new Client(key)](#new_Client_new)
+  * [.emotion](#Client.emotion) : <code>object</code>
+    * [~analyzeEmotion(options)](#Client.emotion..analyzeEmotion) ⇒ <code>Promise</code>
+  * [.face](#Client.face) : <code>object</code>
+    * _static_
+      * [.faceList](#Client.face.faceList) : <code>object</code>
+        * [.list()](#Client.face.faceList.list) ⇒ <code>Promise</code>
+        * [.create(faceListId, options)](#Client.face.faceList.create) ⇒ <code>Promise</code>
+        * [.update(faceListId, options)](#Client.face.faceList.update) ⇒ <code>Promise</code>
+        * [.delete(faceListId)](#Client.face.faceList.delete) ⇒ <code>Promise</code>
+        * [.get(faceListId)](#Client.face.faceList.get) ⇒ <code>Promise</code>
+        * [.addFace(faceListId, options)](#Client.face.faceList.addFace) ⇒ <code>Promise</code>
+        * [.deleteFace(faceListId, persistedFaceId)](#Client.face.faceList.deleteFace) ⇒ <code>Promise</code>
+      * [.personGroup](#Client.face.personGroup) : <code>object</code>
+        * [.create(personGroupId, name, userData)](#Client.face.personGroup.create) ⇒ <code>Promise</code>
+        * [.delete(personGroupId)](#Client.face.personGroup.delete) ⇒ <code>Promise</code>
+        * [.get(personGroupId)](#Client.face.personGroup.get) ⇒ <code>Promise</code>
+        * [.trainingStatus(personGroupId)](#Client.face.personGroup.trainingStatus) ⇒ <code>Promise</code>
+        * [.trainingStart(personGroupId)](#Client.face.personGroup.trainingStart) ⇒ <code>Promise</code>
+        * [.update(personGroupId, name, userData)](#Client.face.personGroup.update) ⇒ <code>Promise</code>
+        * [.list()](#Client.face.personGroup.list) ⇒ <code>Promise</code>
+      * [.person](#Client.face.person) : <code>object</code>
+        * [.addFace(personGroupId, personId, options)](#Client.face.person.addFace) ⇒ <code>Promise</code>
+        * [.deleteFace(personGroupId, personId, persistedFaceId)](#Client.face.person.deleteFace) ⇒ <code>Promise</code>
+        * [.updateFace(personGroupId, personId, persistedFaceId, userData)](#Client.face.person.updateFace) ⇒ <code>Promise</code>
+        * [.getFace(personGroupId, personId, persistedFaceId)](#Client.face.person.getFace) ⇒ <code>Promise</code>
+        * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
+        * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
+        * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
+        * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
+        * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
+    * _inner_
+      * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
+      * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
+      * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
+      * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
+      * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
+  * [.text](#Client.text) : <code>object</code>
+    * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
+    * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
+  * [.video](#Client.video) : <code>object</code>
+    * _static_
+      * [.result](#Client.video.result)
+        * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
+        * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
+    * _inner_
+      * [~trackFace(options)](#Client.video..trackFace) ⇒ <code>Promise</code>
+      * [~detectMotion(options)](#Client.video..detectMotion) ⇒ <code>Promise</code>
+      * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
+  * [.vision](#Client.vision) : <code>object</code>
+    * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
+    * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
+    * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+  * [.weblm](#Client.weblm) : <code>object</code>
+    * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
+    * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
+    * [~generateWords(model, words, options)](#Client.weblm..generateWords) ⇒ <code>Promise</code>
+    * [~getJointProbabilities(model, phrases, order)](#Client.weblm..getJointProbabilities) ⇒ <code>Promise</code>
+    * [~getConditionalProbabilities(model, queries, order)](#Client.weblm..getConditionalProbabilities) ⇒ <code>Promise</code>
 
 <a name="new_Client_new"></a>
 ### new Client(key)
@@ -161,49 +161,47 @@ Analyze the emotions of one or more faces in an image.
 | options.faceRectangles | <code>Array.&lt;Object&gt;</code> | Array of face rectangles.  Face rectangles      are returned in the face.detect and vision.analyzeImage methods. |
 
 <a name="Client.face"></a>
-### Client.face : <code>object</code>
-**Kind**: static namespace of <code>[Client](#Client)</code>  
 
 * [.face](#Client.face) : <code>object</code>
-    * _static_
-        * [.faceList](#Client.face.faceList) : <code>object</code>
-            * [.list()](#Client.face.faceList.list) ⇒ <code>Promise</code>
-            * [.create(faceListId, options)](#Client.face.faceList.create) ⇒ <code>Promise</code>
-            * [.update(faceListId, options)](#Client.face.faceList.update) ⇒ <code>Promise</code>
-            * [.delete(faceListId)](#Client.face.faceList.delete) ⇒ <code>Promise</code>
-            * [.get(faceListId)](#Client.face.faceList.get) ⇒ <code>Promise</code>
-            * [.addFace(faceListId, options)](#Client.face.faceList.addFace) ⇒ <code>Promise</code>
-            * [.deleteFace(faceListId, persistedFaceId)](#Client.face.faceList.deleteFace) ⇒ <code>Promise</code>
-        * [.personGroup](#Client.face.personGroup) : <code>object</code>
-            * [.create(personGroupId, name, userData)](#Client.face.personGroup.create) ⇒ <code>Promise</code>
-            * [.delete(personGroupId)](#Client.face.personGroup.delete) ⇒ <code>Promise</code>
-            * [.get(personGroupId)](#Client.face.personGroup.get) ⇒ <code>Promise</code>
-            * [.trainingStatus(personGroupId)](#Client.face.personGroup.trainingStatus) ⇒ <code>Promise</code>
-            * [.trainingStart(personGroupId)](#Client.face.personGroup.trainingStart) ⇒ <code>Promise</code>
-            * [.update(personGroupId, name, userData)](#Client.face.personGroup.update) ⇒ <code>Promise</code>
-            * [.list()](#Client.face.personGroup.list) ⇒ <code>Promise</code>
-        * [.person](#Client.face.person) : <code>object</code>
-            * [.addFace(personGroupId, personId, options)](#Client.face.person.addFace) ⇒ <code>Promise</code>
-            * [.deleteFace(personGroupId, personId, persistedFaceId)](#Client.face.person.deleteFace) ⇒ <code>Promise</code>
-            * [.updateFace(personGroupId, personId, persistedFaceId, userData)](#Client.face.person.updateFace) ⇒ <code>Promise</code>
-            * [.getFace(personGroupId, personId, persistedFaceId)](#Client.face.person.getFace) ⇒ <code>Promise</code>
-            * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
-            * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
-            * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
-            * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
-            * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
-    * _inner_
-        * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
-        * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
-        * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
-        * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
-        * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
+  * _static_
+    * [.faceList](#Client.face.faceList) : <code>object</code>
+      * [.list()](#Client.face.faceList.list) ⇒ <code>Promise</code>
+      * [.create(faceListId, options)](#Client.face.faceList.create) ⇒ <code>Promise</code>
+      * [.update(faceListId, options)](#Client.face.faceList.update) ⇒ <code>Promise</code>
+      * [.delete(faceListId)](#Client.face.faceList.delete) ⇒ <code>Promise</code>
+      * [.get(faceListId)](#Client.face.faceList.get) ⇒ <code>Promise</code>
+      * [.addFace(faceListId, options)](#Client.face.faceList.addFace) ⇒ <code>Promise</code>
+      * [.deleteFace(faceListId, persistedFaceId)](#Client.face.faceList.deleteFace) ⇒ <code>Promise</code>
+    * [.personGroup](#Client.face.personGroup) : <code>object</code>
+      * [.create(personGroupId, name, userData)](#Client.face.personGroup.create) ⇒ <code>Promise</code>
+      * [.delete(personGroupId)](#Client.face.personGroup.delete) ⇒ <code>Promise</code>
+      * [.get(personGroupId)](#Client.face.personGroup.get) ⇒ <code>Promise</code>
+      * [.trainingStatus(personGroupId)](#Client.face.personGroup.trainingStatus) ⇒ <code>Promise</code>
+      * [.trainingStart(personGroupId)](#Client.face.personGroup.trainingStart) ⇒ <code>Promise</code>
+      * [.update(personGroupId, name, userData)](#Client.face.personGroup.update) ⇒ <code>Promise</code>
+      * [.list()](#Client.face.personGroup.list) ⇒ <code>Promise</code>
+    * [.person](#Client.face.person) : <code>object</code>
+      * [.addFace(personGroupId, personId, options)](#Client.face.person.addFace) ⇒ <code>Promise</code>
+      * [.deleteFace(personGroupId, personId, persistedFaceId)](#Client.face.person.deleteFace) ⇒ <code>Promise</code>
+      * [.updateFace(personGroupId, personId, persistedFaceId, userData)](#Client.face.person.updateFace) ⇒ <code>Promise</code>
+      * [.getFace(personGroupId, personId, persistedFaceId)](#Client.face.person.getFace) ⇒ <code>Promise</code>
+      * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
+      * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
+      * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
+      * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
+      * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
+  * _inner_
+    * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
+    * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
+    * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
+    * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
+    * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
 
 <a name="Client.face.faceList"></a>
 #### face.faceList : <code>object</code>
 **Kind**: static namespace of <code>[face](#Client.face)</code>  
 
-* [.faceList](#Client.face.faceList) : <code>object</code>
+  * [.faceList](#Client.face.faceList) : <code>object</code>
     * [.list()](#Client.face.faceList.list) ⇒ <code>Promise</code>
     * [.create(faceListId, options)](#Client.face.faceList.create) ⇒ <code>Promise</code>
     * [.update(faceListId, options)](#Client.face.faceList.update) ⇒ <code>Promise</code>
@@ -284,7 +282,6 @@ Gets an existing face list.
 | options | <code>object</code> | Options object |
 | options.url | <code>string</code> | URL to image to be used |
 | options.path | <code>string</code> | Path to image to be used |
-| options.stream | <code>stream</code> | Stream for image to be used |
 | options.name | <code>string</code> | Optional name for the face |
 | options.userData | <code>string</code> | Optional user-data for the face |
 
@@ -305,7 +302,7 @@ not from the detect method.
 #### face.personGroup : <code>object</code>
 **Kind**: static namespace of <code>[face](#Client.face)</code>  
 
-* [.personGroup](#Client.face.personGroup) : <code>object</code>
+  * [.personGroup](#Client.face.personGroup) : <code>object</code>
     * [.create(personGroupId, name, userData)](#Client.face.personGroup.create) ⇒ <code>Promise</code>
     * [.delete(personGroupId)](#Client.face.personGroup.delete) ⇒ <code>Promise</code>
     * [.get(personGroupId)](#Client.face.personGroup.get) ⇒ <code>Promise</code>
@@ -401,7 +398,7 @@ Lists all person groups in the current subscription.
 #### face.person : <code>object</code>
 **Kind**: static namespace of <code>[face](#Client.face)</code>  
 
-* [.person](#Client.face.person) : <code>object</code>
+  * [.person](#Client.face.person) : <code>object</code>
     * [.addFace(personGroupId, personId, options)](#Client.face.person.addFace) ⇒ <code>Promise</code>
     * [.deleteFace(personGroupId, personId, persistedFaceId)](#Client.face.person.deleteFace) ⇒ <code>Promise</code>
     * [.updateFace(personGroupId, personId, persistedFaceId, userData)](#Client.face.person.updateFace) ⇒ <code>Promise</code>
@@ -426,7 +423,6 @@ Adds a face to a person for identification. The maximum face count for each pers
 | options | <code>object</code> | The source specification. |
 | options.url | <code>string</code> | URL to image to be used. |
 | options.path | <code>string</code> | Path to image to be used. |
-| options.stream | <code>stream</code> | Stream for image to be used. |
 | options.userData | <code>string</code> | Optional. Attach user data to person's face. The maximum length is 1024. |
 | options.targetFace | <code>object</code> | Optional. The rectangle of the face in the image. |
 
@@ -548,7 +544,6 @@ and Find Similar.
 | options | <code>object</code> | Options object |
 | options.url | <code>string</code> | URL to image to be used |
 | options.path | <code>string</code> | Path to image to be used |
-| options.stream | <code>stream</code> | Stream for image to be used |
 | options.returnFaceId | <code>boolean</code> | Include face ID in response? |
 | options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
 | options.analyzesAge | <code>boolean</code> | Analyze age? |
@@ -628,8 +623,8 @@ For the scenarios that are sensitive to accuracy please use with own judgment.
 **Kind**: static namespace of <code>[Client](#Client)</code>  
 
 * [.text](#Client.text) : <code>object</code>
-    * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
-    * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
+  * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
+  * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
 
 <a name="Client.text..proof"></a>
 #### text~proof(text, preContextText, postContextText) ⇒ <code>Promise</code>
@@ -665,20 +660,20 @@ of performance and relevance.
 **Kind**: static namespace of <code>[Client](#Client)</code>  
 
 * [.video](#Client.video) : <code>object</code>
-    * _static_
-        * [.result](#Client.video.result)
-            * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
-            * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
-    * _inner_
-        * [~trackFace(options)](#Client.video..trackFace) ⇒ <code>Promise</code>
-        * [~detectMotion(options)](#Client.video..detectMotion) ⇒ <code>Promise</code>
-        * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
+  * _static_
+    * [.result](#Client.video.result)
+      * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
+      * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
+  * _inner_
+    * [~trackFace(options)](#Client.video..trackFace) ⇒ <code>Promise</code>
+    * [~detectMotion(options)](#Client.video..detectMotion) ⇒ <code>Promise</code>
+    * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
 
 <a name="Client.video.result"></a>
 #### video.result
 **Kind**: static property of <code>[video](#Client.video)</code>  
 
-* [.result](#Client.video.result)
+  * [.result](#Client.video.result)
     * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
     * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
 
@@ -761,9 +756,9 @@ A stabilized version of you video will be generated.
 **Kind**: static namespace of <code>[Client](#Client)</code>  
 
 * [.vision](#Client.vision) : <code>object</code>
-    * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
-    * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
-    * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+  * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
+  * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
+  * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
 
 <a name="Client.vision..analyzeImage"></a>
 #### vision~analyzeImage(options) ⇒ <code>Promise</code>
@@ -827,11 +822,11 @@ characters into a machine-usable character stream.
 **Kind**: static namespace of <code>[Client](#Client)</code>  
 
 * [.weblm](#Client.weblm) : <code>object</code>
-    * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
-    * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
-    * [~generateWords(model, words, options)](#Client.weblm..generateWords) ⇒ <code>Promise</code>
-    * [~getJointProbabilities(model, phrases, order)](#Client.weblm..getJointProbabilities) ⇒ <code>Promise</code>
-    * [~getConditionalProbabilities(model, queries, order)](#Client.weblm..getConditionalProbabilities) ⇒ <code>Promise</code>
+  * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
+  * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
+  * [~generateWords(model, words, options)](#Client.weblm..generateWords) ⇒ <code>Promise</code>
+  * [~getJointProbabilities(model, phrases, order)](#Client.weblm..getJointProbabilities) ⇒ <code>Promise</code>
+  * [~getConditionalProbabilities(model, queries, order)](#Client.weblm..getConditionalProbabilities) ⇒ <code>Promise</code>
 
 <a name="Client.weblm..listModels"></a>
 #### weblm~listModels() ⇒ <code>Promise</code>
