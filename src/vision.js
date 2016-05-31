@@ -94,7 +94,7 @@ var vision = function (key) {
             if (test.test(key) && options[key]) {
                 query.push(key);
             }
-        };
+        }
 
         let qs = {visualFeatures: query.join()};
 

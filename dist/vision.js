@@ -1,13 +1,13 @@
 'use strict';
 
 var request = require('request').defaults({
-    baseUrl: 'https://api.projectoxford.ai/vision/v1/',
+    baseUrl: 'https://api.projectoxford.ai/vision/v1.0/',
     headers: { 'User-Agent': 'nodejs/0.3.0' } }),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-var analyzeUrl = '/analyses';
-var thumbnailUrl = '/thumbnails';
+var analyzeUrl = '/analyze';
+var thumbnailUrl = '/generateThumbnail';
 var ocrUrl = '/ocr';
 
 /**
@@ -98,7 +98,7 @@ var vision = function vision(key) {
             if (test.test(key) && options[key]) {
                 query.push(key);
             }
-        };
+        }
 
         var qs = { visualFeatures: query.join() };
 
