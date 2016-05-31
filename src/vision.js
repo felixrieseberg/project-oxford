@@ -1,11 +1,11 @@
 var request = require('request').defaults({
-        baseUrl: 'https://api.projectoxford.ai/vision/v1/',
+        baseUrl: 'https://api.projectoxford.ai/vision/v1.0/',
         headers: {'User-Agent': 'nodejs/0.3.0'}}),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const analyzeUrl   = '/analyses';
-const thumbnailUrl = '/thumbnails';
+const analyzeUrl   = '/analyze';
+const thumbnailUrl = '/generateThumbnail';
 const ocrUrl       = '/ocr';
 
 /**
