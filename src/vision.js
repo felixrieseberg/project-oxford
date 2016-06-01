@@ -206,6 +206,10 @@ var vision = function (key) {
         }
     }
 
+    /**
+     * @namespace
+     * @memberof Client.vision
+     */
     var models = {
         /**
          * Lists the domain-specific image analysis models.
@@ -226,10 +230,11 @@ var vision = function (key) {
         /**
          * Analyze an image using a domain-specific image classifier.
          *
-         * @param  {string} model               - Name of the model
-         * @param  {string}  options.url        - Url to image to be analyzed
-         * @param  {string}  options.path       - Path to image to be analyzed
-         * @return {Promise}                    - Promise resolving with the resulting JSON
+         * @param  {string} model              - Name of the model
+         * @param  {Object} options            - Options object location of the source image
+         * @param  {string} options.url        - Url to image to be analyzed
+         * @param  {string} options.path       - Path to image to be analyzed
+         * @return {Promise}                   - Promise resolving with the resulting JSON
          */
         analyzeImage: function (model, options) {
             var modelUrl = modelsUrl + '/' + model + '/analyze';
