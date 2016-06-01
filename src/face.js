@@ -406,6 +406,7 @@ var face = function (key) {
          * @param  {stream} options.stream      - Stream for image to be used
          * @param  {string} options.name        - Optional name for the face
          * @param  {string} options.userData    - Optional user-data for the face
+		  * @param  {string} options.targetFace  - Optional face rectangle to specify the target face to be added into the face list, in the format of "targetFace=left,top,width,height".
          * @return {Promise}                    - Promise resolving with the resulting JSON
          */
         addFace: function (faceListId, options) {
@@ -414,6 +415,7 @@ var face = function (key) {
             if (options) {
                 qs.name = options.name;
                 qs.userData = options.userData;
+				 qs.targetFace = options.targetFace;
             }
             return _postImage(url, options, qs);
         },
