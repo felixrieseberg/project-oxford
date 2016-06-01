@@ -63,10 +63,8 @@ var face = function (key) {
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-
     function _postImageSync(url, image, options) {
-        return new _Promise(function(resolve, reject) {
-
+        return new _Promise(function (resolve, reject) {
             request.post({
                 uri: url,
                 headers: {
@@ -80,7 +78,6 @@ var face = function (key) {
                 _return(error, response, resolve, reject);
             });
         });
-
     }
     function _postLocal(url, image, options) {
         return _postImageSync(url, image, options);
@@ -125,7 +122,7 @@ var face = function (key) {
      * @param  {boolean} options.analyzesFacialHair     - Analyze facial hair?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
-    function detect(options) {       
+    function detect(options) {
         let attributes = [];
         if (options.analyzesAge) {
             attributes.push('age');

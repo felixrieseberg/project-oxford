@@ -67,10 +67,8 @@ var face = function face(key) {
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-
     function _postImageSync(url, image, options) {
         return new _Promise(function (resolve, reject) {
-
             request.post({
                 uri: url,
                 headers: {
