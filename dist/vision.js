@@ -9,6 +9,7 @@ var request = require('request').defaults({
 var analyzeUrl = '/analyze';
 var thumbnailUrl = '/generateThumbnail';
 var ocrUrl = '/ocr';
+var modelsUrl = '/models';
 
 /**
  * @namespace
@@ -33,14 +34,15 @@ var vision = function vision(key) {
     /**
      * (Private) Analyze a local image, using a fs pipe
      * @private
+     * @param  {string} url         - API url
      * @param  {string} image       - Path to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    function _analyzeLocal(image, options) {
+    function _postLocal(url, image, options) {
         return new _Promise(function (resolve, reject) {
             fs.createReadStream(image).pipe(request.post({
-                uri: analyzeUrl,
+                uri: url,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/octet-stream'
@@ -56,14 +58,15 @@ var vision = function vision(key) {
     /**
      * (Private) Analyze an online image
      * @private
+     * @param  {string} url         - API url
      * @param  {string} image       - Url to image
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    function _analyzeOnline(image, options) {
+    function _postOnline(url, image, options) {
         return new _Promise(function (resolve, reject) {
             request.post({
-                uri: analyzeUrl,
+                uri: url,
                 headers: { 'Ocp-Apim-Subscription-Key': key },
                 json: true,
                 body: { url: image },
@@ -103,10 +106,10 @@ var vision = function vision(key) {
         var qs = { visualFeatures: query.join() };
 
         if (options.path) {
-            return _analyzeLocal(options.path, qs);
+            return _postLocal(analyzeUrl, options.path, qs);
         }
         if (options.url) {
-            return _analyzeOnline(options.url, qs);
+            return _postOnline(analyzeUrl, options.url, qs);
         }
     }
 
@@ -184,50 +187,6 @@ var vision = function vision(key) {
     }
 
     /**
-     * (Private) OCR a local image, using a fs pipe
-     * @private
-     * @param  {string} image       - Path to image
-     * @param  {Object} options     - Options object
-     * @return {Promise}            - Promise resolving with the resulting JSON
-     */
-    function _ocrLocal(image, options) {
-        return new _Promise(function (resolve, reject) {
-            fs.createReadStream(image).pipe(request.post({
-                uri: ocrUrl,
-                headers: {
-                    'Ocp-Apim-Subscription-Key': key,
-                    'Content-Type': 'application/octet-stream'
-                },
-                qs: options
-            }, function (error, response) {
-                response.body = JSON.parse(response.body);
-                _return(error, response, resolve, reject);
-            }));
-        });
-    }
-
-    /**
-     * (Private) OCR an online image
-     * @private
-     * @param  {string} image       - url to image
-     * @param  {Object} options     - Options object
-     * @return {Promise}            - Promise resolving with the resulting JSON
-     */
-    function _ocrOnline(image, options) {
-        return new _Promise(function (resolve, reject) {
-            request.post({
-                uri: ocrUrl,
-                headers: { 'Ocp-Apim-Subscription-Key': key },
-                json: true,
-                body: { url: image },
-                qs: options
-            }, function (error, response) {
-                return _return(error, response, resolve, reject);
-            });
-        });
-    }
-
-    /**
      * Optical Character Recognition (OCR) detects text in an image and extracts the recognized
      * characters into a machine-usable character stream.
      *
@@ -245,17 +204,55 @@ var vision = function vision(key) {
         };
 
         if (options.path) {
-            return _ocrLocal(options.path, qs);
+            return _postLocal(ocrUrl, options.path, qs);
         }
         if (options.url) {
-            return _ocrOnline(options.url, qs);
+            return _postOnline(ocrUrl, options.url, qs);
         }
     }
+
+    var models = {
+        /**
+         * Lists the domain-specific image analysis models.
+         * @return {Promise} - Promise resolving with the resulting JSON
+         */
+        list: function list() {
+            return new _Promise(function (resolve, reject) {
+                request({
+                    uri: modelsUrl,
+                    headers: { 'Ocp-Apim-Subscription-Key': key }
+                }, function (error, response) {
+                    response.body = JSON.parse(response.body);
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Analyze an image using a domain-specific image classifier.
+         *
+         * @param  {string} model               - Name of the model
+         * @param  {string}  options.url        - Url to image to be analyzed
+         * @param  {string}  options.path       - Path to image to be analyzed
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        analyzeImage: function analyzeImage(model, options) {
+            var modelUrl = modelsUrl + '/' + model + '/analyze';
+
+            if (options.path) {
+                return _postLocal(modelUrl, options.path, {});
+            }
+            if (options.url) {
+                return _postOnline(modelUrl, options.url, {});
+            }
+        }
+    };
 
     return {
         analyzeImage: analyzeImage,
         thumbnail: thumbnail,
-        ocr: ocr
+        ocr: ocr,
+        models: models
     };
 };
 

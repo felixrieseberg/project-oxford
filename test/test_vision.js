@@ -1,6 +1,5 @@
 var assert   = require('assert'),
     _Promise = require('bluebird'),
-    uuid     = require('uuid'),
     fs       = require('fs'),
     oxford   = require('../dist/oxford'),
     client   = new oxford.Client(process.env.OXFORD_KEY);
@@ -143,6 +142,35 @@ describe('Project Oxford Vision API Test', function () {
             assert.ok(response.language);
             assert.ok(response.orientation);
             done();
+        });
+    });
+
+    it('list domain-specific classifier models, find celebrities model', function (done) {
+        this.timeout(30000);
+        client.vision.models.list()
+        .then(function (response) {
+            var celeb = response.models.find(function(model) { return model.name === 'celebrities'; });
+            assert.ok(celeb);
+            var celebcat = celeb.categories.find(function(category) { return category === 'people_'; });
+            assert.ok(celebcat);
+            done();
+        });
+    });
+
+    it('run celebrity classifier, recognize billg', function (done) {
+        this.timeout(30000);
+        client.vision.models.analyzeImage('celebrities', {
+            path: './test/images/face1.jpg'
+        })
+        .then(function (response) {
+            var celeb = response.result.celebrities[0];
+            assert.equal(celeb.name, 'Bill Gates');
+            assert.ok(celeb.faceRectangle);
+            assert.ok(celeb.confidence);
+            done();
+        })
+        .catch(function (error) {
+            console.log(error)
         });
     });
 });
