@@ -60,7 +60,7 @@ client.vision.thumbnail({
 
 Running OCR on an image, returning the text on the image:
 ```
-visionClient.vision.ocr({
+client.vision.ocr({
     path: './test/images/ocr.jpg',
     language: 'en'
 }).then(function (response) {
