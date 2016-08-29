@@ -14,17 +14,18 @@ var billFaces = [],
     subValid = true,
     billPersonId,
     billPersonPersistedFaceId;
- 
+
 describe('Project Oxford Face API Test', function () {
+    this.timeout(10000);
+
     afterEach(function() {
-        // delay after each test to prevent throttling
-        var now = +new Date() + 1000;
+        // delay after each test to prevent throttling.
+        var now = +new Date() + 6000;
         while(now > +new Date());
     });
 
     describe('#detect()', function () {
         it('detects a face in a local file', function (done) {
-            this.timeout(30000);
             client.face.detect({
                 path: './test/images/face1.jpg',
                 returnFaceId: true,
@@ -48,13 +49,12 @@ describe('Project Oxford Face API Test', function () {
                     console.log(error);
                     return process.exit(1);
                 }
-                
+
                 // throw error;
             });
         });
 
         it('detects a face in a remote file', function (done) {
-            this.timeout(30000);
             client.face.detect({
                 url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
                 returnFaceId: true,
@@ -78,12 +78,10 @@ describe('Project Oxford Face API Test', function () {
             });
         });
     });
-    
+
     describe('#similar()', function () {
         it('detects similar faces', function (done) {
             var detects = [];
-
-            this.timeout(30000);
 
             detects.push(client.face.detect({
                     path: './test/images/face1.jpg',
@@ -119,8 +117,6 @@ describe('Project Oxford Face API Test', function () {
         it('detects groups faces', function (done) {
             var faceIds = [];
 
-            this.timeout(30000);
-
             client.face.detect({
                 path: './test/images/face-group.jpg',
                 returnFaceId: true
@@ -141,7 +137,6 @@ describe('Project Oxford Face API Test', function () {
 
     describe('#verify()', function () {
         it('verifies a face against another face', function (done) {
-            this.timeout(30000);
 
             assert.equal(billFaces.length, 2);
 
@@ -153,10 +148,9 @@ describe('Project Oxford Face API Test', function () {
             });
         });
     });
-    
+
     describe('#faceList', function () {
         before(function(done) {
-            this.timeout(5000);
             // Remove old face lists.
             client.face.faceList.list().then(function (response) {
                 var promises = [];
@@ -185,11 +179,10 @@ describe('Project Oxford Face API Test', function () {
                 done();
             });
         });
-        
+
         it('adds two face to the face list', function (done) {
-            this.timeout(10000);
             var adds = [];
-            
+
             adds.push(client.face.faceList.addFace(personFaceListId, {
                     path: './test/images/face1.jpg',
                     name: 'bill-face-1'})
@@ -199,7 +192,7 @@ describe('Project Oxford Face API Test', function () {
                 .catch(function (error) {
                     assert.ok(false, JSON.stringify(error));
                 }));
-                
+
             adds.push(client.face.faceList.addFace(personFaceListId, {
                     url: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bill_Gates_June_2015.jpg',
                     name: 'bill-face-2'})
@@ -209,12 +202,12 @@ describe('Project Oxford Face API Test', function () {
                 .catch(function (error) {
                     assert.ok(false, JSON.stringify(error));
                 }));
-                
+
             _Promise.all(adds).then(function () {
                 done();
             })
         });
-        
+
         it('removes one face from the face list', function (done) {
             assert.equal(billPersistedFaces.length, 2);
             var persistedFaceId = billPersistedFaces.pop();
@@ -228,7 +221,7 @@ describe('Project Oxford Face API Test', function () {
                 done();
             });
         });
-        
+
         it('retrieves the face list', function (done) {
             client.face.faceList.get(personFaceListId)
             .then(function (response) {
@@ -244,7 +237,7 @@ describe('Project Oxford Face API Test', function () {
                 done();
             });
         });
-        
+
         it('invokes #similar using the face list', function (done) {
             client.face.similar(billFaces[0], {
                 candidateFaceListId: personFaceListId
@@ -260,10 +253,9 @@ describe('Project Oxford Face API Test', function () {
             });
         });
     });
-    
+
     describe('#PersonGroup', function () {
         before(function(done) {
-            this.timeout(5000);
             // In order to test the
             // training feature, we have to start training - sadly, we can't
             // delete the group then. So we clean up before we run tests - and to wait
@@ -318,7 +310,7 @@ describe('Project Oxford Face API Test', function () {
                 done();
             });
         });
-        
+
         it('updates a PersonGroup', function (done) {
             client.face.personGroup.update(personGroupId, 'po-node-test-group2', 'test-data2')
             .then(function (response) {
@@ -498,45 +490,5 @@ describe('Project Oxford Face API Test', function () {
                 done();
             });
         });
-    });
-});
-
-describe('Project Oxford Emotion API Test', function () {
-    it('analyzes a local image', function (done) {
-        this.timeout(30000);
-        client.emotion.analyzeEmotion({
-            path: './test/images/face2.jpg'
-        })
-        .then(function (response) {
-            assert.ok(response);
-            assert.equal(response.length, 1);
-            assert.ok(response[0].faceRectangle);
-            var highestEmotion;
-            var highestScore = 0;
-            for (var emotion in response[0].scores) {
-                var score = response[0].scores[emotion];
-                if (score > highestScore) {
-                    highestScore = score;
-                    highestEmotion = emotion;
-                }
-            }
-            assert.equal(highestEmotion, 'happiness');
-            done();
-        })
-    });
-
-    it('analyzes an online image', function (done) {
-        this.timeout(30000);
-        client.emotion.analyzeEmotion({
-            url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Crying-girl.jpg/640px-Crying-girl.jpg',
-            faceRectangles: [{left: 167, top: 163, width: 224, height: 224}]
-        })
-        .then(function (response) {
-            assert.ok(response);
-            assert.equal(response.length, 1);
-            assert.ok(response[0].faceRectangle);
-            assert.ok(response[0].scores.sadness > 0.98);
-            done();
-        })
     });
 });
