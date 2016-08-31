@@ -92,7 +92,7 @@ var face = function face(key) {
      *
      * @private
      * @param  {string} url         - Url to POST
-     * @param  {string} image       - Url to the image
+     * @param  {string} buffer      - Buffer containing image
      * @param  {object} options     - Querystring object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */

@@ -33,10 +33,20 @@ module.exports = function (grunt) {
                 }
             }
         },
-        clean: ['./test/output/*']
+        clean: ['./test/output/*'],
+        jsdoc2md: {
+	    oneOutputFile: {
+		src: 'dist/*js',
+		dest: 'api.md'
+	    },
+	    withOptions: {
+	    }
+	}
     });
 
+    grunt.loadNpmTasks('grunt-jsdoc-to-markdown');
     grunt.registerTask('compile', 'babel');
     grunt.registerTask('test', ['clean', 'jshint', 'jscs']);
     grunt.registerTask('default', ['test', 'compile']);
+    grunt.registerTask('doc','jsdoc2md');
 };
