@@ -23,6 +23,7 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-jscodesniffer": "^0.1.8",
     "grunt-jscs": "^0.8.1",
+    "grunt-jsdoc-to-markdown": "^1.2.1",
     "load-grunt-tasks": "^1.0.0",
     "mocha": "^2.2.5",
     "uuid": "^2.0.1"

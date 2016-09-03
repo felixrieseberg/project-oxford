@@ -88,6 +88,31 @@ var face = function face(key) {
     }
 
     /**
+     * (Private) Post an online image to a face API URL
+     *
+     * @private
+     * @param  {string} url         - Url to POST
+     * @param  {string} buffer      - Buffer containing image
+     * @param  {object} options     - Querystring object
+     * @return {Promise}            - Promise resolving with the resulting JSON
+     */
+    function _postBuffer(url, buffer, options) {
+        return new _Promise(function (resolve, reject) {
+            request.post({
+                uri: url,
+                headers: {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-Type': 'application/octet-stream' },
+                body: buffer,
+                qs: options
+            }, function (error, response) {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
+            });
+        });
+    }
+
+    /**
      * (Private)  Post an image to a face API URL.
      *
      * @private
@@ -105,6 +130,9 @@ var face = function face(key) {
         if (source.path && source.path !== '') {
             return _postLocal(url, source.path, qs);
         }
+        if (source.data && source.data !== '') {
+            return _postBuffer(url, source.data, qs);
+        }
     }
 
     /**
@@ -117,6 +145,7 @@ var face = function face(key) {
      * @param  {object}  options                        - Options object
      * @param  {string}  options.url                    - URL to image to be used
      * @param  {string}  options.path                   - Path to image to be used
+     * @param  {string}  options.data                   - Image as a binary buffer
      * @param  {boolean} options.returnFaceId           - Include face ID in response?
      * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesAge            - Analyze age?
@@ -401,8 +430,10 @@ var face = function face(key) {
          * @param  {object} options             - Options object
          * @param  {string} options.url         - URL to image to be used
          * @param  {string} options.path        - Path to image to be used
+         * @param  {string} options.data        - Image as a binary buffer
          * @param  {string} options.name        - Optional name for the face
          * @param  {string} options.userData    - Optional user-data for the face
+         * @param  {string} options.targetFace  - Optional face rectangle to specify the target face to be added into the face list, in the format of "targetFace=left,top,width,height".
          * @return {Promise}                    - Promise resolving with the resulting JSON
          */
         addFace: function addFace(faceListId, options) {
@@ -411,6 +442,7 @@ var face = function face(key) {
             if (options) {
                 qs.name = options.name;
                 qs.userData = options.userData;
+                qs.targetFace = options.targetFace;
             }
             return _postImage(url, options, qs);
         },
@@ -597,6 +629,7 @@ var face = function face(key) {
          * @param {object} options             - The source specification.
          * @param {string} options.url         - URL to image to be used.
          * @param {string} options.path        - Path to image to be used.
+         * @param {string} options.data        - Image as a binary buffer
          * @param {string} options.userData    - Optional. Attach user data to person's face. The maximum length is 1024.
          * @param {object} options.targetFace  - Optional. The rectangle of the face in the image.
          * @return {Promise}                   - Promise resolving with the resulting JSON
