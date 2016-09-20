@@ -79,7 +79,7 @@ For the full documentation, please see the API reference below.
 **Kind**: global class  
 
 * [Client](#Client)
-    * [new Client(key)](#new_Client_new)
+    * [new Client(key, host)](#new_Client_new)
     * [.emotion](#Client.emotion) : <code>object</code>
         * [~analyzeEmotion(options)](#Client.emotion..analyzeEmotion) ⇒ <code>Promise</code>
     * [.face](#Client.face) : <code>object</code>
@@ -146,13 +146,14 @@ For the full documentation, please see the API reference below.
 
 <a name="new_Client_new"></a>
 
-### new Client(key)
+### new Client(key, host)
 Creates a new Project Oxford Client using a given API key.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | Project Oxford API Key |
+| host | <code>string</code> | Optional host address |
 
 <a name="Client.emotion"></a>
 
@@ -237,7 +238,8 @@ Lists the faceListIds, and associated names and/or userData.
 <a name="Client.face.faceList.create"></a>
 
 ##### faceList.create(faceListId, options) ⇒ <code>Promise</code>
-Creates a new face list with a user-specified ID.A face list is a list of faces associated to be associated with a given person.
+Creates a new face list with a user-specified ID.
+A face list is a list of faces associated to be associated with a given person.
 
 **Kind**: static method of <code>[faceList](#Client.face.faceList)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -252,7 +254,9 @@ Creates a new face list with a user-specified ID.A face list is a list of faces
 <a name="Client.face.faceList.update"></a>
 
 ##### faceList.update(faceListId, options) ⇒ <code>Promise</code>
-Creates a new person group with a user-specified ID.A person group is one of the most important parameters for the Identification API.The Identification searches person faces in a specified person group.
+Creates a new person group with a user-specified ID.
+A person group is one of the most important parameters for the Identification API.
+The Identification searches person faces in a specified person group.
 
 **Kind**: static method of <code>[faceList](#Client.face.faceList)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -310,7 +314,8 @@ Gets an existing face list.
 <a name="Client.face.faceList.deleteFace"></a>
 
 ##### faceList.deleteFace(faceListId, persistedFaceId) ⇒ <code>Promise</code>
-Delete a face from the face list.  The face ID will be an ID returned in the addFace method,not from the detect method.
+Delete a face from the face list.  The face ID will be an ID returned in the addFace method,
+not from the detect method.
 
 **Kind**: static method of <code>[faceList](#Client.face.faceList)</code>  
 **Returns**: <code>Promise</code> - - Promise; successful response is empty  
@@ -337,7 +342,9 @@ Delete a face from the face list.  The face ID will be an ID returned in the add
 <a name="Client.face.personGroup.create"></a>
 
 ##### personGroup.create(personGroupId, name, userData) ⇒ <code>Promise</code>
-Creates a new person group with a user-specified ID.A person group is one of the most important parameters for the Identification API.The Identification searches person faces in a specified person group.
+Creates a new person group with a user-specified ID.
+A person group is one of the most important parameters for the Identification API.
+The Identification searches person faces in a specified person group.
 
 **Kind**: static method of <code>[personGroup](#Client.face.personGroup)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -375,7 +382,9 @@ Gets an existing person group.
 <a name="Client.face.personGroup.trainingStatus"></a>
 
 ##### personGroup.trainingStatus(personGroupId) ⇒ <code>Promise</code>
-Retrieves the training status of a person group. Training is triggered by the Train PersonGroup API.The training will process for a while on the server side. This API can query whether the trainingis completed or ongoing.
+Retrieves the training status of a person group. Training is triggered by the Train PersonGroup API.
+The training will process for a while on the server side. This API can query whether the training
+is completed or ongoing.
 
 **Kind**: static method of <code>[personGroup](#Client.face.personGroup)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -387,7 +396,10 @@ Retrieves the training status of a person group. Training is triggered by the Tr
 <a name="Client.face.personGroup.trainingStart"></a>
 
 ##### personGroup.trainingStart(personGroupId) ⇒ <code>Promise</code>
-Starts a person group training.Training is a necessary preparation process of a person group before identification.Each person group needs to be trained in order to call Identification. The trainingwill process for a while on the server side even after this API has responded.
+Starts a person group training.
+Training is a necessary preparation process of a person group before identification.
+Each person group needs to be trained in order to call Identification. The training
+will process for a while on the server side even after this API has responded.
 
 **Kind**: static method of <code>[personGroup](#Client.face.personGroup)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -498,7 +510,8 @@ Get a face for a person.
 <a name="Client.face.person.create"></a>
 
 ##### person.create(personGroupId, name, userData) ⇒ <code>Promise</code>
-Creates a new person in a specified person group for identification.The number of persons has a subscription limit. Free subscription amount is 1000 persons.
+Creates a new person in a specified person group for identification.
+The number of persons has a subscription limit. Free subscription amount is 1000 persons.
 
 **Kind**: static method of <code>[person](#Client.face.person)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -564,7 +577,11 @@ Lists all persons in a person group, with the person information.
 <a name="Client.face..detect"></a>
 
 #### face~detect(options) ⇒ <code>Promise</code>
-Call the Face Detected APIDetects human faces in an image and returns face locations, face landmarks, andoptional attributes including head-pose, gender, and age. Detection is an essentialAPI that provides faceId to other APIs like Identification, Verification,and Find Similar.
+Call the Face Detected API
+Detects human faces in an image and returns face locations, face landmarks, and
+optional attributes including head-pose, gender, and age. Detection is an essential
+API that provides faceId to other APIs like Identification, Verification,
+and Find Similar.
 
 **Kind**: inner method of <code>[face](#Client.face)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -586,7 +603,8 @@ Call the Face Detected APIDetects human faces in an image and returns face loca
 <a name="Client.face..similar"></a>
 
 #### face~similar(sourceFace, options) ⇒ <code>Promise</code>
-Detect similar faces using faceIds (as returned from the detect API), or faceListId(as returned from the facelist API).
+Detect similar faces using faceIds (as returned from the detect API), or faceListId
+(as returned from the facelist API).
 
 **Kind**: inner method of <code>[face](#Client.face)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -602,7 +620,15 @@ Detect similar faces using faceIds (as returned from the detect API), or faceLis
 <a name="Client.face..grouping"></a>
 
 #### face~grouping(faces) ⇒ <code>Promise</code>
-Divides candidate faces into groups based on face similarity using faceIds.The output is one or more disjointed face groups and a MessyGroup.A face group contains the faces that have similar looking, often of the same person.There will be one or more face groups ranked by group size, i.e. number of face.Faces belonging to the same person might be split into several groups in the result.The MessyGroup is a special face group that each face is not similar to any otherfaces in original candidate faces. The messyGroup will not appear in the result ifall faces found their similar counterparts. The candidate face list has alimit of 100 faces.
+Divides candidate faces into groups based on face similarity using faceIds.
+The output is one or more disjointed face groups and a MessyGroup.
+A face group contains the faces that have similar looking, often of the same person.
+There will be one or more face groups ranked by group size, i.e. number of face.
+Faces belonging to the same person might be split into several groups in the result.
+The MessyGroup is a special face group that each face is not similar to any other
+faces in original candidate faces. The messyGroup will not appear in the result if
+all faces found their similar counterparts. The candidate face list has a
+limit of 100 faces.
 
 **Kind**: inner method of <code>[face](#Client.face)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -614,7 +640,12 @@ Divides candidate faces into groups based on face similarity using faceIds.The 
 <a name="Client.face..identify"></a>
 
 #### face~identify(faces, personGroupId, maxNumOfCandidatesReturned) ⇒ <code>Promise</code>
-Identifies persons from a person group by one or more input faces.To recognize which person a face belongs to, Face Identification needs a person groupthat contains number of persons. Each person contains one or more faces. After a persongroup prepared, it should be trained to make it ready for identification. Then theidentification API compares the input face to those persons' faces in person group andreturns the best-matched candidate persons, ranked by confidence.
+Identifies persons from a person group by one or more input faces.
+To recognize which person a face belongs to, Face Identification needs a person group
+that contains number of persons. Each person contains one or more faces. After a person
+group prepared, it should be trained to make it ready for identification. Then the
+identification API compares the input face to those persons' faces in person group and
+returns the best-matched candidate persons, ranked by confidence.
 
 **Kind**: inner method of <code>[face](#Client.face)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -628,7 +659,9 @@ Identifies persons from a person group by one or more input faces.To recognize 
 <a name="Client.face..verify"></a>
 
 #### face~verify(faces) ⇒ <code>Promise</code>
-Analyzes two faces and determine whether they are from the same person.Verification works well for frontal and near-frontal faces.For the scenarios that are sensitive to accuracy please use with own judgment.
+Analyzes two faces and determine whether they are from the same person.
+Verification works well for frontal and near-frontal faces.
+For the scenarios that are sensitive to accuracy please use with own judgment.
 
 **Kind**: inner method of <code>[face](#Client.face)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -649,7 +682,8 @@ Analyzes two faces and determine whether they are from the same person.Verifica
 <a name="Client.text..proof"></a>
 
 #### text~proof(text, preContextText, postContextText) ⇒ <code>Promise</code>
-Proofs a word or phrase.  Offers Microsoft Office Word-like spelling corrections. Longer phrases canbe checked, and the result will include casing corrections while avoiding aggressive corrections.
+Proofs a word or phrase.  Offers Microsoft Office Word-like spelling corrections. Longer phrases can
+be checked, and the result will include casing corrections while avoiding aggressive corrections.
 
 **Kind**: inner method of <code>[text](#Client.text)</code>  
 **Returns**: <code>Promise</code> - - A promise in which the resulting JSON is returned.  
@@ -663,7 +697,9 @@ Proofs a word or phrase.  Offers Microsoft Office Word-like spelling corrections
 <a name="Client.text..spellCheck"></a>
 
 #### text~spellCheck(text, preContextText, postContextText) ⇒ <code>Promise</code>
-Spell checks a word or phrase.  Spell checks offers search-engine-like corrections.  Short phrases(up to 9 tokens) will be checked, and the result will be optimized for search queries, both in termsof performance and relevance.
+Spell checks a word or phrase.  Spell checks offers search-engine-like corrections.  Short phrases
+(up to 9 tokens) will be checked, and the result will be optimized for search queries, both in terms
+of performance and relevance.
 
 **Kind**: inner method of <code>[text](#Client.text)</code>  
 **Returns**: <code>Promise</code> - - A promise in which the resulting JSON is returned.  
@@ -701,7 +737,12 @@ Spell checks a word or phrase.  Spell checks offers search-engine-like correctio
 <a name="Client.video.result.get"></a>
 
 ##### result.get(operation) ⇒ <code>Promise</code>
-Checks the result of a given operation.  When an operation is deemed completed, thestatus of the returned object should be 'Succeeded' (or, possibly, 'Failed'.) Foroperations which return a JSON payload, the stringified-JSON is returned in theprocessingResult field.  For operations which return a video, the location of thevideo is provided in the resourceLocation field.  You can use the [getVideo](Client.video.result#getVideo) methodto help you retrieve that, as this would automatically attach the API key to request.
+Checks the result of a given operation.  When an operation is deemed completed, the
+status of the returned object should be 'Succeeded' (or, possibly, 'Failed'.) For
+operations which return a JSON payload, the stringified-JSON is returned in the
+processingResult field.  For operations which return a video, the location of the
+video is provided in the resourceLocation field.  You can use the [getVideo](Client.video.result#getVideo) method
+to help you retrieve that, as this would automatically attach the API key to request.
 
 **Kind**: static method of <code>[result](#Client.video.result)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -713,7 +754,8 @@ Checks the result of a given operation.  When an operation is deemed completed, 
 <a name="Client.video.result.getVideo"></a>
 
 ##### result.getVideo(url, pipe) ⇒ <code>Promise</code>
-Downloads the resulting video, for processors that returning videos instead of metadata.Currently this applies to the [stabilize](Client.video#stabilize) operation.
+Downloads the resulting video, for processors that returning videos instead of metadata.
+Currently this applies to the [stabilize](Client.video#stabilize) operation.
 
 **Kind**: static method of <code>[result](#Client.video.result)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting video  
@@ -726,7 +768,8 @@ Downloads the resulting video, for processors that returning videos instead of m
 <a name="Client.video..trackFace"></a>
 
 #### video~trackFace(options) ⇒ <code>Promise</code>
-Start a face-tracking processorFaces in a video will be tracked.
+Start a face-tracking processor
+Faces in a video will be tracked.
 
 **Kind**: inner method of <code>[video](#Client.video)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -741,7 +784,8 @@ Start a face-tracking processorFaces in a video will be tracked.
 <a name="Client.video..detectMotion"></a>
 
 #### video~detectMotion(options) ⇒ <code>Promise</code>
-Start a motion-tracking processorMotion in a video will be tracked.
+Start a motion-tracking processor
+Motion in a video will be tracked.
 
 **Kind**: inner method of <code>[video](#Client.video)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -756,7 +800,8 @@ Start a motion-tracking processorMotion in a video will be tracked.
 <a name="Client.video..stabilize"></a>
 
 #### video~stabilize(options) ⇒ <code>Promise</code>
-Start a stablization processorA stabilized version of you video will be generated.
+Start a stablization processor
+A stabilized version of you video will be generated.
 
 **Kind**: inner method of <code>[video](#Client.video)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -817,7 +862,8 @@ Analyze an image using a domain-specific image classifier.
 <a name="Client.vision..analyzeImage"></a>
 
 #### vision~analyzeImage(options) ⇒ <code>Promise</code>
-This operation does a deep analysis on the given image and then extracts aset of rich visual features based on the image content.
+This operation does a deep analysis on the given image and then extracts a
+set of rich visual features based on the image content.
 
 **Kind**: inner method of <code>[vision](#Client.vision)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -838,7 +884,10 @@ This operation does a deep analysis on the given image and then extracts aset o
 <a name="Client.vision..thumbnail"></a>
 
 #### vision~thumbnail(options) ⇒ <code>Promise</code>
-Generate a thumbnail image to the user-specified width and height. By default, theservice analyzes the image, identifies the region of interest (ROI), and generatessmart crop coordinates based on the ROI. Smart cropping is designed to help when youspecify an aspect ratio that differs from the input image.
+Generate a thumbnail image to the user-specified width and height. By default, the
+service analyzes the image, identifies the region of interest (ROI), and generates
+smart crop coordinates based on the ROI. Smart cropping is designed to help when you
+specify an aspect ratio that differs from the input image.
 
 **Kind**: inner method of <code>[vision](#Client.vision)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
@@ -856,7 +905,8 @@ Generate a thumbnail image to the user-specified width and height. By default, t
 <a name="Client.vision..ocr"></a>
 
 #### vision~ocr(options) ⇒ <code>Promise</code>
-Optical Character Recognition (OCR) detects text in an image and extracts the recognizedcharacters into a machine-usable character stream.
+Optical Character Recognition (OCR) detects text in an image and extracts the recognized
+characters into a machine-usable character stream.
 
 **Kind**: inner method of <code>[vision](#Client.vision)</code>  
 **Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  

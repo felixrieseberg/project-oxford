@@ -1,16 +1,16 @@
 var request = require('request').defaults({
-        baseUrl: 'https://api.projectoxford.ai/emotion/v1.0/',
-        headers: {'User-Agent': 'nodejs/0.3.0'}}),
+        headers: {'User-Agent': 'nodejs/0.4.0'}}),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-const emotionUrl = '/recognize';
+const rootPath = '/emotion/v1.0';
+const recognizePath = '/recognize';
 
 /**
  * @namespace
  * @memberof Client
  */
-var emotion = function (key) {
+var emotion = function (key, host) {
     /**
      * @private
      */
@@ -35,17 +35,19 @@ var emotion = function (key) {
      */
     function _emotionLocal(image, options) {
         return new _Promise(function (resolve, reject) {
-            fs.createReadStream(image).pipe(request.post({
-                uri: emotionUrl,
+            /*fs.createReadStream(image).pipe(*/
+            request.post({
+                uri: host + rootPath + recognizePath,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/octet-stream'
                 },
-                qs: options
+                qs: options,
+                body: fs.readFileSync(image)
             }, (error, response) => {
                 response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
-            }));
+            })/*)*/;
         });
     }
 
@@ -59,7 +61,7 @@ var emotion = function (key) {
     function _emotionOnline(image, options) {
         return new _Promise(function (resolve, reject) {
             request.post({
-                uri: emotionUrl,
+                uri: host + rootPath + recognizePath,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/json'

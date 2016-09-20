@@ -21,20 +21,23 @@ oxford.makeBuffer = function (dataURL) {
 /**
  * Creates a new Project Oxford Client using a given API key.
  * @class Client
- * @param {string} key - Project Oxford API Key
+ * @param {string} key  - Project Oxford API Key
+ * @param {string} host - Optional host address
  */
-oxford.Client = function (key) {
+oxford.Client = function (key, host) {
     if (!key || key === '') {
         return console.error('Tried to initialize Project Oxford client without API key');
     }
 
+    host = (host || 'https://api.projectoxford.ai').replace('\/$', '');
+
     this._key = key;
-    this.emotion = emotion(key);
-    this.face = face(key);
-    this.text = text(key);
-    this.video = video(key);
-    this.vision = vision(key);
-    this.weblm = weblm(key);
+    this.emotion = emotion(key, host);
+    this.face = face(key, host);
+    this.text = text(key, host);
+    this.video = video(key, host);
+    this.vision = vision(key, host);
+    this.weblm = weblm(key, host);
 };
 
 module.exports = oxford;

@@ -1,9 +1,9 @@
 var request = require('request').defaults({
-        baseUrl: 'https://api.projectoxford.ai/vision/v1.0/',
-        headers: {'User-Agent': 'nodejs/0.3.0'}}),
+        headers: {'User-Agent': 'nodejs/0.4.0'}}),
     fs = require('fs'),
     _Promise = require('bluebird');
 
+const rootPath     = '/vision/v1.0';
 const analyzeUrl   = '/analyze';
 const thumbnailUrl = '/generateThumbnail';
 const ocrUrl       = '/ocr';
@@ -13,7 +13,7 @@ const modelsUrl    = '/models';
  * @namespace
  * @memberof Client
  */
-var vision = function (key) {
+var vision = function (key, host) {
     /**
      * @private
      */
@@ -40,7 +40,7 @@ var vision = function (key) {
     function _postLocal(url, image, options) {
         return new _Promise(function (resolve, reject) {
             fs.createReadStream(image).pipe(request.post({
-                uri: url,
+                uri: host + rootPath + url,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/octet-stream'
@@ -64,7 +64,7 @@ var vision = function (key) {
     function _postOnline(url, image, options) {
         return new _Promise(function (resolve, reject) {
             request.post({
-                uri: url,
+                uri: host + rootPath + url,
                 headers: {'Ocp-Apim-Subscription-Key': key},
                 json: true,
                 body: {url: image},
@@ -119,7 +119,7 @@ var vision = function (key) {
     function _thumbnailLocal(image, options, pipe) {
         return new _Promise(function (resolve, reject) {
             fs.createReadStream(image).pipe(request.post({
-                uri: thumbnailUrl,
+                uri: host + rootPath + thumbnailUrl,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/octet-stream'
@@ -141,7 +141,7 @@ var vision = function (key) {
     function _thumbnailOnline(image, options, pipe) {
         return new _Promise(function (resolve, reject) {
             request.post({
-                uri: thumbnailUrl,
+                uri: host + rootPath + thumbnailUrl,
                 headers: {'Ocp-Apim-Subscription-Key': key},
                 json: true,
                 body: {url: image},
@@ -218,7 +218,7 @@ var vision = function (key) {
         list: function () {
             return new _Promise((resolve, reject) => {
                 request({
-                    uri: modelsUrl,
+                    uri: host + rootPath + modelsUrl,
                     headers: {'Ocp-Apim-Subscription-Key': key}
                 }, function (error, response) {
                     response.body = JSON.parse(response.body);

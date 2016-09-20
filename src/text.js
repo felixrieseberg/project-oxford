@@ -1,15 +1,15 @@
 var request = require('request').defaults({
-        baseUrl: 'https://api.projectoxford.ai/text/v1.0/',
-        headers: {'User-Agent': 'nodejs/0.3.0'}}),
+        headers: {'User-Agent': 'nodejs/0.4.0'}}),
     _Promise = require('bluebird');
 
-const spellCheckUrl = '/spellcheck';
+const rootPath = '/text/v1.0';
+const spellCheckPath = '/spellcheck';
 
 /**
  * @namespace
  * @memberof Client
  */
-var text = function (key) {
+var text = function (key, host) {
     /**
      * @private
      */
@@ -41,7 +41,7 @@ var text = function (key) {
                 PostContextText: postContextText
             };
             request.post({
-                uri: spellCheckUrl,
+                uri: host + rootPath + spellCheckPath,
                 headers: {'Ocp-Apim-Subscription-Key': key},
                 form: form,
                 json: true,
