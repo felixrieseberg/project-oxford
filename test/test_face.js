@@ -1,6 +1,7 @@
 var assert   = require('assert'),
     _Promise = require('bluebird'),
     uuid     = require('uuid'),
+    http     = require('http'),
     fs       = require('fs'),
     oxford   = require('../dist/oxford'),
     client   = new oxford.Client(process.env.OXFORD_KEY);
@@ -805,6 +806,25 @@ describe('Project Oxford Face API Test', function () {
                 assert.ok(false, JSON.stringify(error));
                 done();
             });
+        });
+
+        it('detects a face on an alternate host', function (done) {
+            const server = http.createServer((req, res) => {
+                var body = [];
+                req.on('data', function(chunk) { body.push(chunk); });
+                req.on('end', function() {
+                    var json = JSON.parse(Buffer.concat(body).toString());
+                    assert.ok(req.url.indexOf('/detect') > 0);
+                    assert.ok(JSON.stringify(json) === '{\"url\":\"just-checking!\"}');
+                    res.end();
+                    done();
+                });
+            })
+            .listen(8080, 'localhost');
+
+            var altClient = new oxford.Client(process.env.OXFORD_KEY, 'http://localhost:8080');
+
+            altClient.face.detect({ url: 'just-checking!' });
         });
     });
 });

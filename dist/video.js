@@ -1,20 +1,20 @@
 'use strict';
 
 var request = require('request').defaults({
-    headers: { 'User-Agent': 'nodejs/0.3.0' } }),
+    headers: { 'User-Agent': 'nodejs/0.4.0' } }),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-var apiBaseUrl = 'https://api.projectoxford.ai/video/v1.0/';
-var trackFaceUrl = apiBaseUrl + 'trackface';
-var detectMotionrUrl = apiBaseUrl + 'detectmotion';
-var stabilizeUrl = apiBaseUrl + 'stabilize';
+var rootPath = '/video/v1.0';
+var trackFacePath = '/trackface';
+var detectMotionrPath = '/detectmotion';
+var stabilizePath = '/stabilize';
 
 /**
  * @namespace
  * @memberof Client
  */
-var video = function video(key) {
+var video = function video(key, host) {
     /**
      * @private
      */
@@ -127,7 +127,7 @@ var video = function video(key) {
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function trackFace(options) {
-        return _postVideo(trackFaceUrl, options);
+        return _postVideo(host + rootPath + trackFacePath, options);
     }
 
     /**
@@ -141,7 +141,7 @@ var video = function video(key) {
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detectMotion(options) {
-        return _postVideo(detectMotionrUrl, options);
+        return _postVideo(host + rootPath + detectMotionrPath, options);
     }
 
     /**
@@ -155,7 +155,7 @@ var video = function video(key) {
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function stabilize(options) {
-        return _postVideo(stabilizeUrl, options);
+        return _postVideo(host + rootPath + stabilizePath, options);
     }
 
     /**

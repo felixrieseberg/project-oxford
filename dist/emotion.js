@@ -1,18 +1,18 @@
 'use strict';
 
 var request = require('request').defaults({
-    baseUrl: 'https://api.projectoxford.ai/emotion/v1.0/',
-    headers: { 'User-Agent': 'nodejs/0.3.0' } }),
+    headers: { 'User-Agent': 'nodejs/0.4.0' } }),
     fs = require('fs'),
     _Promise = require('bluebird');
 
-var emotionUrl = '/recognize';
+var rootPath = '/emotion/v1.0';
+var recognizePath = '/recognize';
 
 /**
  * @namespace
  * @memberof Client
  */
-var emotion = function emotion(key) {
+var emotion = function emotion(key, host) {
     /**
      * @private
      */
@@ -37,17 +37,19 @@ var emotion = function emotion(key) {
      */
     function _emotionLocal(image, options) {
         return new _Promise(function (resolve, reject) {
-            fs.createReadStream(image).pipe(request.post({
-                uri: emotionUrl,
+            /*fs.createReadStream(image).pipe(*/
+            request.post({
+                uri: host + rootPath + recognizePath,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/octet-stream'
                 },
-                qs: options
+                qs: options,
+                body: fs.readFileSync(image)
             }, function (error, response) {
                 response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
-            }));
+            });
         });
     }
 
@@ -58,10 +60,10 @@ var emotion = function emotion(key) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    function _emotionOnline(image, options) {
+    /*)*/function _emotionOnline(image, options) {
         return new _Promise(function (resolve, reject) {
             request.post({
-                uri: emotionUrl,
+                uri: host + rootPath + recognizePath,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/json'

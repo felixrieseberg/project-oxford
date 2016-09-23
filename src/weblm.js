@@ -1,19 +1,19 @@
 var request = require('request').defaults({
-        baseUrl: 'https://api.projectoxford.ai/text/weblm/v1.0/',
-        headers: {'User-Agent': 'nodejs/0.3.0'}}),
+        headers: {'User-Agent': 'nodejs/0.4.0'}}),
     _Promise = require('bluebird');
 
-const workBreakUrl          = '/breakIntoWords';
-const listModelsUrl         = '/models';
-const generateNextWordsUrl  = '/generateNextWords';
-const calculateJointProbUrl = '/calculateJointProbability';
-const calculateCondProbUrl  = '/calculateConditionalProbability';
+const rootPath               = '/text/weblm/v1.0/';
+const workBreakPath          = '/breakIntoWords';
+const listModelsPath         = '/models';
+const generateNextWordsPath  = '/generateNextWords';
+const calculateJointProbPath = '/calculateJointProbability';
+const calculateCondProbPath  = '/calculateConditionalProbability';
 
 /**
  * @namespace
  * @memberof Client
  */
-var weblm = function (key) {
+var weblm = function (key, host) {
     /**
      * @private
      */
@@ -37,7 +37,7 @@ var weblm = function (key) {
     function listModels() {
         return new _Promise(function (resolve, reject) {
             request({
-                uri: listModelsUrl,
+                uri: host + rootPath + listModelsPath,
                 json: true,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key
@@ -69,7 +69,7 @@ var weblm = function (key) {
         }
         return new _Promise(function (resolve, reject) {
             request.post({
-                uri: url,
+                uri: host + rootPath + url,
                 headers: {
                     'Ocp-Apim-Subscription-Key': key,
                     'Content-Type': 'application/json'
@@ -92,7 +92,7 @@ var weblm = function (key) {
      * @return {Promise}                       - Promise resolving with the resulting JSON
      */
     function breakIntoWords(model, text, options) {
-        return _processWords(workBreakUrl, model, {text: text}, undefined, options);
+        return _processWords(workBreakPath, model, {text: text}, undefined, options);
     }
 
     /**
@@ -106,7 +106,7 @@ var weblm = function (key) {
      * @return {Promise}                       - Promise resolving with the resulting JSON
      */
     function generateWords(model, words, options) {
-        return _processWords(generateNextWordsUrl, model, {words: words}, undefined, options);
+        return _processWords(generateNextWordsPath, model, {words: words}, undefined, options);
     }
 
     /**
@@ -118,7 +118,7 @@ var weblm = function (key) {
      * @return {Promise}                       - Promise resolving with the resulting JSON
      */
     function getJointProbabilities(model, phrases, order) {
-        return _processWords(calculateJointProbUrl, model, {}, {queries: phrases}, {order: order});
+        return _processWords(calculateJointProbPath, model, {}, {queries: phrases}, {order: order});
     }
 
     /**
@@ -131,7 +131,7 @@ var weblm = function (key) {
      * @return {Promise}                       - Promise resolving with the resulting JSON
      */
     function getConditionalProbabilities(model, queries, order) {
-        return _processWords(calculateCondProbUrl, model, {}, {queries: queries}, {order: order});
+        return _processWords(calculateCondProbPath, model, {}, {queries: queries}, {order: order});
     }
 
     return {
