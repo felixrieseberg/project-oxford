@@ -592,13 +592,24 @@ var face = function (key) {
 
         /**
          * Lists all person groups in the current subscription.
-         * @return {Promise}                    - Promise resolving with the resulting JSON
+         * All of the person groups are stored in alphabetical order of personGroupId.
+         * @param {string} start    - Optional starting point to list person groups from the least personGroupId greater than the "start".
+         * @param {Number} top      - Optional number of person groups to list, ranging in [1, 1000].
+         * @return {Promise}        - Promise resolving with the resulting JSON
          */
-        list: function () {
+        list: function (start, top) {
             return new _Promise((resolve, reject) => {
+                var qs = {};
+                if (start) {
+                    qs.start = start;
+                }
+                if (top) {
+                    qs.top = top;
+                }
                 request({
                     uri: personGroupUrl,
-                    headers: {'Ocp-Apim-Subscription-Key': key}
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    qs
                 }, function (error, response) {
                     response.body = JSON.parse(response.body);
                     return _return(error, response, resolve, reject);
