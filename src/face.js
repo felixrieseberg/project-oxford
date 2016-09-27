@@ -170,6 +170,7 @@ var face = function (key) {
      * @param  {string[]} options.candidateFaces      - Array of faceIds to use as candidates
      * @param  {string}   options.candidateFaceListId - Id of face list, created via FaceList.create
      * @param  {Number}   options.maxCandidates       - Optional max number for top candidates (default is 20, max is 20)
+     * @param  {string}   options.mode                - Optional similar face searching mode. It can be "matchPerson" or "matchFace"
      * @return {Promise}                              - Promise resolving with the resulting JSON
      */
     function similar(sourceFace, options) {
@@ -185,6 +186,9 @@ var face = function (key) {
                 }
                 if (options.maxCandidates) {
                     faces.maxNumOfCandidatesReturned = options.maxCandidates;
+                }
+                if (options.mode) {
+                    faces.mode = options.mode;
                 }
             }
             request.post({
