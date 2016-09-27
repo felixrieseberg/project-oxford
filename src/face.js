@@ -256,20 +256,32 @@ var face = function (key) {
     }
 
     /**
-     * Analyzes two faces and determine whether they are from the same person.
+     * Verify whether two faces belong to a same person or whether one face belongs to a person.
      * Verification works well for frontal and near-frontal faces.
      * For the scenarios that are sensitive to accuracy please use with own judgment.
-     * @param  {string[]} faces     - Array containing two faceIds to use
-     * @return {Promise}            - Promise resolving with the resulting JSON
+     * @param  {string[]} faces         - Array containing faceIds to use (provide two for face-to-face, one for face-to-person).
+     * @param {string} personGroupId    - ID of person group for face-to-person verification.
+     * @param {string} personId         - ID of a person for face-to-person verification.
+     * @return {Promise}                - Promise resolving with the resulting JSON
      */
-    function verify(faces) {
+    function verify(faces, personGroupId, personId) {
         return new _Promise(function (resolve, reject) {
-            if (faces && faces.length > 1) {
-                let body = {
-                    faceId1: faces[0],
-                    faceId2: faces[1]
-                };
-
+            let body = null;
+            if (faces) {
+                if (faces.length === 2) {
+                    body = {
+                        faceId1: faces[0],
+                        faceId2: faces[1]
+                    };
+                } else if(faces.length === 1 && personGroupId && personId){
+                    body = {
+                        faceId: faces[0],
+                        personGroupId,
+                        personId
+                    };
+                }
+            }
+            if (body) {
                 request.post({
                     uri: verifyUrl,
                     headers: {'Ocp-Apim-Subscription-Key': key},
@@ -277,7 +289,7 @@ var face = function (key) {
                     body: body
                 }, (error, response) => _return(error, response, resolve, reject));
             } else {
-                return reject('Faces array must contain two face ids');
+                return reject('Two face ids or one face id with personGroupId and personId should be provided');
             }
         });
     }
