@@ -1,14 +1,14 @@
-## Project Oxford for Node.js
+## Cognitive Services for Node.js
 [![npm version](https://badge.fury.io/js/project-oxford.svg)](http://badge.fury.io/js/project-oxford)
 
-This package contains a set of intelligent APIs understanding images: It can detect and analyze people's faces, their age, gender, and similarity. It can identify people based on a set of images. It can understand what is displayed in a picture and crop it according to where the important features are. It can tell you whether an image contains adult content, what the main colors are, and which of your images belong in a group. If your image features text, it will tell you the language and return the text as a string. It's basically magic. For more details on the Project Oxford API, please visit [projectoxford.ai](http://www.projectoxford.ai/demo/face#detection).
+This package contains a set of intelligent APIs understanding images: It can detect and analyze people's faces, their age, gender, and similarity. It can identify people based on a set of images. It can understand what is displayed in a picture and crop it according to where the important features are. It can tell you whether an image contains adult content, what the main colors are, and which of your images belong in a group. If your image features text, it will tell you the language and return the text as a string. It's basically magic. For more details on the Cognitive Services APIs, please visit [https://www.microsoft.com/cognitive-services](https://www.microsoft.com/cognitive-services/en-us/face-api).
 
-This Node module implements Project Oxford's API for Faces, Vision, Text, Video, and WebLM.
+This Node module implements Cognitive Services APIs for Faces, Vision, Text, Video, and WebLM.
 
 ![](https://i.imgur.com/Zrsnhd3.jpg)
 
 ## Usage
-To install this package, run `npm install --save project-oxford` [and obtain an API key](http://www.projectoxford.ai/doc/general/subscription-key-mgmt). To obtain such a key, [you will also need an (free) Microsoft Azure Account](http://www.azure.com). Once you got your key, you can instantiate an Oxford client in your code:
+To install this package, run `npm install --save project-oxford` [and obtain an API key](https://www.microsoft.com/cognitive-services/en-US/sign-up?ReturnUrl=/cognitive-services/en-us/subscriptions). Once you got your key, you can instantiate a Cognitive Services client in your code:
 
 ```
 var oxford = require('project-oxford'),
@@ -146,7 +146,7 @@ For the full documentation, please see the API reference below.
 <a name="new_Client_new"></a>
 
 ### new Client(key, host)
-Creates a new Project Oxford Client using a given API key.
+Creates a new Cognitive Service Client using a given API key.
 
 
 | Param | Type | Description |
@@ -998,3 +998,8 @@ Generates a list of candidate of words that would follow the a given sequence of
 | order | <code>Number</code> | Optional N-gram order. Default is 5 |
 
 Licensed as MIT - please see LICENSE for details.
+
+## Developer Code of Conduct
+The SDK uses the Microsoft Cognitive Services, see https://www.microsoft.com/cognitive-services/. Developers using this are expected to follow the “Developer Code of Conduct for Microsoft Cognitive Services” at http://go.microsoft.com/fwlink/?LinkId=698895.
+
+Data submitted may be retained by Microsoft for service improvement purposes, along with the other stipulations noted in the following documents: [Cognitive Services TOU] (http://research.microsoft.com/en-us/um/legal/CognitiveServicesTerms20160804.htm), [Developer Code of Conduct] (http://research.microsoft.com/en-us/UM/legal/DeveloperCodeofConductforCognitiveServices.htm).
