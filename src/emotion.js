@@ -74,6 +74,31 @@ var emotion = function (key, host) {
     }
 
     /**
+     * (Private) Analyze an image from a Buffer
+     * @private
+     * @param  {Object} image       - Buffer with image
+     * @param  {Object} options     - Options object
+     * @return {Promise}            - Promise resolving with the resulting JSON
+     */
+    function _emotionData(image, options) {
+        return new _Promise(function (resolve, reject) {
+            /*fs.createReadStream(image).pipe(*/
+            request.post({
+                uri: host + rootPath + recognizePath,
+                headers: {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-Type': 'application/octet-stream'
+                },
+                qs: options,
+                body: image,
+            }, (error, response) => {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
+            });
+        });
+    }
+
+    /**
      * Analyze the emotions of one or more faces in an image.
      *
      * @param  {Object}   options                - Options object
@@ -103,6 +128,9 @@ var emotion = function (key, host) {
         }
         if (options.url) {
             return _emotionOnline(options.url, qs);
+        }
+        if (options.data) {
+            return _emotionData(options.data, qs);
         }
     }
 
