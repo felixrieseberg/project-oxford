@@ -30,7 +30,11 @@ node_modules
 #Idea directory
 .idea
 
+# Test output
 /test/output/*
+
+# Visual Studio Code
+.vscode/
 
 # jsdoc2md intermediate file
 api.md

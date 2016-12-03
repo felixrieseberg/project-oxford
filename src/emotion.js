@@ -90,7 +90,7 @@ var emotion = function (key, host) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options,
-                body: image,
+                body: image
             }, (error, response) => {
                 response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
@@ -104,6 +104,7 @@ var emotion = function (key, host) {
      * @param  {Object}   options                - Options object
      * @param  {string}   options.url            - URL to the image file
      * @param  {string}   options.path           - URL to a local image file
+     * @param  {string}   options.data           - Image as a binary buffer
      * @param  {Object[]} options.faceRectangles - Array of face rectangles.  Face rectangles
      *      are returned in the face.detect and vision.analyzeImage methods.
      * @return {Promise}                         - Promise resolving with the resulting JSON
