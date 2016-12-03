@@ -70,8 +70,6 @@ client.vision.ocr({
 For the full documentation, please see the API reference below.
 
 ## API Reference
-
-## License
 <a name="Client"></a>
 
 ## Client
@@ -873,6 +871,7 @@ set of rich visual features based on the image content.
 | options | <code>Object</code> | Options object describing features to extract |
 | options.url | <code>string</code> | Url to image to be analyzed |
 | options.path | <code>string</code> | Path to image to be analyzed |
+| options.data | <code>string</code> | Buffer of image to be analyzed |
 | options.ImageType | <code>boolean</code> | Detects if image is clipart or a line drawing. |
 | options.Color | <code>boolean</code> | Determines the accent color, dominant color, if image is black&white. |
 | options.Faces | <code>boolean</code> | Detects if faces are present. If present, generate coordinates, gender and age. |
@@ -897,6 +896,7 @@ specify an aspect ratio that differs from the input image.
 | options | <code>Object</code> | Options object describing features to extract |
 | options.url | <code>string</code> | Url to image to be thumbnailed |
 | options.path | <code>string</code> | Path to image to be thumbnailed |
+| options.data | <code>string</code> | Buffer of image to be analyzed |
 | options.width | <code>number</code> | Width of the thumb in pixels |
 | options.height | <code>number</code> | Height of the thumb in pixels |
 | options.smartCropping | <code>boolean</code> | Should SmartCropping be enabled? |
@@ -916,6 +916,7 @@ characters into a machine-usable character stream.
 | options | <code>Object</code> | Options object describing features to extract |
 | options.url | <code>string</code> | Url to image to be analyzed |
 | options.path | <code>string</code> | Path to image to be analyzed |
+| options.data | <code>string</code> | Buffer of image to be analyzed |
 | options.language | <code>string</code> | BCP-47 language code of the text to be detected in the image. Default value is "unk", then the service will auto detect the language of the text in the image. |
 | options.detectOrientation | <code>string</code> | Detect orientation of text in the image |
 
@@ -998,4 +999,5 @@ Generates a list of candidate of words that would follow the a given sequence of
 | queries | <code>Array</code> | One of more objects consisting of 'words'/'word' pairs,      where the conditional probability of 'word' in the context of 'words' is computed. |
 | order | <code>Number</code> | Optional N-gram order. Default is 5 |
 
+## License
 Licensed as MIT - please see LICENSE for details.
