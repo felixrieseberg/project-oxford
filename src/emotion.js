@@ -90,7 +90,7 @@ var emotion = function (key, host) {
                     'Content-Type': 'application/octet-stream'
                 },
                 qs: options,
-                body: image,
+                body: image
             }, (error, response) => {
                 response.body = JSON.parse(response.body);
                 _return(error, response, resolve, reject);
