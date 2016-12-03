@@ -171,6 +171,7 @@ Analyze the emotions of one or more faces in an image.
 | options | <code>Object</code> | Options object |
 | options.url | <code>string</code> | URL to the image file |
 | options.path | <code>string</code> | URL to a local image file |
+| options.data | <code>string</code> | Image as a binary buffer |
 | options.faceRectangles | <code>Array.&lt;Object&gt;</code> | Array of face rectangles.  Face rectangles      are returned in the face.detect and vision.analyzeImage methods. |
 
 <a name="Client.face"></a>
