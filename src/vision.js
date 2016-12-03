@@ -74,12 +74,38 @@ var vision = function (key, host) {
     }
 
     /**
+     * (Private) Analyze an image buffer
+     * @private
+     * @param  {string} url         - API url
+     * @param  {string} image       - Buffer with image
+     * @param  {Object} options     - Options object
+     * @return {Promise}            - Promise resolving with the resulting JSON
+     */
+    function _postData(url, image, options) {
+        return new _Promise(function (resolve, reject) {
+            request.post({
+                uri: host + rootPath + url,
+                headers: {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-Type': 'application/octet-stream'
+                },
+                body: image,
+                qs: options
+            }, (error, response) => {
+                response.body = JSON.parse(response.body);
+                _return(error, response, resolve, reject);
+            });
+        });
+    }
+
+    /**
      * This operation does a deep analysis on the given image and then extracts a
      * set of rich visual features based on the image content.
      *
      * @param  {Object}  options                - Options object describing features to extract
      * @param  {string}  options.url            - Url to image to be analyzed
      * @param  {string}  options.path           - Path to image to be analyzed
+     * @param  {string}  options.data           - Buffer of image to be analyzed
      * @param  {boolean} options.ImageType      - Detects if image is clipart or a line drawing.
      * @param  {boolean} options.Color          - Determines the accent color, dominant color, if image is black&white.
      * @param  {boolean} options.Faces          - Detects if faces are present. If present, generate coordinates, gender and age.
@@ -106,6 +132,9 @@ var vision = function (key, host) {
         }
         if (options.url) {
             return _postOnline(analyzeUrl, options.url, qs);
+        }
+        if (options.data) {
+            return _postData(analyzeUrl, options.data, qs);
         }
     }
 
@@ -152,6 +181,28 @@ var vision = function (key, host) {
     }
 
     /**
+     * (Private) Get a thumbnail for am online image
+     * @private
+     * @param  {string} image       - Buffer of image
+     * @param  {Object} options     - Options object
+     * @return {Promise}            - Promise resolving with the resulting JSON
+     */
+    function _thumbnailData(image, options, pipe) {
+        return new _Promise(function (resolve, reject) {
+            request.post({
+                uri: host + rootPath + thumbnailUrl,
+                headers: {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-Type': 'application/octet-stream'
+                },
+                body: image,
+                qs: options
+            }, (error, response) => _return(error, response, resolve, reject))
+            .pipe(pipe);
+        });
+    }
+
+    /**
      * Generate a thumbnail image to the user-specified width and height. By default, the
      * service analyzes the image, identifies the region of interest (ROI), and generates
      * smart crop coordinates based on the ROI. Smart cropping is designed to help when you
@@ -160,6 +211,7 @@ var vision = function (key, host) {
      * @param  {Object}  options                - Options object describing features to extract
      * @param  {string}  options.url            - Url to image to be thumbnailed
      * @param  {string}  options.path           - Path to image to be thumbnailed
+     * @param  {string}  options.data           - Buffer of image to be analyzed
      * @param  {number}  options.width          - Width of the thumb in pixels
      * @param  {number}  options.height         - Height of the thumb in pixels
      * @param  {boolean} options.smartCropping  - Should SmartCropping be enabled?
@@ -179,6 +231,9 @@ var vision = function (key, host) {
         if (options.url) {
             return _thumbnailOnline(options.url, qs, options.pipe);
         }
+        if (options.data) {
+            return _thumbnailData(options.data, qs, options.pipe);
+        }
     }
 
     /**
@@ -188,6 +243,7 @@ var vision = function (key, host) {
      * @param  {Object}  options                    - Options object describing features to extract
      * @param  {string}  options.url                - Url to image to be analyzed
      * @param  {string}  options.path               - Path to image to be analyzed
+     * @param  {string}  options.data               - Buffer of image to be analyzed
      * @param  {string}  options.language           - BCP-47 language code of the text to be detected in the image. Default value is "unk", then the service will auto detect the language of the text in the image.
      * @param  {string}  options.detectOrientation  - Detect orientation of text in the image
      * @return {Promise}                            - Promise resolving with the resulting JSON
@@ -203,6 +259,9 @@ var vision = function (key, host) {
         }
         if (options.url) {
             return _postOnline(ocrUrl, options.url, qs);
+        }
+        if (options.data) {
+            return _postData(ocrUrl, options.data, qs);
         }
     }
 
@@ -244,6 +303,9 @@ var vision = function (key, host) {
             }
             if (options.url) {
                 return _postOnline(modelUrl, options.url, {});
+            }
+            if (options.data) {
+                return _postData(modelUrl, options.data, {});
             }
         }
     };
