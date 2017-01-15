@@ -548,7 +548,7 @@ Gets an existing person from a person group.
 
 <a name="Client.face.person.update"></a>
 
-##### person.update(personGroupId, name, userData) ⇒ <code>Promise</code>
+##### person.update(personGroupId, personId, name, userData) ⇒ <code>Promise</code>
 Updates a person's information.
 
 **Kind**: static method of <code>[person](#Client.face.person)</code>  
@@ -557,6 +557,7 @@ Updates a person's information.
 | Param | Type | Description |
 | --- | --- | --- |
 | personGroupId | <code>string</code> | The target person's person group. |
+| personId | <code>string</code> | The target person's id. |
 | name | <code>string</code> | Target person's display name. The maximum length is 128. |
 | userData | <code>string</code> | Optional fields for user-provided data attached to a person. Size limit is 16KB. |
 
