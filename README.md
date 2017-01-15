@@ -1,5 +1,6 @@
 ## Project Oxford for Node.js
-[![npm version](https://badge.fury.io/js/project-oxford.svg)](http://badge.fury.io/js/project-oxford)
+[![npm version](https://badge.fury.io/js/project-oxford.svg)](http://badge.fury.io/js/project-oxford)[![Known Vulnerabilities](https://snyk.io/test/github/felixrieseberg/project-oxford/badge.svg)](https://snyk.io/test/github/felixrieseberg/project-oxford)
+
 
 This package contains a set of intelligent APIs understanding images: It can detect and analyze people's faces, their age, gender, and similarity. It can identify people based on a set of images. It can understand what is displayed in a picture and crop it according to where the important features are. It can tell you whether an image contains adult content, what the main colors are, and which of your images belong in a group. If your image features text, it will tell you the language and return the text as a string. It's basically magic. For more details on the Project Oxford API, please visit [projectoxford.ai](http://www.projectoxford.ai/demo/face#detection).
 
