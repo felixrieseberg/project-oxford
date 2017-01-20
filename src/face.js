@@ -755,6 +755,7 @@ var face = function (key, host) {
          * Updates a person's information.
          *
          * @param {string} personGroupId     - The target person's person group.
+         * @param {string} personId          - The target person's id.
          * @param {string} name              - Target person's display name. The maximum length is 128.
          * @param {string} userData          - Optional fields for user-provided data attached to a person. Size limit is 16KB.
          * @return {Promise}                 - Promise resolving with the resulting JSON
