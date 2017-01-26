@@ -29,7 +29,7 @@ oxford.Client = function (key, host) {
         return console.error('Tried to initialize Project Oxford client without API key');
     }
 
-    host = (host || 'https://api.projectoxford.ai').replace('\/$', '');
+    host = (host || 'https://westus.api.cognitive.microsoft.com').replace('\/$', '');
 
     this._key = key;
     this.emotion = emotion(key, host);

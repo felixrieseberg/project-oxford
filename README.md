@@ -105,13 +105,13 @@ For the full documentation, please see the API reference below.
                 * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
                 * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
                 * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
-                * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
+                * [.update(personGroupId, personId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
                 * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
         * _inner_
             * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
             * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
             * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
-            * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
+            * [~identify(faces, personGroupId, maxNumOfCandidatesReturned, confidenceThreshold)](#Client.face..identify) ⇒ <code>Promise</code>
             * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
     * [.text](#Client.text) : <code>object</code>
         * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
@@ -203,13 +203,13 @@ Analyze the emotions of one or more faces in an image.
             * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
             * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
             * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
-            * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
+            * [.update(personGroupId, personId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
             * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
     * _inner_
         * [~detect(options)](#Client.face..detect) ⇒ <code>Promise</code>
         * [~similar(sourceFace, options)](#Client.face..similar) ⇒ <code>Promise</code>
         * [~grouping(faces)](#Client.face..grouping) ⇒ <code>Promise</code>
-        * [~identify(faces, personGroupId, maxNumOfCandidatesReturned)](#Client.face..identify) ⇒ <code>Promise</code>
+        * [~identify(faces, personGroupId, maxNumOfCandidatesReturned, confidenceThreshold)](#Client.face..identify) ⇒ <code>Promise</code>
         * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
 
 <a name="Client.face.faceList"></a>
@@ -440,7 +440,7 @@ Lists all person groups in the current subscription.
     * [.create(personGroupId, name, userData)](#Client.face.person.create) ⇒ <code>Promise</code>
     * [.delete(personGroupId, personId)](#Client.face.person.delete) ⇒ <code>Promise</code>
     * [.get(personGroupId, personId)](#Client.face.person.get) ⇒ <code>Promise</code>
-    * [.update(personGroupId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
+    * [.update(personGroupId, personId, name, userData)](#Client.face.person.update) ⇒ <code>Promise</code>
     * [.list(personGroupId)](#Client.face.person.list) ⇒ <code>Promise</code>
 
 <a name="Client.face.person.addFace"></a>
@@ -548,7 +548,7 @@ Gets an existing person from a person group.
 
 <a name="Client.face.person.update"></a>
 
-##### person.update(personGroupId, name, userData) ⇒ <code>Promise</code>
+##### person.update(personGroupId, personId, name, userData) ⇒ <code>Promise</code>
 Updates a person's information.
 
 **Kind**: static method of <code>[person](#Client.face.person)</code>  
@@ -557,6 +557,7 @@ Updates a person's information.
 | Param | Type | Description |
 | --- | --- | --- |
 | personGroupId | <code>string</code> | The target person's person group. |
+| personId | <code>string</code> | The target person's id. |
 | name | <code>string</code> | Target person's display name. The maximum length is 128. |
 | userData | <code>string</code> | Optional fields for user-provided data attached to a person. Size limit is 16KB. |
 
@@ -637,7 +638,7 @@ limit of 100 faces.
 
 <a name="Client.face..identify"></a>
 
-#### face~identify(faces, personGroupId, maxNumOfCandidatesReturned) ⇒ <code>Promise</code>
+#### face~identify(faces, personGroupId, maxNumOfCandidatesReturned, confidenceThreshold) ⇒ <code>Promise</code>
 Identifies persons from a person group by one or more input faces.
 To recognize which person a face belongs to, Face Identification needs a person group
 that contains number of persons. Each person contains one or more faces. After a person
@@ -653,6 +654,7 @@ returns the best-matched candidate persons, ranked by confidence.
 | faces | <code>Array.&lt;string&gt;</code> | Array of faceIds to use |
 | personGroupId | <code>string</code> | Id of person group from which faces will be identified |
 | maxNumOfCandidatesReturned | <code>Number</code> | Optional max number of candidates per face (default=1, max=5) |
+| confidenceThreshold | <code>Number</code> | Confidence threshold of identification, used to judge whether one face belong to one person. The range of confidenceThreshold is [0, 1] (default specified by algorithm). |
 
 <a name="Client.face..verify"></a>
 
