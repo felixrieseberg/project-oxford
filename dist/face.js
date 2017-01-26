@@ -153,6 +153,7 @@ var face = function face(key, host) {
      * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
      * @param  {boolean} options.analyzesSmile          - Analyze smile?
      * @param  {boolean} options.analyzesFacialHair     - Analyze facial hair?
+     * @param  {boolean} options.analyzesGlasses        - Analyze glasses?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detect(options) {
@@ -172,6 +173,9 @@ var face = function face(key, host) {
         if (options.analyzesFacialHair) {
             attributes.push('facialHair');
         }
+        if (options.analyzesGlasses) {
+            attributes.push('glasses');
+        }
         var qs = {
             returnFaceId: !!options.returnFaceId,
             returnFaceLandmarks: !!options.analyzesFaceLandmarks,
@@ -189,6 +193,7 @@ var face = function face(key, host) {
      * @param  {string[]} options.candidateFaces      - Array of faceIds to use as candidates
      * @param  {string}   options.candidateFaceListId - Id of face list, created via FaceList.create
      * @param  {Number}   options.maxCandidates       - Optional max number for top candidates (default is 20, max is 20)
+     * @param  {string?}  options.mode                - Optional mode Similar face searching mode. It can be "matchPerson" or "matchFace" (default is "matchPerson")
      * @return {Promise}                              - Promise resolving with the resulting JSON
      */
     function similar(sourceFace, options) {
@@ -204,6 +209,9 @@ var face = function face(key, host) {
                 }
                 if (options.maxCandidates) {
                     faces.maxNumOfCandidatesReturned = options.maxCandidates;
+                }
+                if (options.mode) {
+                    faces.mode = options.mode;
                 }
             }
             request.post({
