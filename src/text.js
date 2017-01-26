@@ -2,7 +2,7 @@ var request = require('request').defaults({
         headers: {'User-Agent': 'nodejs/0.4.0'}}),
     _Promise = require('bluebird');
 
-const rootPath = '/text/v1.0';
+const rootPath = '/bing/v5.0';
 const spellCheckPath = '/spellcheck';
 
 /**
@@ -33,19 +33,20 @@ var text = function (key, host) {
      * @param  {Object} options     - Options object
      * @return {Promise}            - Promise resolving with the resulting JSON
      */
-    function _check(mode, text, preContextText, postContextText) {
+    function _check(mode, text, preContextText, postContextText, market) {
         return new _Promise(function (resolve, reject) {
-            let form = {
-                Text: text,
-                PreContextText: preContextText,
-                PostContextText: postContextText
+            let qs = {
+                mode: mode,
+                text: text,
+                preContextText: preContextText,
+                postContextText: postContextText,
+                mkt: market
             };
-            request.post({
+            request.get({
                 uri: host + rootPath + spellCheckPath,
                 headers: {'Ocp-Apim-Subscription-Key': key},
-                form: form,
-                json: true,
-                qs: {mode: mode}
+                qs: qs,
+                json: true
             }, (error, response) => _return(error, response, resolve, reject));
         });
     }
@@ -57,10 +58,11 @@ var text = function (key, host) {
      * @param  {string}  text             - Word or phrase to spell check.
      * @param  {string?} preContextText   - Optional context of one or more words preceding the target word/phrase.
      * @param  {string?} postContextText  - Optional context of one or more words following the target word/phrase.
+     * @param  {string?} market           - Optional market
      * @return {Promise}                  - A promise in which the resulting JSON is returned.
      */
-    function proof(text, preContextText, postContextText) {
-        return _check('proof', text, preContextText, postContextText);
+    function proof(text, preContextText, postContextText, market) {
+        return _check('proof', text, preContextText, postContextText, market);
     }
 
     /**
@@ -71,10 +73,11 @@ var text = function (key, host) {
      * @param  {string}  text             - Word or phrase to spell check.
      * @param  {string?} preContextText   - Optional context of one or more words preceding the target word/phrase.
      * @param  {string?} postContextText  - Optional context of one or more words following the target word/phrase.
+     * @param  {string?} market           - Optional market
      * @return {Promise}                  - A promise in which the resulting JSON is returned.
      */
-    function spellCheck(text, preContextText, postContextText) {
-        return _check('spell', text, preContextText, postContextText);
+    function spellCheck(text, preContextText, postContextText, market) {
+        return _check('spell', text, preContextText, postContextText, market);
     }
 
     return {

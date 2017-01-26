@@ -114,8 +114,8 @@ For the full documentation, please see the API reference below.
             * [~identify(faces, personGroupId, maxNumOfCandidatesReturned, confidenceThreshold)](#Client.face..identify) ⇒ <code>Promise</code>
             * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
     * [.text](#Client.text) : <code>object</code>
-        * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
-        * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
+        * [~proof(text, preContextText, postContextText, market)](#Client.text..proof) ⇒ <code>Promise</code>
+        * [~spellCheck(text, preContextText, postContextText, market)](#Client.text..spellCheck) ⇒ <code>Promise</code>
     * [.video](#Client.video) : <code>object</code>
         * _static_
             * [.result](#Client.video.result)
@@ -676,12 +676,12 @@ For the scenarios that are sensitive to accuracy please use with own judgment.
 **Kind**: static namespace of <code>[Client](#Client)</code>  
 
 * [.text](#Client.text) : <code>object</code>
-    * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
-    * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
+    * [~proof(text, preContextText, postContextText, market)](#Client.text..proof) ⇒ <code>Promise</code>
+    * [~spellCheck(text, preContextText, postContextText, market)](#Client.text..spellCheck) ⇒ <code>Promise</code>
 
 <a name="Client.text..proof"></a>
 
-#### text~proof(text, preContextText, postContextText) ⇒ <code>Promise</code>
+#### text~proof(text, preContextText, postContextText, market) ⇒ <code>Promise</code>
 Proofs a word or phrase.  Offers Microsoft Office Word-like spelling corrections. Longer phrases can
 be checked, and the result will include casing corrections while avoiding aggressive corrections.
 
@@ -693,10 +693,11 @@ be checked, and the result will include casing corrections while avoiding aggres
 | text | <code>string</code> | Word or phrase to spell check. |
 | preContextText | <code>string</code> | Optional context of one or more words preceding the target word/phrase. |
 | postContextText | <code>string</code> | Optional context of one or more words following the target word/phrase. |
+| market | <code>string</code> | Optional market |
 
 <a name="Client.text..spellCheck"></a>
 
-#### text~spellCheck(text, preContextText, postContextText) ⇒ <code>Promise</code>
+#### text~spellCheck(text, preContextText, postContextText, market) ⇒ <code>Promise</code>
 Spell checks a word or phrase.  Spell checks offers search-engine-like corrections.  Short phrases
 (up to 9 tokens) will be checked, and the result will be optimized for search queries, both in terms
 of performance and relevance.
@@ -709,6 +710,7 @@ of performance and relevance.
 | text | <code>string</code> | Word or phrase to spell check. |
 | preContextText | <code>string</code> | Optional context of one or more words preceding the target word/phrase. |
 | postContextText | <code>string</code> | Optional context of one or more words following the target word/phrase. |
+| market | <code>string</code> | Optional market |
 
 <a name="Client.video"></a>
 

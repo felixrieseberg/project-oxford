@@ -27,12 +27,13 @@ oxford.Client = function (key, host) {
         return console.error('Tried to initialize Project Oxford client without API key');
     }
 
+    var bingHost = (host || 'https://api.cognitive.microsoft.com').replace('\/$', '');
     host = (host || 'https://westus.api.cognitive.microsoft.com').replace('\/$', '');
 
     this._key    = key;
     this.emotion = emotion(key, host);
     this.face    = face(key, host);
-    this.text    = text(key, host);
+    this.text    = text(key, bingHost);
     this.video   = video(key, host);
     this.vision  = vision(key, host);
     this.weblm   = weblm(key, host);
