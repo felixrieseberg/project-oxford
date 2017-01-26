@@ -251,15 +251,20 @@ var face = function (key, host) {
      * @param  {string[]} faces                     - Array of faceIds to use
      * @param  {string} personGroupId               - Id of person group from which faces will be identified
      * @param  {Number} maxNumOfCandidatesReturned  - Optional max number of candidates per face (default=1, max=5)
+     * @param  {Number} confidenceThreshold         - Confidence threshold of identification, used to judge whether one face belong to one person. The range of confidenceThreshold is [0, 1] (default specified by algorithm).
      * @return {Promise}                            - Promise resolving with the resulting JSON
      */
-    function identify(faces, personGroupId, maxNumOfCandidatesReturned) {
+    function identify(faces, personGroupId, maxNumOfCandidatesReturned, confidenceThreshold) {
         return new _Promise(function (resolve, reject) {
             let body = {
                 faceIds: faces,
                 personGroupId: personGroupId,
                 maxNumOfCandidatesReturned: maxNumOfCandidatesReturned || 1
             };
+
+            if (confidenceThreshold !== undefined) {
+                body.confidenceThreshold = confidenceThreshold;
+            }
 
             request.post({
                 uri: host + rootPath + identifyPath,
