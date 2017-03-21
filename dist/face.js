@@ -193,7 +193,7 @@ var face = function face(key, host) {
      * @param  {string[]} options.candidateFaces      - Array of faceIds to use as candidates
      * @param  {string}   options.candidateFaceListId - Id of face list, created via FaceList.create
      * @param  {Number}   options.maxCandidates       - Optional max number for top candidates (default is 20, max is 20)
-     * @param  {string?}  options.mode                - Optional mode Similar face searching mode. It can be "matchPerson" or "matchFace" (default is "matchPerson")
+     * @param  {string}   options.mode                - Optional face searching mode. It can be "matchPerson" or "matchFace" (default is "matchPerson")
      * @return {Promise}                              - Promise resolving with the resulting JSON
      */
     function similar(sourceFace, options) {
