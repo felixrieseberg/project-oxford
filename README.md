@@ -594,6 +594,7 @@ and Find Similar.
 | options.returnFaceId | <code>boolean</code> | Include face ID in response? |
 | options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
 | options.analyzesAge | <code>boolean</code> | Analyze age? |
+| options.analyzesEmotion | <code>boolean</code> | Analyze emotions? |
 | options.analyzesGender | <code>boolean</code> | Analyze gender? |
 | options.analyzesHeadPose | <code>boolean</code> | Analyze headpose? |
 | options.analyzesSmile | <code>boolean</code> | Analyze smile? |
@@ -616,7 +617,7 @@ Detect similar faces using faceIds (as returned from the detect API), or faceLis
 | options.candidateFaces | <code>Array.&lt;string&gt;</code> | Array of faceIds to use as candidates |
 | options.candidateFaceListId | <code>string</code> | Id of face list, created via FaceList.create |
 | options.maxCandidates | <code>Number</code> | Optional max number for top candidates (default is 20, max is 20) |
-| options.mode | <code>string</code> | Optional mode Similar face searching mode. It can be "matchPerson" or "matchFace" (default is "matchPerson") |
+| options.mode | <code>string</code> | Optional face searching mode. It can be "matchPerson" or "matchFace" (default is "matchPerson") |
 
 <a name="Client.face..grouping"></a>
 
