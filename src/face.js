@@ -145,6 +145,7 @@ var face = function (key, host) {
      * @param  {boolean} options.returnFaceId           - Include face ID in response?
      * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesAge            - Analyze age?
+     * @param  {boolean} options.analyzesEmotion        - Analyze emotions?
      * @param  {boolean} options.analyzesGender         - Analyze gender?
      * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
      * @param  {boolean} options.analyzesSmile          - Analyze smile?
@@ -153,31 +154,28 @@ var face = function (key, host) {
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detect(options) {
-        let attributes = [];
-        if (options.analyzesAge) {
-            attributes.push('age');
+        var qs = {};
+        if (options) {
+            var returnFaceLandmarks = false;
+            if (options.hasOwnProperty('analyzesFaceLandmarks')) {
+                returnFaceLandmarks = !!options.analyzesFaceLandmarks;
+                delete options.analyzesFaceLandmarks;
+            }
+            let attributes = [];
+            for (var key in options) {
+                if (options.hasOwnProperty(key)) {
+                    var match = key.match('^analyzes(.*)');
+                    if (match && !!options[key]) {
+                        attributes.push(match[1]);
+                    }
+                }
+            }
+            qs = {
+                returnFaceId: !!options.returnFaceId,
+                returnFaceLandmarks: returnFaceLandmarks,
+                returnFaceAttributes: attributes.join()
+            };
         }
-        if (options.analyzesGender) {
-            attributes.push('gender');
-        }
-        if (options.analyzesHeadPose) {
-            attributes.push('headPose');
-        }
-        if (options.analyzesSmile) {
-            attributes.push('smile');
-        }
-        if (options.analyzesFacialHair) {
-            attributes.push('facialHair');
-        }
-        if (options.analyzesGlasses) {
-            attributes.push('glasses');
-        }
-        let qs = {
-            returnFaceId: !!options.returnFaceId,
-            returnFaceLandmarks: !!options.analyzesFaceLandmarks,
-            returnFaceAttributes: attributes.join()
-        };
-
         return _postImage(detectPath, options, qs);
     }
 

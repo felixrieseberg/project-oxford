@@ -35,6 +35,7 @@ describe('Project Oxford Face API Test', function () {
                 analyzesGender: true,
                 analyzesHeadPose: true,
                 analyzesGlasses: true,
+                analyzesEmotion: true
             }).then(function (response) {
                 assert.ok(response[0].faceId);
                 assert.ok(response[0].faceRectangle);
@@ -44,6 +45,9 @@ describe('Project Oxford Face API Test', function () {
 
                 assert.equal(response[0].faceAttributes.gender, 'male');
                 assert.equal(response[0].faceAttributes.glasses, 'ReadingGlasses');
+
+                assert.ok(response[0].faceAttributes.emotion.happiness > 0.5);
+
                 done();
             }).catch(function (error) {
                 // Check if subscription is valid
