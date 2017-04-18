@@ -127,6 +127,8 @@ For the full documentation, please see the API reference below.
             * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
     * [.vision](#Client.vision) : <code>object</code>
         * _static_
+            * [.result](#Client.vision.result)
+                * [.get(operation)](#Client.vision.result.get) ⇒ <code>Promise</code>
             * [.models](#Client.vision.models) : <code>object</code>
                 * [.list()](#Client.vision.models.list) ⇒ <code>Promise</code>
                 * [.analyzeImage(model, options)](#Client.vision.models.analyzeImage) ⇒ <code>Promise</code>
@@ -134,6 +136,7 @@ For the full documentation, please see the API reference below.
             * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
             * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
             * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+            * [~recognizeText(options)](#Client.vision..recognizeText) ⇒ <code>Promise</code>
     * [.weblm](#Client.weblm) : <code>object</code>
         * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
         * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
@@ -825,6 +828,8 @@ A stabilized version of you video will be generated.
 
 * [.vision](#Client.vision) : <code>object</code>
     * _static_
+        * [.result](#Client.vision.result)
+            * [.get(operation)](#Client.vision.result.get) ⇒ <code>Promise</code>
         * [.models](#Client.vision.models) : <code>object</code>
             * [.list()](#Client.vision.models.list) ⇒ <code>Promise</code>
             * [.analyzeImage(model, options)](#Client.vision.models.analyzeImage) ⇒ <code>Promise</code>
@@ -832,6 +837,25 @@ A stabilized version of you video will be generated.
         * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
         * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
         * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+        * [~recognizeText(options)](#Client.vision..recognizeText) ⇒ <code>Promise</code>
+
+<a name="Client.vision.result"></a>
+
+#### vision.result
+**Kind**: static property of <code>[vision](#Client.vision)</code>  
+<a name="Client.vision.result.get"></a>
+
+##### result.get(operation) ⇒ <code>Promise</code>
+Checks the result of a text recognition request.  When an operation is deemed completed,
+the status of the returned object should be 'Succeeded' (or, possibly, 'Failed'.) The
+`recognitionResult` contains the result when the operation is complete.
+
+**Kind**: static method of <code>[result](#Client.vision.result)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| operation | <code>Object</code> | Object holding the result URL |
 
 <a name="Client.vision.models"></a>
 
@@ -926,6 +950,22 @@ characters into a machine-usable character stream.
 | options.data | <code>string</code> | Buffer of image to be analyzed |
 | options.language | <code>string</code> | BCP-47 language code of the text to be detected in the image. Default value is "unk", then the service will auto detect the language of the text in the image. |
 | options.detectOrientation | <code>string</code> | Detect orientation of text in the image |
+
+<a name="Client.vision..recognizeText"></a>
+
+#### vision~recognizeText(options) ⇒ <code>Promise</code>
+Recognize text, including hand-written text.
+
+**Kind**: inner method of <code>[vision](#Client.vision)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | Options object describing features to extract |
+| options.url | <code>string</code> | Url to image to be analyzed |
+| options.path | <code>string</code> | Path to image to be analyzed |
+| options.data | <code>string</code> | Buffer of image to be analyzed |
+| options.handwriting | <code>string</code> | Whether the image is of hand-written text.  Default is false. |
 
 <a name="Client.weblm"></a>
 
