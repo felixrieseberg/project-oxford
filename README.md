@@ -598,6 +598,7 @@ and Find Similar.
 | options.analyzesHeadPose | <code>boolean</code> | Analyze headpose? |
 | options.analyzesSmile | <code>boolean</code> | Analyze smile? |
 | options.analyzesFacialHair | <code>boolean</code> | Analyze facial hair? |
+| options.analyzesEmotion | <code>boolean</code> | Analyze emotion? |
 
 <a name="Client.face..similar"></a>
 
