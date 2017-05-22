@@ -76,7 +76,7 @@ For the full documentation, please see the API reference below.
 **Kind**: global class  
 
 * [Client](#Client)
-    * [new Client(key, host)](#new_Client_new)
+    * [new Client(key, hostOrRegion)](#new_Client_new)
     * [.emotion](#Client.emotion) : <code>object</code>
         * [~analyzeEmotion(options)](#Client.emotion..analyzeEmotion) ⇒ <code>Promise</code>
     * [.face](#Client.face) : <code>object</code>
@@ -146,14 +146,14 @@ For the full documentation, please see the API reference below.
 
 <a name="new_Client_new"></a>
 
-### new Client(key, host)
+### new Client(key, hostOrRegion)
 Creates a new Project Oxford Client using a given API key.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | Project Oxford API Key |
-| host | <code>string</code> | Optional host address |
+| hostOrRegion | <code>string</code> | Optional host address or region |
 
 <a name="Client.emotion"></a>
 
