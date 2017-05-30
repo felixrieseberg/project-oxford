@@ -23,7 +23,6 @@ oxford.makeBuffer = function (dataURL) {
  */
 oxford.region = {
     EAST_US_2: 'eastus2',
-    FREE_TRIAL: 'westcentralus',
     SOUTHEAST_ASIA: 'southeastasia',
     WEST_CENTRAL_US: 'westcentralus',
     WEST_EUROPE: 'westeurope',
