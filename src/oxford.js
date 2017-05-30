@@ -54,7 +54,7 @@ oxford.Client = function (key, hostOrRegion) {
     // If hostOrRegion is not defined, use westus for the region, for backwards compatibility.
     var host;
     if (hostOrRegion) {
-        var re = /[a-z]\w+/;
+        var re = /^[a-z]\w+$/;
         host = hostOrRegion.match(re) ? oxford.hostFromRegion(hostOrRegion) : hostOrRegion.replace('\/$', '');
     } else {
         host = oxford.hostFromRegion(oxford.region.WEST_US);
