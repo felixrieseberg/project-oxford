@@ -818,13 +818,16 @@ var face = function face(key, host) {
          * Lists all persons in a person group, with the person information.
          *
          * @param {string} personGroupId     - The target person's person group.
+         * @param {string} options.start     - List persons from the least personId greater than the "start". It contains no more than 64 characters. Default is empty.
+         * @param {Number} options.top       - Optional count of persons to return.  Valid range is [1,1000].  (Default: 1000)
          * @return {Promise}                 - Promise resolving with the resulting JSON
          */
-        list: function list(personGroupId) {
+        list: function list(personGroupId, options) {
             return new _Promise(function (resolve, reject) {
                 request({
                     uri: host + rootPath + personPath + '/' + personGroupId + '/persons',
-                    headers: { 'Ocp-Apim-Subscription-Key': key }
+                    headers: { 'Ocp-Apim-Subscription-Key': key },
+                    qs: options
                 }, function (error, response) {
                     response.body = JSON.parse(response.body);
                     _return(error, response, resolve, reject);
