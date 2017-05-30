@@ -70,7 +70,8 @@ describe('Project Oxford Face API Test', function () {
                 analyzesFacialHair: true,
                 analyzesGender: true,
                 analyzesHeadPose: true,
-                analyzesSmile: true
+                analyzesSmile: true,
+                analyzesEmotion: true
             }).then(function (response) {
                 assert.ok(response[0].faceId);
                 assert.ok(response[0].faceRectangle);
@@ -81,6 +82,7 @@ describe('Project Oxford Face API Test', function () {
                 assert.equal(response[0].faceAttributes.gender, 'male');
                 assert.ok(response[0].faceAttributes.smile > 0.5);
                 assert.ok(response[0].faceAttributes.facialHair.beard < 0.1);
+                assert.ok(response[0].faceAttributes.emotion.anger >= 0);
                 done();
             });
         });
@@ -380,7 +382,8 @@ describe('Project Oxford Face API Test', function () {
                 analyzesFacialHair: true,
                 analyzesGender: true,
                 analyzesHeadPose: true,
-                analyzesSmile: true
+                analyzesSmile: true,
+                analyzesEmotion: true
             }).then(function (response) {
                 assert.ok(response[0].faceId);
                 assert.ok(response[0].faceRectangle);
@@ -391,6 +394,7 @@ describe('Project Oxford Face API Test', function () {
                 assert.equal(response[0].faceAttributes.gender, 'male');
                 assert.ok(response[0].faceAttributes.smile > 0.5);
                 assert.ok(response[0].faceAttributes.facialHair.beard < 0.1);
+                assert.ok(response[0].faceAttributes.emotion.anger >= 0);
                 done();
             });
         });
