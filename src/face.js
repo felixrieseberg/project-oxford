@@ -149,6 +149,7 @@ var face = function (key, host) {
      * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
      * @param  {boolean} options.analyzesSmile          - Analyze smile?
      * @param  {boolean} options.analyzesFacialHair     - Analyze facial hair?
+     * @param  {boolean} options.analyzesEmotion        - Analyze emotion?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detect(options) {
@@ -167,6 +168,9 @@ var face = function (key, host) {
         }
         if (options.analyzesFacialHair) {
             attributes.push('facialHair');
+        }
+        if (options.analyzesEmotion) {
+            attributes.push('emotion');
         }
         let qs = {
             returnFaceId: !!options.returnFaceId,
