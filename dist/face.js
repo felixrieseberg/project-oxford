@@ -147,41 +147,46 @@ var face = function face(key, host) {
      * @param  {string}  options.path                   - Path to image to be used
      * @param  {string}  options.data                   - Image as a binary buffer
      * @param  {boolean} options.returnFaceId           - Include face ID in response?
-     * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
+     * @param  {boolean} options.analyzesAccessories    - Analyze accessories?
      * @param  {boolean} options.analyzesAge            - Analyze age?
-     * @param  {boolean} options.analyzesGender         - Analyze gender?
-     * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
-     * @param  {boolean} options.analyzesSmile          - Analyze smile?
+     * @param  {boolean} options.analyzesBlur           - Analyze blur?
+     * @param  {boolean} options.analyzesEmotion        - Analyze emotions?
+     * @param  {boolean} options.analyzesExposure       - Analyze expose?
+     * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesFacialHair     - Analyze facial hair?
-     * @param  {boolean} options.analyzesEmotion        - Analyze emotion?
+     * @param  {boolean} options.analyzesGender         - Analyze gender?
+     * @param  {boolean} options.analyzesGlasses        - Analyze glasses?
+     * @param  {boolean} options.analyzesHair           - Analyze hair?
+     * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
+     * @param  {boolean} options.analyzesMakeup         - Analyze makeup?
+     * @param  {boolean} options.analyzesNoise          - Analyze noise?
+     * @param  {boolean} options.analyzesOcclusion      - Analyze occlusion?
+     * @param  {boolean} options.analyzesSmile          - Analyze smile?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detect(options) {
-        var attributes = [];
-        if (options.analyzesAge) {
-            attributes.push('age');
+        var qs = {};
+        if (options) {
+            var returnFaceLandmarks = false;
+            if (options.hasOwnProperty('analyzesFaceLandmarks')) {
+                returnFaceLandmarks = !!options.analyzesFaceLandmarks;
+                delete options.analyzesFaceLandmarks;
+            }
+            var attributes = [];
+            for (var key in options) {
+                if (options.hasOwnProperty(key)) {
+                    var match = key.match('^analyzes(.*)');
+                    if (match && !!options[key]) {
+                        attributes.push(match[1]);
+                    }
+                }
+            }
+            qs = {
+                returnFaceId: !!options.returnFaceId,
+                returnFaceLandmarks: returnFaceLandmarks,
+                returnFaceAttributes: attributes.join()
+            };
         }
-        if (options.analyzesGender) {
-            attributes.push('gender');
-        }
-        if (options.analyzesHeadPose) {
-            attributes.push('headPose');
-        }
-        if (options.analyzesSmile) {
-            attributes.push('smile');
-        }
-        if (options.analyzesFacialHair) {
-            attributes.push('facialHair');
-        }
-        if (options.analyzesEmotion) {
-            attributes.push('emotion');
-        }
-        var qs = {
-            returnFaceId: !!options.returnFaceId,
-            returnFaceLandmarks: !!options.analyzesFaceLandmarks,
-            returnFaceAttributes: attributes.join()
-        };
-
         return _postImage(detectPath, options, qs);
     }
 
@@ -193,6 +198,7 @@ var face = function face(key, host) {
      * @param  {string[]} options.candidateFaces      - Array of faceIds to use as candidates
      * @param  {string}   options.candidateFaceListId - Id of face list, created via FaceList.create
      * @param  {Number}   options.maxCandidates       - Optional max number for top candidates (default is 20, max is 20)
+     * @param  {string}   options.mode                - Optional face searching mode. It can be "matchPerson" or "matchFace" (default is "matchPerson")
      * @return {Promise}                              - Promise resolving with the resulting JSON
      */
     function similar(sourceFace, options) {
@@ -208,6 +214,9 @@ var face = function face(key, host) {
                 }
                 if (options.maxCandidates) {
                     faces.maxNumOfCandidatesReturned = options.maxCandidates;
+                }
+                if (options.mode) {
+                    faces.mode = options.mode;
                 }
             }
             request.post({
@@ -809,13 +818,16 @@ var face = function face(key, host) {
          * Lists all persons in a person group, with the person information.
          *
          * @param {string} personGroupId     - The target person's person group.
+         * @param {string} options.start     - List persons from the least personId greater than the "start". It contains no more than 64 characters. Default is empty.
+         * @param {Number} options.top       - Optional count of persons to return.  Valid range is [1,1000].  (Default: 1000)
          * @return {Promise}                 - Promise resolving with the resulting JSON
          */
-        list: function list(personGroupId) {
+        list: function list(personGroupId, options) {
             return new _Promise(function (resolve, reject) {
                 request({
                     uri: host + rootPath + personPath + '/' + personGroupId + '/persons',
-                    headers: { 'Ocp-Apim-Subscription-Key': key }
+                    headers: { 'Ocp-Apim-Subscription-Key': key },
+                    qs: options
                 }, function (error, response) {
                     response.body = JSON.parse(response.body);
                     _return(error, response, resolve, reject);

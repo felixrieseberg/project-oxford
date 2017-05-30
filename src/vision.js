@@ -8,6 +8,7 @@ const analyzeUrl   = '/analyze';
 const thumbnailUrl = '/generateThumbnail';
 const ocrUrl       = '/ocr';
 const modelsUrl    = '/models';
+const recognizeTextUrl = '/recognizeText';
 
 /**
  * @namespace
@@ -21,12 +22,23 @@ var vision = function (key, host) {
         if (error) {
             return reject(error);
         }
-
+        if (response.statusCode === 202) {
+            return resolve({url: response.headers['operation-location']});
+        }
         if (response.statusCode !== 200) {
             reject(response.body);
         }
-
         return resolve(response.body);
+    }
+
+    /**
+     * @private
+     */
+    function _returnJson(error, response, resolve, reject) {
+        response.body = (response.statusCode === 202) ?
+            {url: response.headers['operation-location']} :
+            JSON.parse(response.body);
+        _return(error, response, resolve, reject);
     }
 
     /**
@@ -47,8 +59,7 @@ var vision = function (key, host) {
                 },
                 qs: options
             }, (error, response) => {
-                response.body = JSON.parse(response.body);
-                _return(error, response, resolve, reject);
+                _returnJson(error, response, resolve, reject);
             }));
         });
     }
@@ -65,11 +76,15 @@ var vision = function (key, host) {
         return new _Promise(function (resolve, reject) {
             request.post({
                 uri: host + rootPath + url,
-                headers: {'Ocp-Apim-Subscription-Key': key},
-                json: true,
-                body: {url: image},
+                headers: {
+                    'Ocp-Apim-Subscription-Key': key,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({url: image}),
                 qs: options
-            }, (error, response) => _return(error, response, resolve, reject));
+            }, (error, response) => {
+                _returnJson(error, response, resolve, reject);
+            });
         });
     }
 
@@ -92,8 +107,7 @@ var vision = function (key, host) {
                 body: image,
                 qs: options
             }, (error, response) => {
-                response.body = JSON.parse(response.body);
-                _return(error, response, resolve, reject);
+                _returnJson(error, response, resolve, reject);
             });
         });
     }
@@ -280,8 +294,7 @@ var vision = function (key, host) {
                     uri: host + rootPath + modelsUrl,
                     headers: {'Ocp-Apim-Subscription-Key': key}
                 }, function (error, response) {
-                    response.body = JSON.parse(response.body);
-                    return _return(error, response, resolve, reject);
+                    return _returnJson(error, response, resolve, reject);
                 });
             });
         },
@@ -310,11 +323,63 @@ var vision = function (key, host) {
         }
     };
 
+    /**
+     * Recognize text, including hand-written text.
+     *
+     * @param  {Object}  options                    - Options object describing features to extract
+     * @param  {string}  options.url                - Url to image to be analyzed
+     * @param  {string}  options.path               - Path to image to be analyzed
+     * @param  {string}  options.data               - Buffer of image to be analyzed
+     * @param  {string}  options.handwriting        - Whether the image is of hand-written text.  Default is false.
+     * @return {Promise}                            - Promise resolving with the resulting JSON
+     */
+    function recognizeText(options) {
+        let qs = {
+            handwriting: !!options.handwriting
+        };
+
+        if (options.path) {
+            return _postLocal(recognizeTextUrl, options.path, qs);
+        }
+        if (options.url) {
+            return _postOnline(recognizeTextUrl, options.url, qs);
+        }
+        if (options.data) {
+            return _postData(recognizeTextUrl, options.data, qs);
+        }
+    }
+
+    /**
+     * @memberof Client.vision
+     */
+    var result = {
+        /**
+        * Checks the result of a text recognition request.  When an operation is deemed completed,
+        * the status of the returned object should be 'Succeeded' (or, possibly, 'Failed'.) The
+        * `recognitionResult` contains the result when the operation is complete.
+        *
+        * @param  {Object} operation  - Object holding the result URL
+        * @return {Promise}           - Promise resolving with the resulting JSON
+        */
+        get: function (operation) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: operation.url,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, (error, response) => {
+                    _returnJson(error, response, resolve, reject);
+                });
+            });
+        }
+    };
+
     return {
         analyzeImage: analyzeImage,
         thumbnail: thumbnail,
         ocr: ocr,
-        models: models
+        models: models,
+        recognizeText: recognizeText,
+        result: result
     };
 };
 

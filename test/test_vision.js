@@ -288,4 +288,50 @@ describe('Project Oxford Vision API Test', function () {
             console.log(error)
         });
     });
+
+    describe('Recognize handwriting text', function() {
+        var operation = {};
+
+        it('start a recognition request', function (done) {
+            this.timeout(30000);
+            client.vision.recognizeText({
+                path: './test/images/written.jpg',
+                handwriting: true
+            })
+            .then(function (response) {
+                assert.ok(response);
+                operation = response;
+                done();
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
+        });
+
+        it('checks the recognition operation status, polls until done', function (done) {
+            this.slow(200000);
+            this.timeout(120000);
+            var waitTimeMs = 1000;
+            var checkFn = function() {
+                client.vision.result.get(operation)
+                .then(function (response) {
+                    assert.ok(response.status);
+                    if (response.status === 'Succeeded') {
+                        assert.equal(2, response.recognitionResult.lines.length);
+                        assert.equal("You must be the change", response.recognitionResult.lines[0].text);
+                        assert.equal("you want to see in the world !", response.recognitionResult.lines[1].text);
+                        done();
+                    } else if (response.status === 'Failed') {
+                        assert.ok(false);
+                        done();
+                    } else {
+                        waitTimeMs *= 1.8;
+                        setTimeout(checkFn, waitTimeMs);
+                    }
+                });
+            };
+
+            setTimeout(checkFn, waitTimeMs);
+        });
+    })
 });

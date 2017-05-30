@@ -12,16 +12,16 @@ describe('Project Oxford Text API Test', function () {
 
     describe('#spellCheck', function() {
         it('Spell check a word without additional context, no case correction', function(done) {
-            client.text.spellCheck('micro$oft').
+            client.text.spellCheck('Bill Gatas').
             then(function(json) {
-                assert.equal(json.spellingErrors.length, 1);
-                var err = json.spellingErrors[0];
-                assert.equal(err.offset, 0);
-                assert.equal(err.token, 'micro$oft');
-                assert.equal(err.type, 'UnknownToken');
-                assert.equal(err.suggestions.length, 1);
-                var suggestion = err.suggestions[0];
-                assert.equal(suggestion.token, 'microsoft');
+                assert.equal(json.flaggedTokens.length, 1);
+                var token = json.flaggedTokens[0];
+                assert.equal(token.offset, 5);
+                assert.equal(token.token, 'Gatas');
+                assert.equal(token.type, 'UnknownToken');
+                assert.equal(token.suggestions.length, 1);
+                var suggestion = token.suggestions[0];
+                assert.equal(suggestion.suggestion, 'gates');
                 done();
             }).
             catch(function(error) {
@@ -33,17 +33,14 @@ describe('Project Oxford Text API Test', function () {
         it('Proof a word with context; Ode Too Joy -> Ode To Joy', function(done) {
             client.text.proof('Too', 'Ode', 'Joy').
             then(function(json) {
-                var expected = {
-                    spellingErrors: [{
-                        offset: 0,
-                        token: 'Too',
-                        type: 'UnknownToken',
-                        suggestions: [{
-                            token: 'To'
-                        }]
-                    }]
-                };
-                assert.deepEqual(json, expected);
+                assert.equal(json.flaggedTokens.length, 1);
+                var token = json.flaggedTokens[0];
+                assert.equal(token.offset, 0);
+                assert.equal(token.token, 'Too');
+                assert.equal(token.type, 'UnknownToken');
+                assert.equal(token.suggestions.length, 1);
+                var suggestion = token.suggestions[0];
+                assert.equal(suggestion.suggestion, 'To');
                 done();
             }).
             catch(function(error) {
@@ -55,17 +52,14 @@ describe('Project Oxford Text API Test', function () {
         it('Proof one of the most commonly mispelled names, and also case-corrects', function(done) {
             client.text.proof('Arnold shuwartsanayger').
             then(function(json) {
-                var expected = {
-                    spellingErrors: [{
-                        offset: 7,
-                        token: 'shuwartsanayger',
-                        type: 'UnknownToken',
-                        suggestions: [{
-                            token: 'Schwarzenegger'
-                        }]
-                    }]
-                };
-                assert.deepEqual(json, expected);
+                assert.equal(json.flaggedTokens.length, 1);
+                var token = json.flaggedTokens[0];
+                assert.equal(token.offset, 7);
+                assert.equal(token.token, 'shuwartsanayger');
+                assert.equal(token.type, 'UnknownToken');
+                assert.equal(token.suggestions.length, 1);
+                var suggestion = token.suggestions[0];
+                assert.equal(suggestion.suggestion, 'Schwarzenegger');
                 done();
             }).
             catch(function(error) {

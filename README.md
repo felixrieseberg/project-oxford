@@ -76,7 +76,7 @@ For the full documentation, please see the API reference below.
 **Kind**: global class  
 
 * [Client](#Client)
-    * [new Client(key, host)](#new_Client_new)
+    * [new Client(key, hostOrRegion)](#new_Client_new)
     * [.emotion](#Client.emotion) : <code>object</code>
         * [~analyzeEmotion(options)](#Client.emotion..analyzeEmotion) ⇒ <code>Promise</code>
     * [.face](#Client.face) : <code>object</code>
@@ -114,8 +114,8 @@ For the full documentation, please see the API reference below.
             * [~identify(faces, personGroupId, maxNumOfCandidatesReturned, confidenceThreshold)](#Client.face..identify) ⇒ <code>Promise</code>
             * [~verify(faces)](#Client.face..verify) ⇒ <code>Promise</code>
     * [.text](#Client.text) : <code>object</code>
-        * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
-        * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
+        * [~proof(text, preContextText, postContextText, market)](#Client.text..proof) ⇒ <code>Promise</code>
+        * [~spellCheck(text, preContextText, postContextText, market)](#Client.text..spellCheck) ⇒ <code>Promise</code>
     * [.video](#Client.video) : <code>object</code>
         * _static_
             * [.result](#Client.video.result)
@@ -127,6 +127,8 @@ For the full documentation, please see the API reference below.
             * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
     * [.vision](#Client.vision) : <code>object</code>
         * _static_
+            * [.result](#Client.vision.result)
+                * [.get(operation)](#Client.vision.result.get) ⇒ <code>Promise</code>
             * [.models](#Client.vision.models) : <code>object</code>
                 * [.list()](#Client.vision.models.list) ⇒ <code>Promise</code>
                 * [.analyzeImage(model, options)](#Client.vision.models.analyzeImage) ⇒ <code>Promise</code>
@@ -134,6 +136,7 @@ For the full documentation, please see the API reference below.
             * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
             * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
             * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+            * [~recognizeText(options)](#Client.vision..recognizeText) ⇒ <code>Promise</code>
     * [.weblm](#Client.weblm) : <code>object</code>
         * [~listModels()](#Client.weblm..listModels) ⇒ <code>Promise</code>
         * [~breakIntoWords(model, text, options)](#Client.weblm..breakIntoWords) ⇒ <code>Promise</code>
@@ -143,14 +146,14 @@ For the full documentation, please see the API reference below.
 
 <a name="new_Client_new"></a>
 
-### new Client(key, host)
+### new Client(key, hostOrRegion)
 Creates a new Project Oxford Client using a given API key.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | Project Oxford API Key |
-| host | <code>string</code> | Optional host address |
+| hostOrRegion | <code>string</code> | Optional host address or region |
 
 <a name="Client.emotion"></a>
 
@@ -572,6 +575,8 @@ Lists all persons in a person group, with the person information.
 | Param | Type | Description |
 | --- | --- | --- |
 | personGroupId | <code>string</code> | The target person's person group. |
+| options.start | <code>string</code> | List persons from the least personId greater than the "start". It contains no more than 64 characters. Default is empty. |
+| options.top | <code>Number</code> | Optional count of persons to return.  Valid range is [1,1000].  (Default: 1000) |
 
 <a name="Client.face..detect"></a>
 
@@ -592,13 +597,21 @@ and Find Similar.
 | options.path | <code>string</code> | Path to image to be used |
 | options.data | <code>string</code> | Image as a binary buffer |
 | options.returnFaceId | <code>boolean</code> | Include face ID in response? |
-| options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
+| options.analyzesAccessories | <code>boolean</code> | Analyze accessories? |
 | options.analyzesAge | <code>boolean</code> | Analyze age? |
-| options.analyzesGender | <code>boolean</code> | Analyze gender? |
-| options.analyzesHeadPose | <code>boolean</code> | Analyze headpose? |
-| options.analyzesSmile | <code>boolean</code> | Analyze smile? |
+| options.analyzesBlur | <code>boolean</code> | Analyze blur? |
+| options.analyzesEmotion | <code>boolean</code> | Analyze emotions? |
+| options.analyzesExposure | <code>boolean</code> | Analyze expose? |
+| options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
 | options.analyzesFacialHair | <code>boolean</code> | Analyze facial hair? |
-| options.analyzesEmotion | <code>boolean</code> | Analyze emotion? |
+| options.analyzesGender | <code>boolean</code> | Analyze gender? |
+| options.analyzesGlasses | <code>boolean</code> | Analyze glasses? |
+| options.analyzesHair | <code>boolean</code> | Analyze hair? |
+| options.analyzesHeadPose | <code>boolean</code> | Analyze headpose? |
+| options.analyzesMakeup | <code>boolean</code> | Analyze makeup? |
+| options.analyzesNoise | <code>boolean</code> | Analyze noise? |
+| options.analyzesOcclusion | <code>boolean</code> | Analyze occlusion? |
+| options.analyzesSmile | <code>boolean</code> | Analyze smile? |
 
 <a name="Client.face..similar"></a>
 
@@ -616,6 +629,7 @@ Detect similar faces using faceIds (as returned from the detect API), or faceLis
 | options.candidateFaces | <code>Array.&lt;string&gt;</code> | Array of faceIds to use as candidates |
 | options.candidateFaceListId | <code>string</code> | Id of face list, created via FaceList.create |
 | options.maxCandidates | <code>Number</code> | Optional max number for top candidates (default is 20, max is 20) |
+| options.mode | <code>string</code> | Optional face searching mode. It can be "matchPerson" or "matchFace" (default is "matchPerson") |
 
 <a name="Client.face..grouping"></a>
 
@@ -677,12 +691,12 @@ For the scenarios that are sensitive to accuracy please use with own judgment.
 **Kind**: static namespace of <code>[Client](#Client)</code>  
 
 * [.text](#Client.text) : <code>object</code>
-    * [~proof(text, preContextText, postContextText)](#Client.text..proof) ⇒ <code>Promise</code>
-    * [~spellCheck(text, preContextText, postContextText)](#Client.text..spellCheck) ⇒ <code>Promise</code>
+    * [~proof(text, preContextText, postContextText, market)](#Client.text..proof) ⇒ <code>Promise</code>
+    * [~spellCheck(text, preContextText, postContextText, market)](#Client.text..spellCheck) ⇒ <code>Promise</code>
 
 <a name="Client.text..proof"></a>
 
-#### text~proof(text, preContextText, postContextText) ⇒ <code>Promise</code>
+#### text~proof(text, preContextText, postContextText, market) ⇒ <code>Promise</code>
 Proofs a word or phrase.  Offers Microsoft Office Word-like spelling corrections. Longer phrases can
 be checked, and the result will include casing corrections while avoiding aggressive corrections.
 
@@ -694,10 +708,11 @@ be checked, and the result will include casing corrections while avoiding aggres
 | text | <code>string</code> | Word or phrase to spell check. |
 | preContextText | <code>string</code> | Optional context of one or more words preceding the target word/phrase. |
 | postContextText | <code>string</code> | Optional context of one or more words following the target word/phrase. |
+| market | <code>string</code> | Optional market |
 
 <a name="Client.text..spellCheck"></a>
 
-#### text~spellCheck(text, preContextText, postContextText) ⇒ <code>Promise</code>
+#### text~spellCheck(text, preContextText, postContextText, market) ⇒ <code>Promise</code>
 Spell checks a word or phrase.  Spell checks offers search-engine-like corrections.  Short phrases
 (up to 9 tokens) will be checked, and the result will be optimized for search queries, both in terms
 of performance and relevance.
@@ -710,6 +725,7 @@ of performance and relevance.
 | text | <code>string</code> | Word or phrase to spell check. |
 | preContextText | <code>string</code> | Optional context of one or more words preceding the target word/phrase. |
 | postContextText | <code>string</code> | Optional context of one or more words following the target word/phrase. |
+| market | <code>string</code> | Optional market |
 
 <a name="Client.video"></a>
 
@@ -821,6 +837,8 @@ A stabilized version of you video will be generated.
 
 * [.vision](#Client.vision) : <code>object</code>
     * _static_
+        * [.result](#Client.vision.result)
+            * [.get(operation)](#Client.vision.result.get) ⇒ <code>Promise</code>
         * [.models](#Client.vision.models) : <code>object</code>
             * [.list()](#Client.vision.models.list) ⇒ <code>Promise</code>
             * [.analyzeImage(model, options)](#Client.vision.models.analyzeImage) ⇒ <code>Promise</code>
@@ -828,6 +846,25 @@ A stabilized version of you video will be generated.
         * [~analyzeImage(options)](#Client.vision..analyzeImage) ⇒ <code>Promise</code>
         * [~thumbnail(options)](#Client.vision..thumbnail) ⇒ <code>Promise</code>
         * [~ocr(options)](#Client.vision..ocr) ⇒ <code>Promise</code>
+        * [~recognizeText(options)](#Client.vision..recognizeText) ⇒ <code>Promise</code>
+
+<a name="Client.vision.result"></a>
+
+#### vision.result
+**Kind**: static property of <code>[vision](#Client.vision)</code>  
+<a name="Client.vision.result.get"></a>
+
+##### result.get(operation) ⇒ <code>Promise</code>
+Checks the result of a text recognition request.  When an operation is deemed completed,
+the status of the returned object should be 'Succeeded' (or, possibly, 'Failed'.) The
+`recognitionResult` contains the result when the operation is complete.
+
+**Kind**: static method of <code>[result](#Client.vision.result)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| operation | <code>Object</code> | Object holding the result URL |
 
 <a name="Client.vision.models"></a>
 
@@ -922,6 +959,22 @@ characters into a machine-usable character stream.
 | options.data | <code>string</code> | Buffer of image to be analyzed |
 | options.language | <code>string</code> | BCP-47 language code of the text to be detected in the image. Default value is "unk", then the service will auto detect the language of the text in the image. |
 | options.detectOrientation | <code>string</code> | Detect orientation of text in the image |
+
+<a name="Client.vision..recognizeText"></a>
+
+#### vision~recognizeText(options) ⇒ <code>Promise</code>
+Recognize text, including hand-written text.
+
+**Kind**: inner method of <code>[vision](#Client.vision)</code>  
+**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> | Options object describing features to extract |
+| options.url | <code>string</code> | Url to image to be analyzed |
+| options.path | <code>string</code> | Path to image to be analyzed |
+| options.data | <code>string</code> | Buffer of image to be analyzed |
+| options.handwriting | <code>string</code> | Whether the image is of hand-written text.  Default is false. |
 
 <a name="Client.weblm"></a>
 
