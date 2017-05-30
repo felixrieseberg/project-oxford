@@ -575,6 +575,8 @@ Lists all persons in a person group, with the person information.
 | Param | Type | Description |
 | --- | --- | --- |
 | personGroupId | <code>string</code> | The target person's person group. |
+| options.start | <code>string</code> | List persons from the least personId greater than the "start". It contains no more than 64 characters. Default is empty. |
+| options.top | <code>Number</code> | Optional count of persons to return.  Valid range is [1,1000].  (Default: 1000) |
 
 <a name="Client.face..detect"></a>
 
@@ -595,14 +597,21 @@ and Find Similar.
 | options.path | <code>string</code> | Path to image to be used |
 | options.data | <code>string</code> | Image as a binary buffer |
 | options.returnFaceId | <code>boolean</code> | Include face ID in response? |
-| options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
+| options.analyzesAccessories | <code>boolean</code> | Analyze accessories? |
 | options.analyzesAge | <code>boolean</code> | Analyze age? |
+| options.analyzesBlur | <code>boolean</code> | Analyze blur? |
 | options.analyzesEmotion | <code>boolean</code> | Analyze emotions? |
-| options.analyzesGender | <code>boolean</code> | Analyze gender? |
-| options.analyzesHeadPose | <code>boolean</code> | Analyze headpose? |
-| options.analyzesSmile | <code>boolean</code> | Analyze smile? |
+| options.analyzesExposure | <code>boolean</code> | Analyze expose? |
+| options.analyzesFaceLandmarks | <code>boolean</code> | Analyze face landmarks? |
 | options.analyzesFacialHair | <code>boolean</code> | Analyze facial hair? |
+| options.analyzesGender | <code>boolean</code> | Analyze gender? |
 | options.analyzesGlasses | <code>boolean</code> | Analyze glasses? |
+| options.analyzesHair | <code>boolean</code> | Analyze hair? |
+| options.analyzesHeadPose | <code>boolean</code> | Analyze headpose? |
+| options.analyzesMakeup | <code>boolean</code> | Analyze makeup? |
+| options.analyzesNoise | <code>boolean</code> | Analyze noise? |
+| options.analyzesOcclusion | <code>boolean</code> | Analyze occlusion? |
+| options.analyzesSmile | <code>boolean</code> | Analyze smile? |
 
 <a name="Client.face..similar"></a>
 
