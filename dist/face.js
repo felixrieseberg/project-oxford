@@ -147,14 +147,21 @@ var face = function face(key, host) {
      * @param  {string}  options.path                   - Path to image to be used
      * @param  {string}  options.data                   - Image as a binary buffer
      * @param  {boolean} options.returnFaceId           - Include face ID in response?
-     * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
+     * @param  {boolean} options.analyzesAccessories    - Analyze accessories?
      * @param  {boolean} options.analyzesAge            - Analyze age?
+     * @param  {boolean} options.analyzesBlur           - Analyze blur?
      * @param  {boolean} options.analyzesEmotion        - Analyze emotions?
-     * @param  {boolean} options.analyzesGender         - Analyze gender?
-     * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
-     * @param  {boolean} options.analyzesSmile          - Analyze smile?
+     * @param  {boolean} options.analyzesExposure       - Analyze expose?
+     * @param  {boolean} options.analyzesFaceLandmarks  - Analyze face landmarks?
      * @param  {boolean} options.analyzesFacialHair     - Analyze facial hair?
+     * @param  {boolean} options.analyzesGender         - Analyze gender?
      * @param  {boolean} options.analyzesGlasses        - Analyze glasses?
+     * @param  {boolean} options.analyzesHair           - Analyze hair?
+     * @param  {boolean} options.analyzesHeadPose       - Analyze headpose?
+     * @param  {boolean} options.analyzesMakeup         - Analyze makeup?
+     * @param  {boolean} options.analyzesNoise          - Analyze noise?
+     * @param  {boolean} options.analyzesOcclusion      - Analyze occlusion?
+     * @param  {boolean} options.analyzesSmile          - Analyze smile?
      * @return {Promise}                                - Promise resolving with the resulting JSON
      */
     function detect(options) {
