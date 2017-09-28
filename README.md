@@ -23,8 +23,8 @@ client.face.detect({
     analyzesAge: true,
     analyzesGender: true
 }).then(function (response) {
-    console.log('The age is: ' + response[0].attributes.age);
-    console.log('The gender is: ' + response[0].attributes.gender);
+    console.log('The age is: ' + response[0].faceAttributes.age);
+    console.log('The gender is: ' + response[0].faceAttributes.gender);
 });
 ```
 Have a picture of a person and want a computed guess about their emotions?
