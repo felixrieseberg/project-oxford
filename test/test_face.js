@@ -7,7 +7,8 @@ var assert   = require('assert'),
     client   = new oxford.Client(process.env.OXFORD_KEY);
 
 // Store variables, no point in calling the api too often
-var billFaces = [],
+var billFaceId,
+    billFaces = [],
     billPersistedFaces = [],
     personGroupId = uuid.v4(),
     personGroupId2 = uuid.v4(),
@@ -37,7 +38,7 @@ describe('Project Oxford Face API Test', function () {
                 analyzesGlasses: true,
                 analyzesEmotion: true
             }).then(function (response) {
-                assert.ok(response[0].faceId);
+                assert.ok(billFaceId = response[0].faceId);
                 assert.ok(response[0].faceRectangle);
                 assert.ok(response[0].faceLandmarks);
                 assert.ok(response[0].faceAttributes.gender);
@@ -758,6 +759,23 @@ describe('Project Oxford Face API Test', function () {
             .then(function (response) {
                 assert.equal(response.persistedFaceId, billPersonPersistedFaceId);
                 assert.equal(response.userData, 'test-data-face');
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('verify a face of a Person in a PersonGroup', function (done) {
+            client.face.verify({
+                faceId: billFaceId,
+	            personId: billPersonId,
+                personGroupId: personGroupId2
+            })
+            .then(function (response) {
+                assert.ok(true, response.isIdentical);
+                assert.ok(response.confidence > 0.5);
                 done();
             })
             .catch(function (error) {
