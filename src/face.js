@@ -314,8 +314,8 @@ var face = function (key, host) {
                     return reject('Faces object must have faceId, personId, and personGroupId fields');
                 }
             } else {
-                return reject('Faces must either be array containing two face ids, or' +
-                    'an object with the fields faceId, personId, and personGroupId');
+                return reject('Faces must either be an array containing two face ids, or' +
+                    'an object with the fields \'faceId\', \'personId\', and \'personGroupId\'');
             }
 
             request.post({
