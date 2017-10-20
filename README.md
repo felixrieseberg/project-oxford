@@ -683,7 +683,7 @@ For the scenarios that are sensitive to accuracy please use with own judgment.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| faces | <code>Array.&lt;string&gt;</code> | Array containing two faceIds to use |
+| faces | <code>Array.&lt;string&gt;</code> &#124; <code>object</code> | An array containing two faceIds to use, or an object with the fields faceId, personId, and personGroupId |
 
 <a name="Client.text"></a>
 
