@@ -302,28 +302,39 @@ var face = function face(key, host) {
      * Analyzes two faces and determine whether they are from the same person.
      * Verification works well for frontal and near-frontal faces.
      * For the scenarios that are sensitive to accuracy please use with own judgment.
-     * @param  {string[]} faces     - Array containing two faceIds to use
-     * @return {Promise}            - Promise resolving with the resulting JSON
+     * @param  {string[]|object} faces - An array containing two faceIds to use, or an object with the fields faceId, personId, and personGroupId
+     * @return {Promise}               - Promise resolving with the resulting JSON
      */
     function verify(faces) {
         return new _Promise(function (resolve, reject) {
-            if (faces && faces.length > 1) {
-                var body = {
-                    faceId1: faces[0],
-                    faceId2: faces[1]
-                };
-
-                request.post({
-                    uri: host + rootPath + verifyPath,
-                    headers: { 'Ocp-Apim-Subscription-Key': key },
-                    json: true,
-                    body: body
-                }, function (error, response) {
-                    return _return(error, response, resolve, reject);
-                });
+            var body;
+            if (faces instanceof Array) {
+                if (faces.length > 1) {
+                    body = {
+                        faceId1: faces[0],
+                        faceId2: faces[1]
+                    };
+                } else {
+                    return reject('Faces array must contain two face ids');
+                }
+            } else if (faces) {
+                if (faces.faceId && faces.personId && faces.personGroupId) {
+                    body = faces;
+                } else {
+                    return reject('Faces object must have faceId, personId, and personGroupId fields');
+                }
             } else {
-                return reject('Faces array must contain two face ids');
+                return reject('Faces must either be an array containing two face ids, or' + 'an object with the fields \'faceId\', \'personId\', and \'personGroupId\'');
             }
+
+            request.post({
+                uri: host + rootPath + verifyPath,
+                headers: { 'Ocp-Apim-Subscription-Key': key },
+                json: true,
+                body: body
+            }, function (error, response) {
+                return _return(error, response, resolve, reject);
+            });
         });
     }
 
