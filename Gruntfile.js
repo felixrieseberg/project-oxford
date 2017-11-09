@@ -28,7 +28,6 @@ module.exports = function (grunt) {
                     'dist/face.js': 'src/face.js',
                     'dist/oxford.js': 'src/oxford.js',
                     'dist/text.js': 'src/text.js',
-                    'dist/video.js': 'src/video.js',
                     'dist/vision.js': 'src/vision.js',
                     'dist/weblm.js': 'src/weblm.js',
                 }
