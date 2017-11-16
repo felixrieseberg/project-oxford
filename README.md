@@ -461,7 +461,7 @@ Adds a face to a person for identification. The maximum face count for each pers
 Deletes a face from a person.
 
 **Kind**: static method of <code>[person](#Client.face.person)</code>  
-**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+**Returns**: <code>Promise</code> - - Promise; successful response is empty  
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -670,7 +670,7 @@ var face = function (key, host) {
          * @param {string} personGroupId     - The target person's person group.
          * @param {string} personId          - The target person that the face is removed from.
          * @param {string} persistedFaceId   - The ID of the face to be deleted.
-         * @return {Promise}                 - Promise resolving with the resulting JSON
+         * @return {Promise}                 - Promise; successful response is empty
          */
         deleteFace: function (personGroupId, personId, persistedFaceId) {
             return new _Promise((resolve, reject) => {
