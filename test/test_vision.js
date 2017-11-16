@@ -2,7 +2,7 @@ var assert   = require('assert'),
     _Promise = require('bluebird'),
     fs       = require('fs'),
     oxford   = require('../dist/oxford'),
-    client   = new oxford.Client(process.env.OXFORD_KEY);
+    client   = new oxford.Client(process.env.OXFORD_VISION_KEY);
 
 var harryImageBuffer = oxford.makeBuffer('data:image/jpeg;base64,' +
     '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDABALDA4MChAODQ4SERATGCkbGBYWGDIkJh4pOzQ+PTo0' +
@@ -319,7 +319,7 @@ describe('Project Oxford Vision API Test', function () {
                     if (response.status === 'Succeeded') {
                         assert.equal(2, response.recognitionResult.lines.length);
                         assert.equal("You must be the change", response.recognitionResult.lines[0].text);
-                        assert.equal("you want to see in the world !", response.recognitionResult.lines[1].text);
+                        assert.equal("you want to see in the world!", response.recognitionResult.lines[1].text);
                         done();
                     } else if (response.status === 'Failed') {
                         assert.ok(false);
