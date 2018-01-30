@@ -3,7 +3,7 @@
 
 This package contains a set of intelligent APIs understanding images: It can detect and analyze people's faces, their age, gender, and similarity. It can identify people based on a set of images. It can understand what is displayed in a picture and crop it according to where the important features are. It can tell you whether an image contains adult content, what the main colors are, and which of your images belong in a group. If your image features text, it will tell you the language and return the text as a string. It's basically magic. For more details on the Project Oxford API, please visit [projectoxford.ai](http://www.projectoxford.ai/demo/face#detection).
 
-This Node module implements Project Oxford's API for Faces, Vision, Text, Video, and WebLM.
+This Node module implements Project Oxford's API for Faces, Vision, Text, and WebLM.
 
 ![](https://i.imgur.com/Zrsnhd3.jpg)
 
@@ -69,7 +69,6 @@ client.vision.ocr({
 
 For the full documentation, please see the API reference below.
 
-## API Reference
 <a name="Client"></a>
 
 ## Client
@@ -116,15 +115,6 @@ For the full documentation, please see the API reference below.
     * [.text](#Client.text) : <code>object</code>
         * [~proof(text, preContextText, postContextText, market)](#Client.text..proof) ⇒ <code>Promise</code>
         * [~spellCheck(text, preContextText, postContextText, market)](#Client.text..spellCheck) ⇒ <code>Promise</code>
-    * [.video](#Client.video) : <code>object</code>
-        * _static_
-            * [.result](#Client.video.result)
-                * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
-                * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
-        * _inner_
-            * [~trackFace(options)](#Client.video..trackFace) ⇒ <code>Promise</code>
-            * [~detectMotion(options)](#Client.video..detectMotion) ⇒ <code>Promise</code>
-            * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
     * [.vision](#Client.vision) : <code>object</code>
         * _static_
             * [.result](#Client.vision.result)
@@ -471,7 +461,7 @@ Adds a face to a person for identification. The maximum face count for each pers
 Deletes a face from a person.
 
 **Kind**: static method of <code>[person](#Client.face.person)</code>  
-**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
+**Returns**: <code>Promise</code> - - Promise; successful response is empty  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -726,109 +716,6 @@ of performance and relevance.
 | preContextText | <code>string</code> | Optional context of one or more words preceding the target word/phrase. |
 | postContextText | <code>string</code> | Optional context of one or more words following the target word/phrase. |
 | market | <code>string</code> | Optional market |
-
-<a name="Client.video"></a>
-
-### Client.video : <code>object</code>
-**Kind**: static namespace of <code>[Client](#Client)</code>  
-
-* [.video](#Client.video) : <code>object</code>
-    * _static_
-        * [.result](#Client.video.result)
-            * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
-            * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
-    * _inner_
-        * [~trackFace(options)](#Client.video..trackFace) ⇒ <code>Promise</code>
-        * [~detectMotion(options)](#Client.video..detectMotion) ⇒ <code>Promise</code>
-        * [~stabilize(options)](#Client.video..stabilize) ⇒ <code>Promise</code>
-
-<a name="Client.video.result"></a>
-
-#### video.result
-**Kind**: static property of <code>[video](#Client.video)</code>  
-
-* [.result](#Client.video.result)
-    * [.get(operation)](#Client.video.result.get) ⇒ <code>Promise</code>
-    * [.getVideo(url, pipe)](#Client.video.result.getVideo) ⇒ <code>Promise</code>
-
-<a name="Client.video.result.get"></a>
-
-##### result.get(operation) ⇒ <code>Promise</code>
-Checks the result of a given operation.  When an operation is deemed completed, the
-status of the returned object should be 'Succeeded' (or, possibly, 'Failed'.) For
-operations which return a JSON payload, the stringified-JSON is returned in the
-processingResult field.  For operations which return a video, the location of the
-video is provided in the resourceLocation field.  You can use the [getVideo](Client.video.result#getVideo) method
-to help you retrieve that, as this would automatically attach the API key to request.
-
-**Kind**: static method of <code>[result](#Client.video.result)</code>  
-**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| operation | <code>Object</code> | Object holding the result URL |
-
-<a name="Client.video.result.getVideo"></a>
-
-##### result.getVideo(url, pipe) ⇒ <code>Promise</code>
-Downloads the resulting video, for processors that returning videos instead of metadata.
-Currently this applies to the [stabilize](Client.video#stabilize) operation.
-
-**Kind**: static method of <code>[result](#Client.video.result)</code>  
-**Returns**: <code>Promise</code> - - Promise resolving with the resulting video  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| url | <code>string</code> | URL of the resource |
-| pipe | <code>Object</code> | Destination for video, typically a fs object |
-
-<a name="Client.video..trackFace"></a>
-
-#### video~trackFace(options) ⇒ <code>Promise</code>
-Start a face-tracking processor
-Faces in a video will be tracked.
-
-**Kind**: inner method of <code>[video](#Client.video)</code>  
-**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>object</code> | Options object |
-| options.url | <code>string</code> | URL to video to be processed |
-| options.path | <code>string</code> | Path to video to be processed |
-| options.stream | <code>stream</code> | Stream for video to be processed |
-
-<a name="Client.video..detectMotion"></a>
-
-#### video~detectMotion(options) ⇒ <code>Promise</code>
-Start a motion-tracking processor
-Motion in a video will be tracked.
-
-**Kind**: inner method of <code>[video](#Client.video)</code>  
-**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>object</code> | Options object |
-| options.url | <code>string</code> | URL to video to be processed |
-| options.path | <code>string</code> | Path to video to be processed |
-| options.stream | <code>stream</code> | Stream for video to be processed |
-
-<a name="Client.video..stabilize"></a>
-
-#### video~stabilize(options) ⇒ <code>Promise</code>
-Start a stablization processor
-A stabilized version of you video will be generated.
-
-**Kind**: inner method of <code>[video](#Client.video)</code>  
-**Returns**: <code>Promise</code> - - Promise resolving with the resulting JSON  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| options | <code>object</code> | Options object |
-| options.url | <code>string</code> | URL to video to be processed |
-| options.path | <code>string</code> | Path to video to be processed |
-| options.stream | <code>stream</code> | Stream for video to be processed |
 
 <a name="Client.vision"></a>
 

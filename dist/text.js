@@ -4,7 +4,7 @@ var request = require('request').defaults({
     headers: { 'User-Agent': 'nodejs/0.4.0' } }),
     _Promise = require('bluebird');
 
-var rootPath = '/bing/v5.0';
+var rootPath = '/bing/v7.0';
 var spellCheckPath = '/spellcheck';
 
 /**

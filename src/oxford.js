@@ -3,7 +3,6 @@
 var emotion = require('./emotion.js'),
     face = require('./face.js'),
     text = require('./text.js'),
-    video = require('./video.js'),
     vision = require('./vision.js'),
     weblm = require('./weblm.js'),
     oxford = {};
@@ -64,7 +63,6 @@ oxford.Client = function (key, hostOrRegion) {
     this.emotion = emotion(key, host);
     this.face = face(key, host);
     this.text = text(key, bingHost);
-    this.video = video(key, host);
     this.vision = vision(key, host);
     this.weblm = weblm(key, host);
 };

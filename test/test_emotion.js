@@ -1,7 +1,7 @@
 var assert   = require('assert'),
     _Promise = require('bluebird'),
     oxford   = require('../dist/oxford'),
-    client   = new oxford.Client(process.env.OXFORD_KEY);
+    client   = new oxford.Client(process.env.OXFORD_EMOTION_KEY);
 
 function getHighestEmotion(response) {
     var result = [];

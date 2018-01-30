@@ -1,7 +1,7 @@
 var assert   = require('assert'),
     _Promise = require('bluebird'),
     oxford   = require('../dist/oxford'),
-    client   = new oxford.Client(process.env.OXFORD_KEY);
+    client   = new oxford.Client(process.env.OXFORD_SPELL_KEY);
 
 describe('Project Oxford Text API Test', function () {
     afterEach(function() {

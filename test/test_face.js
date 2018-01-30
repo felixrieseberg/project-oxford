@@ -4,7 +4,7 @@ var assert   = require('assert'),
     http     = require('http'),
     fs       = require('fs'),
     oxford   = require('../dist/oxford'),
-    client   = new oxford.Client(process.env.OXFORD_KEY);
+    client   = new oxford.Client(process.env.OXFORD_FACE_KEY);
 
 // Store variables, no point in calling the api too often
 var billFaceId,
@@ -850,7 +850,7 @@ describe('Project Oxford Face API Test', function () {
             })
             .listen(8080, 'localhost');
 
-            var altClient = new oxford.Client(process.env.OXFORD_KEY, 'http://localhost:8080');
+            var altClient = new oxford.Client(process.env.OXFORD_FACE_KEY, 'http://localhost:8080');
 
             altClient.face.detect({ url: 'just-checking!' });
         });
