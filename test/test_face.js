@@ -12,6 +12,8 @@ var billFaceId,
     billPersistedFaces = [],
     personGroupId = uuid.v4(),
     personGroupId2 = uuid.v4(),
+    largePersonGroupId1 = uuid.v4(),
+    largePersonGroupId2 = uuid.v4(),
     personFaceListId = uuid.v4(),
     subValid = true,
     billPersonId,
@@ -652,7 +654,6 @@ describe('Project Oxford Face API Test', function () {
         it('gets a PersonGroup\'s training status', function (done) {
             client.face.personGroup.trainingStatus(personGroupId)
             .then(function (response) {
-                assert.equal(response.personGroupId, personGroupId);
                 assert.equal(response.status, 'notstarted');
                 done();
             })
@@ -853,6 +854,299 @@ describe('Project Oxford Face API Test', function () {
             var altClient = new oxford.Client(process.env.OXFORD_FACE_KEY, 'http://localhost:8080');
 
             altClient.face.detect({ url: 'just-checking!' });
+        });
+    });
+
+    describe('#LargePersonGroup', function () {
+        before(function(done) {
+            // In order to test the
+            // training feature, we have to start training - sadly, we can't
+            // delete the group then. So we clean up before we run tests - and to wait
+            // for cleanup to finish, we're just using done().
+            client.face.largePersonGroup.list().then(function (response) {
+                var promises = [];
+
+                response.forEach(function (largePersonGroup) {
+                    if (largePersonGroup.name.indexOf('po-node-test-large-group') > -1) {
+                        promises.push(client.face.largePersonGroup.delete(largePersonGroup.largePersonGroupId));
+                    }
+                });
+
+                _Promise.all(promises).then(function () {
+                    done();
+                });
+            });
+        });
+
+        it('creates a LargePersonGroup', function (done) {
+            client.face.largePersonGroup.create(largePersonGroupId1, 'po-node-test-large-group-1', 'test-data')
+            .then(function (response) {
+                assert.ok(true, "void response expected");
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('lists LargePersonGroups', function (done) {
+            client.face.largePersonGroup.list({top: 5})
+            .then(function (response) {
+                assert.ok(response);
+                assert.ok((response.length > 0));
+                assert.ok(response[0].largePersonGroupId);
+                done();
+            });
+        });
+
+        it('gets a LargePersonGroups', function (done) {
+            client.face.largePersonGroup.get(largePersonGroupId1)
+            .then(function (response) {
+                assert.equal(response.largePersonGroupId, largePersonGroupId1);
+                assert.equal(response.name, 'po-node-test-large-group-1');
+                assert.equal(response.userData, 'test-data');
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('updates a LargePersonGroups', function (done) {
+            client.face.largePersonGroup.update(largePersonGroupId1, 'po-node-test-large-group-2', 'test-data2')
+            .then(function (response) {
+                assert.ok(true, "void response expected");;
+                done();
+            }).catch(function (response) {
+                assert.equal(response, 'LargePersonGroupTrainingNotFinished')
+            });
+        });
+
+        it('gets a LargePersonGroups\'s training status', function (done) {
+            client.face.largePersonGroup.trainingStatus(largePersonGroupId1)
+            .then(function (response) {
+                assert.equal(response.status, 'notstarted');
+                done();
+            })
+            .catch(function (error) {
+                assert.equal(error.code, 'LargePersonGroupNotTrained');
+                done();
+            });
+        });
+
+        it('starts a LargePersonGroups\'s training', function (done) {
+            client.face.largePersonGroup.trainingStart(largePersonGroupId1)
+            .then(function (response) {
+                assert.ok(true, "void response expected");;
+                done();
+            }).catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('deletes a LargePersonGroups', function (done) {
+            client.face.largePersonGroup.delete(largePersonGroupId1)
+            .then(function (response) {
+                assert.ok(!response, "void response");
+                done();
+            }).catch(function (response) {
+                assert.equal(JSON.parse(response).error.code, 'LargePersonGroupTrainingNotFinished');
+                done();
+            });
+        });
+    });
+
+    describe('#LargePersonGroupPerson', function () {
+
+        it('creates a LargePersonGroup for the Person', function (done) {
+            client.face.largePersonGroup.create(largePersonGroupId2, 'po-node-test-large-group', 'test-data')
+            .then(function (response) {
+                assert.ok(true, "void response expected");
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('creates a Person', function (done) {
+            client.face.largePersonGroupPerson.create(largePersonGroupId2, 'test-bill', 'test-data')
+            .then(function (response) {
+                assert.ok(response.personId);
+                billPersonId = response.personId;
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('gets a Person', function (done) {
+            client.face.largePersonGroupPerson.get(largePersonGroupId2, billPersonId)
+            .then(function (response) {
+                assert.equal(response.personId, billPersonId);
+                assert.equal(response.name, 'test-bill');
+                assert.equal(response.userData, 'test-data');
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('updates a Person', function (done) {
+            client.face.largePersonGroupPerson.update(largePersonGroupId2, billPersonId, 'test-bill2', 'test-data2')
+            .then(function (response) {
+                assert.ok(true, "void response expected");
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('adds a face to a Person', function (done) {
+            client.face.largePersonGroupPerson.addFace(largePersonGroupId2, billPersonId, {
+                path: './test/images/face1.jpg',
+                userData: 'test-data-face'
+            })
+            .then(function (response) {
+                billPersonPersistedFaceId = response.persistedFaceId;
+                assert.ok(billPersonPersistedFaceId);
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('gets a face from a Person', function (done) {
+            client.face.largePersonGroupPerson.getFace(largePersonGroupId2, billPersonId, billPersonPersistedFaceId)
+            .then(function (response) {
+                assert.equal(response.persistedFaceId, billPersonPersistedFaceId);
+                assert.equal(response.userData, 'test-data-face');
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('verify a face of a Person in a LargePersonGroup', function (done) {
+            client.face.verify({
+                faceId: billFaceId,
+	            personId: billPersonId,
+                largePersonGroupId: largePersonGroupId2
+            })
+            .then(function (response) {
+                assert.ok(true, response.isIdentical);
+                assert.ok(response.confidence > 0.5);
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('starts a LargePersonGroups\'s training', function (done) {
+            client.face.largePersonGroup.trainingStart(largePersonGroupId2)
+            .then(function (response) {
+                assert.ok(true, "void response expected");;
+                done();
+            }).catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('gets a LargePersonGroup\'s training status - validate trainign is successful', function (done) {
+            client.face.largePersonGroup.trainingStatus(largePersonGroupId2)
+            .then(function (response) {
+                assert.equal(response.status, 'succeeded');
+                done();
+            })
+            .catch(function (error) {
+                assert.equal(error.code, 'LargePersonGroupNotTrained');
+                done();
+            });
+        });
+
+        it('identify a face of a Person in a LargePersonGroup', function (done) {
+            client.face.identify([billFaceId],{largePersonGroupId: largePersonGroupId2})
+            .then(function (response) {
+                assert.ok(response);
+                assert.ok((response.length > 0));
+                assert.ok(response[0].candidates);
+                assert.ok(response[0].candidates.length > 0);
+                assert.ok(response[0].candidates[0].confidence > 0.5);
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('updates a face on a Person', function (done) {
+            client.face.largePersonGroupPerson.updateFace(largePersonGroupId2, billPersonId, billPersonPersistedFaceId, 'test-data-face-updated')
+            .then(function (response) {
+                assert.ok(true, "void response expected");
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('deletes a face on a Person', function (done) {
+            client.face.largePersonGroupPerson.deleteFace(largePersonGroupId2, billPersonId, billPersonPersistedFaceId)
+            .then(function (response) {
+                assert.ok(true, "void response expected");
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('lists Persons', function (done) {
+            client.face.largePersonGroupPerson.list(largePersonGroupId2)
+            .then(function (response) {
+                assert.equal(response.length, 1);
+                assert.equal(response[0].personId, billPersonId);
+                assert.equal(response[0].name, 'test-bill2');
+                assert.equal(response[0].userData, 'test-data2');
+                assert.ok(!response[0].persistedFaceIds || response[0].persistedFaceIds.length == 0);
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
+        });
+
+        it('deletes a Person', function (done) {
+            client.face.largePersonGroupPerson.delete(largePersonGroupId2, billPersonId)
+            .then(function (response) {
+                assert.ok(true, "void response expected");
+                done();
+            })
+            .catch(function (error) {
+                assert.ok(false, JSON.stringify(error));
+                done();
+            });
         });
     });
 });

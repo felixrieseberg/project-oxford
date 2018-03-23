@@ -11,6 +11,8 @@ const identifyPath    = '/identify';
 const verifyPath      = '/verify';
 const personGroupPath = '/persongroups';
 const personPath      = '/persongroups';
+const largePersonGroupPath = '/largepersongroups';
+const largePersonGroupPersonPath = '/largepersongroups';
 const faceListPath    = '/facelists';
 
 /**
@@ -254,31 +256,36 @@ var face = function (key, host) {
     }
 
     /**
-     * Identifies persons from a person group by one or more input faces.
-     * To recognize which person a face belongs to, Face Identification needs a person group
-     * that contains number of persons. Each person contains one or more faces. After a person
-     * group prepared, it should be trained to make it ready for identification. Then the
-     * identification API compares the input face to those persons' faces in person group and
-     * returns the best-matched candidate persons, ranked by confidence.
+     * 1-to-many identification to find the closest matches of the specific query person face(s) from a person group or large person group.
+     * For each face in the faceIds array, Face Identify will compute similarities between the query face and all the faces in the person group
+     * (given by personGroupId) or large person group (given by largePersonGroupId), and return candidate person(s)
+     * for that face ranked by similarity confidence.
+     * The person group/large person group should be trained to make it ready for identification.
      *
      * @param  {string[]} faces                     - Array of faceIds to use
-     * @param  {string} personGroupId               - Id of person group from which faces will be identified
-     * @param  {Number} maxNumOfCandidatesReturned  - Optional max number of candidates per face (default=1, max=5)
-     * @param  {Number} confidenceThreshold         - Confidence threshold of identification, used to judge whether one face belong to one person. The range of confidenceThreshold is [0, 1] (default specified by algorithm).
+     * @param  {object} options                     - Identify options
+     * @param  {string} options.personGroupId       - Id of person group from which faces will be identified (personGroupId and largePersonGroupId should not be provided at the same time)
+     * @param  {string} options.largePersonGroupId  - Id of large person group from which faces will be identified (personGroupId and largePersonGroupId should not be provided at the same time)
+     * @param  {Number} options.maxNumOfCandidatesReturned  - Optional max number of candidates per face (default=1, max=5)
+     * @param  {Number} options.confidenceThreshold         - Confidence threshold of identification, used to judge whether one face belong to one person. The range of confidenceThreshold is [0, 1] (default specified by algorithm).
      * @return {Promise}                            - Promise resolving with the resulting JSON
      */
-    function identify(faces, personGroupId, maxNumOfCandidatesReturned, confidenceThreshold) {
+    function identify(faces, options) {
         return new _Promise(function (resolve, reject) {
             let body = {
                 faceIds: faces,
-                personGroupId: personGroupId,
-                maxNumOfCandidatesReturned: maxNumOfCandidatesReturned || 1
+                maxNumOfCandidatesReturned: options.maxNumOfCandidatesReturned || 1
             };
-
-            if (confidenceThreshold !== undefined) {
-                body.confidenceThreshold = confidenceThreshold;
+            if (options.personGroupId  !== undefined) {
+                body.personGroupId = options.personGroupId;
+            }
+            if (options.largePersonGroupId !== undefined) {
+                body.largePersonGroupId = options.largePersonGroupId;
             }
 
+            if (options.confidenceThreshold !== undefined) {
+                body.confidenceThreshold = options.confidenceThreshold;
+            }
             request.post({
                 uri: host + rootPath + identifyPath,
                 headers: {'Ocp-Apim-Subscription-Key': key},
@@ -308,10 +315,10 @@ var face = function (key, host) {
                     return reject('Faces array must contain two face ids');
                 }
             } else if (faces) {
-                if (faces.faceId && faces.personId && faces.personGroupId) {
+                if (faces.faceId && faces.personId && (faces.personGroupId || faces.largePersonGroupId)) {
                     body = faces;
                 } else {
-                    return reject('Faces object must have faceId, personId, and personGroupId fields');
+                    return reject('Faces object must have faceId, personId, and either personGroupId or largePersonGroupId fields');
                 }
             } else {
                 return reject('Faces must either be an array containing two face ids, or' +
@@ -618,14 +625,18 @@ var face = function (key, host) {
         },
 
         /**
-         * Lists all person groups in the current subscription.
+         * List person groups’s pesonGroupId, name, and userData.
+         * @param  {object} options             - List opentions
+         * @param  {string} options.start       - List person groups from the least personGroupId greater than the "start". It contains no more than 64 characters. Default is empty.
+         * @param  {integer} options.top        - The number of person groups to list, ranging in [1, 1000]. Default is 1000.
          * @return {Promise}                    - Promise resolving with the resulting JSON
          */
-        list: function () {
+        list: function (options) {
             return new _Promise((resolve, reject) => {
                 request({
                     uri: host + rootPath + personGroupPath,
-                    headers: {'Ocp-Apim-Subscription-Key': key}
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    qs: options
                 }, function (error, response) {
                     response.body = JSON.parse(response.body);
                     return _return(error, response, resolve, reject);
@@ -826,6 +837,362 @@ var face = function (key, host) {
         }
     };
 
+    /**
+     * @namespace
+     * @memberof Client.face
+     */
+    var largePersonGroup = {
+        /**
+         * Create a new large person group with user-specified largePersonGroupId, name, and optional userData.
+         * A large person group is the container of the uploaded person data, including face images and face recognition feature, and up to 1,000,000 people.
+         * The Identify() method searches person faces in a specified large person group.
+         *
+         * @param  {string} largePersonGroupId  - Numbers, en-us letters in lower case, '-', '_'. Max length: 64
+         * @param  {string} name                - Person group display name. The maximum length is 128.
+         * @param  {string} userData            - User-provided data attached to the group. The size limit is 16KB.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        create: function (largePersonGroupId, name, userData) {
+            return new _Promise((resolve, reject) => {
+                request.put({
+                    uri: host + rootPath + largePersonGroupPath + '/' + largePersonGroupId,
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    json: true,
+                    body: {
+                        name: name,
+                        userData: userData
+                    }
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Deletes an existing large person group.
+         *
+         * @param  {string} largePersonGroupId  - ID of large person group to delete
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        delete: function (largePersonGroupId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    method: 'DELETE',
+                    uri: host + rootPath + largePersonGroupPath + '/' + largePersonGroupId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Gets an existing large person group.
+         *
+         * @param  {string} largePersonGroupId  - ID of large person group to get
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        get: function (largePersonGroupId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: host + rootPath + largePersonGroupPath + '/' + largePersonGroupId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    response.body = JSON.parse(response.body);
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * To check large person group training status completed or still ongoing.
+         * LargePersonGroup Training is an asynchronous operation triggered by LargePersonGroup - Train API.
+         * Training time depends on the number of person entries, and their faces in a large person group.
+         * It could be in seconds, or up to half an hour for 1,000,000 persons.
+         *
+         * @param  {string} largePersonGroupId  - ID of large person group to get
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        trainingStatus: function (largePersonGroupId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: host + rootPath + largePersonGroupPath + '/' + largePersonGroupId + '/training',
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    response.body = JSON.parse(response.body);
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Submit a large person group training task.
+         * Training is a crucial step that only a trained large person group can be used by Face - Identify.
+         * The training task is an asynchronous task. Training time depends on the number of person entries,
+         * and their faces in a large person group. It could be in several seconds, or up to half a hour for 1,000,000 persons.
+         * To check training completion, please use LargePersonGroup - Get Training Status.
+         *
+         * @param  {string} largePersonGroupId  - ID of large person group to get
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        trainingStart: function (largePersonGroupId) {
+            return new _Promise((resolve, reject) => {
+                request.post({
+                    uri: host + rootPath + largePersonGroupPath + '/' + largePersonGroupId + '/train',
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Update an existing large person group's name and userData.
+         * The properties keep unchanged if they are not in request body.
+         *
+         * @param  {string} largePersonGroupId  - ID of large person group to update
+         * @param  {string} name                - Person group display name. The maximum length is 128.
+         * @param  {string} userData            - User-provided data attached to the group. The size limit is 16KB.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        update: function (largePersonGroupId, name, userData) {
+            return new _Promise((resolve, reject) => {
+                request.patch({
+                    uri: host + rootPath + largePersonGroupPath + '/' + largePersonGroupId,
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    json: true,
+                    body: {
+                        name: name,
+                        userData: userData
+                    }
+                }, function (error, response) {
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * List all existing large person groups’s largePesonGroupId, name, and userData.
+         * @param  {object} options             - List opentions
+         * @param  {string} options.start       - List large person groups from the least largePersonGroupId greater than the "start". It contains no more than 64 characters. Default is empty.
+         * @param  {integer} options.top        - The number of large person groups to list, ranging in [1, 1000]. Default is 1000.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        list: function (options) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: host + rootPath + largePersonGroupPath,
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    qs: options
+                }, function (error, response) {
+                    response.body = JSON.parse(response.body);
+                    return _return(error, response, resolve, reject);
+                });
+            });
+        }
+    };
+
+    /**
+     * @namespace
+     * @memberof Client.face
+     */
+    var largePersonGroupPerson = {
+        /**
+         * Add a face image to a person into a large person group for face identification or verification.
+         * Adding/deleting faces to/from a same person will be processed sequentially.
+         * Adding/deleting faces to/from different persons are processed in parallel.
+         *
+         * @param {string} largePersonGroupId  - largePersonGroupId of the target large person group.
+         * @param {string} personId            - The target person that the face is added to.
+         * @param {object} options             - The source specification.
+         * @param {string} options.url         - URL to image to be used.
+         * @param {string} options.path        - Path to image to be used.
+         * @param {string} options.data        - Image as a binary buffer
+         * @param {string} options.userData    - Optional. Attach user data to person's face. The maximum length is 1024.
+         * @param {object} options.targetFace  - Optional. The rectangle of the face in the image.
+         * @return {Promise}                   - Promise resolving with the resulting JSON
+         */
+        addFace: function (largePersonGroupId, personId, options) {
+            var qs = {};
+            if (options) {
+                qs.userData = options.userData;
+                if (options.targetFace) {
+                    qs.targetFace = [options.targetFace.left, options.targetFace.top, options.targetFace.width, options.targetFace.height].join();
+                }
+            }
+            var url = largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons/' + personId + '/persistedFaces';
+            return _postImage(url, options, qs);
+        },
+
+        /**
+         * Delete a face from a person in a large person group.
+         * Face data and image related to this face entry will be also deleted.
+         * Adding/deleting faces to/from a same person will be processed sequentially.
+         * Adding/deleting faces to/from different persons are processed in parallel.
+         *
+         * @param {string} largePersonGroupId   - largePersonGroupId of the target large person group.
+         * @param {string} personId             - The target person that the face is removed from.
+         * @param {string} persistedFaceId      - The ID of the face to be deleted.
+         * @return {Promise}                    - Promise; successful response is empty
+         */
+        deleteFace: function (largePersonGroupId, personId, persistedFaceId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    method: 'DELETE',
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons/' + personId + '/persistedFaces/' + persistedFaceId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, (error, response) => _return(error, response, resolve, reject));
+            });
+        },
+
+        /**
+         * Update a person persisted face's userData field.
+         *
+         * @param {string} largePersonGroupId   - largePersonGroupId of the target large person group.
+         * @param {string} personId             - The target person that the face is updated on.
+         * @param {string} persistedFaceId      - The ID of the face to be updated.
+         * @param {string} userData             - Optional. Attach user data to person's face. The maximum length is 1024.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        updateFace: function (largePersonGroupId, personId, persistedFaceId, userData) {
+            return new _Promise((resolve, reject) => {
+                request.patch({
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons/' + personId + '/persistedFaces/' + persistedFaceId,
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    json: true,
+                    body: userData ? {userData: userData} : {}
+                }, (error, response) => _return(error, response, resolve, reject));
+            });
+        },
+
+        /**
+         * Retrieve person face information.
+         * The persisted person face is specified by its largePersonGroupId, personId and persistedFaceId.
+         *
+         * @param {string} largePersonGroupId   - largePersonGroupId of the target large person group.
+         * @param {string} personId             - The target person that the face is to get from.
+         * @param {string} persistedFaceId      - The ID of the face to get.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        getFace: function (largePersonGroupId, personId, persistedFaceId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons/' + personId + '/persistedFaces/' + persistedFaceId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, (error, response) => {
+                    response.body = JSON.parse(response.body);
+                    _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Create a new person in a specified large person group.
+         * To add face to this person, please call LargePersonGroup PersonFace - Add.
+         * The number of persons has a subscription limit. Free subscription amount is 1000 persons.
+         *
+         * @param {string} largePersonGroupId   - largePersonGroupId of the target large person group.
+         * @param {string} name                 - Target person's display name. The maximum length is 128.
+         * @param {string} userData             - Optional fields for user-provided data attached to a person. Size limit is 16KB.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        create: function (largePersonGroupId, name, userData) {
+            return new _Promise((resolve, reject) => {
+                request.post({
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons',
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    json: true,
+                    body: {
+                        name: name,
+                        userData: userData
+                    }
+                }, (error, response) => _return(error, response, resolve, reject));
+            });
+        },
+
+        /**
+         * Delete an existing person from a large person group.
+         * All stored person data, and face images in the person entry will be deleted.
+         *
+         * @param {string} largePersonGroupId   - largePersonGroupId of the target large person group.
+         * @param {string} personId             - The target person to delete.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        delete: function (largePersonGroupId, personId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    method: 'DELETE',
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons/' + personId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, (error, response) => _return(error, response, resolve, reject));
+            });
+        },
+
+        /**
+         * Retrieve a person's name and userData, and the persisted faceIds representing the registered person face image.
+         *
+         * @param {string} largePersonGroupId   - largePersonGroupId of the target large person group.
+         * @param {string} personId             - The target person to get.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        get: function (largePersonGroupId, personId) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons/' + personId,
+                    headers: {'Ocp-Apim-Subscription-Key': key}
+                }, (error, response) => {
+                    response.body = JSON.parse(response.body);
+                    _return(error, response, resolve, reject);
+                });
+            });
+        },
+
+        /**
+         * Updates a person's information.
+         *
+         * @param {string} largePersonGroupId   - largePersonGroupId of the target large person group.
+         * @param {string} personId             - The target person's id.
+         * @param {string} name                 - Target person's display name. The maximum length is 128.
+         * @param {string} userData             - Optional fields for user-provided data attached to a person. Size limit is 16KB.
+         * @return {Promise}                    - Promise resolving with the resulting JSON
+         */
+        update: function (largePersonGroupId, personId, name, userData) {
+            return new _Promise((resolve, reject) => {
+                request.patch({
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons/' + personId,
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    json: true,
+                    body: {
+                        name: name,
+                        userData: userData
+                    }
+                }, (error, response) => _return(error, response, resolve, reject));
+            });
+        },
+
+        /**
+         * List all persons’ information in the specified large person group,
+         * including personId, name, userData and persistedFaceIds of registered person faces.
+         *
+         * @param {string} largePersonGroupId     - The target person's person group.
+         * @param {string} options.start     - List persons from the least personId greater than the "start". It contains no more than 64 characters. Default is empty.
+         * @param {Number} options.top       - Optional count of persons to return.  Valid range is [1,1000].  (Default: 1000)
+         * @return {Promise}                 - Promise resolving with the resulting JSON
+         */
+        list: function (largePersonGroupId, options) {
+            return new _Promise((resolve, reject) => {
+                request({
+                    uri: host + rootPath + largePersonGroupPersonPath + '/' + largePersonGroupId + '/persons',
+                    headers: {'Ocp-Apim-Subscription-Key': key},
+                    qs: options
+                }, (error, response) => {
+                    response.body = JSON.parse(response.body);
+                    _return(error, response, resolve, reject);
+                });
+            });
+        }
+    };
+
     return {
         detect: detect,
         similar: similar,
@@ -834,7 +1201,9 @@ var face = function (key, host) {
         verify: verify,
         faceList: faceList,
         personGroup: personGroup,
-        person: person
+        person: person,
+        largePersonGroup: largePersonGroup,
+        largePersonGroupPerson: largePersonGroupPerson
     };
 };
 
